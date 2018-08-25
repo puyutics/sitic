@@ -1,2 +1,2 @@
 # sitic
-Sistema Integral de Gestión de Tecnologías de la Información
+Sistema Integrado para la Gestión de Tecnologías de la Información y Comunicación
