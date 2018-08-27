@@ -2,7 +2,7 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=sitic',
+    'dsn' => 'mysql:host=127.0.0.1;dbname=sitic',
     'username' => 'root',
     'password' => '',
     'charset' => 'utf8',

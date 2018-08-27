@@ -15,7 +15,7 @@ return [
     'company' => 'El Nombre de la Empresa',
     'adminEmail' => 'admin@dominio.com', //Cuenta para recibir correo del formulario de contacto.
     'appURL' => 'http://sitic.dominio.com/',
-    'contact' => 'Unidad de TI. Contáctese al (+593) 3-2555-555 en horario de atención 08h00 - 17h00.',
+    'contact' => 'Unidad de TI. Contáctese al (+593) 3-2555-555 en horario de atención de lunes a viernes de 08h00 - 17h00.',
 
 
     //Parámetros Personalizados Email Sender Gestión de identidad

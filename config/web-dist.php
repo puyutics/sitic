@@ -22,9 +22,12 @@ $config = [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+        ],
         'user' => [
-            'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
+            //'identityClass' => 'app\models\User',
+            'identityClass' => 'Edvlerblog\Adldap2\model\UserDbLdap',
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
