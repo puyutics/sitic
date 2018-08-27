@@ -11,7 +11,7 @@ Este proyecto utiliza Yii 2 Framework Basic Project Template (http://www.yiifram
 
 Proyecto creado para la Gestión de Departamentos, Unidades o Áreas de TI, utilizando fundamentos de la ISO/IEC 38500 y el marco de trabajo COBIT 5 (EN DESARROLLO).
 
-Contiene un módulo de Autoservicio y manejo de información de identidad de los usuarios, basados en servidores Active Directory / LDAP. Utilizando la extensión yii2-adldap-module v4 (wrapper for Adldap v8)
+Contiene un módulo de Autoservicio y manejo de información de identidad de los usuarios, basados en servidores Active Directory / LDAP. Utilizando la extensión yii2-adldap-module v4 (wrapper for Adldap v8).
 La configuración de este plugin la podemos encontrar en el siguiente enlace:
 https://github.com/edvler/yii2-adldap-module
 
