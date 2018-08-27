@@ -11,6 +11,7 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
+        '72579e7bd17821bb1321b87411366eae' => __DIR__ . '/..' . '/illuminate/support/helpers.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         '180092cfc969a12e06f2132a203a3184' => __DIR__ . '/..' . '/codeception/verify/src/Codeception/function.php',
@@ -20,6 +21,8 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         'y' => 
         array (
             'yii\\swiftmailer\\' => 16,
+            'yii\\jui\\' => 8,
+            'yii\\httpclient\\' => 15,
             'yii\\gii\\' => 8,
             'yii\\faker\\' => 10,
             'yii\\debug\\' => 10,
@@ -30,6 +33,20 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         'p' => 
         array (
             'phpDocumentor\\Reflection\\' => 25,
+        ),
+        'k' => 
+        array (
+            'kartik\\popover\\' => 15,
+            'kartik\\plugins\\strengthmeter\\' => 29,
+            'kartik\\plugins\\popover\\' => 23,
+            'kartik\\password\\' => 16,
+            'kartik\\ipinfo\\' => 14,
+            'kartik\\icons\\' => 13,
+            'kartik\\base\\' => 12,
+        ),
+        'h' => 
+        array (
+            'himiklab\\yii2\\recaptcha\\' => 24,
         ),
         'c' => 
         array (
@@ -44,6 +61,7 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Component\\Yaml\\' => 23,
+            'Symfony\\Component\\Translation\\' => 30,
             'Symfony\\Component\\Finder\\' => 25,
             'Symfony\\Component\\EventDispatcher\\' => 34,
             'Symfony\\Component\\DomCrawler\\' => 29,
@@ -53,7 +71,14 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         ),
         'P' => 
         array (
+            'Psr\\SimpleCache\\' => 16,
             'Psr\\Http\\Message\\' => 17,
+            'Psr\\Container\\' => 14,
+        ),
+        'I' => 
+        array (
+            'Illuminate\\Support\\' => 19,
+            'Illuminate\\Contracts\\' => 21,
         ),
         'G' => 
         array (
@@ -63,9 +88,14 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         array (
             'Faker\\' => 6,
         ),
+        'E' => 
+        array (
+            'Edvlerblog\\Adldap2\\' => 19,
+        ),
         'D' => 
         array (
             'Doctrine\\Instantiator\\' => 22,
+            'Doctrine\\Common\\Inflector\\' => 26,
             'DeepCopy\\' => 9,
         ),
         'C' => 
@@ -74,12 +104,24 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
             'Codeception\\Extension\\' => 22,
             'Codeception\\' => 12,
         ),
+        'A' => 
+        array (
+            'Adldap\\' => 7,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
         'yii\\swiftmailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/yiisoft/yii2-swiftmailer',
+        ),
+        'yii\\jui\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yiisoft/yii2-jui',
+        ),
+        'yii\\httpclient\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yiisoft/yii2-httpclient/src',
         ),
         'yii\\gii\\' => 
         array (
@@ -111,6 +153,38 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
             1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
             2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
+        'kartik\\popover\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-popover-x',
+        ),
+        'kartik\\plugins\\strengthmeter\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/strength-meter',
+        ),
+        'kartik\\plugins\\popover\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/bootstrap-popover-x',
+        ),
+        'kartik\\password\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-password',
+        ),
+        'kartik\\ipinfo\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-ipinfo/src',
+        ),
+        'kartik\\icons\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-icons',
+        ),
+        'kartik\\base\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-krajee-base/src',
+        ),
+        'himiklab\\yii2\\recaptcha\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/himiklab/yii2-recaptcha-widget',
+        ),
         'cebe\\markdown\\' => 
         array (
             0 => __DIR__ . '/..' . '/cebe/markdown',
@@ -130,6 +204,10 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         'Symfony\\Component\\Yaml\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/yaml',
+        ),
+        'Symfony\\Component\\Translation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/translation',
         ),
         'Symfony\\Component\\Finder\\' => 
         array (
@@ -155,9 +233,25 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         array (
             0 => __DIR__ . '/..' . '/symfony/browser-kit',
         ),
+        'Psr\\SimpleCache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/simple-cache/src',
+        ),
         'Psr\\Http\\Message\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
+        'Psr\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+        'Illuminate\\Support\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/support',
+        ),
+        'Illuminate\\Contracts\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/contracts',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (
@@ -167,9 +261,17 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         array (
             0 => __DIR__ . '/..' . '/fzaninotto/faker/src/Faker',
         ),
+        'Edvlerblog\\Adldap2\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/edvlerblog/yii2-adldap-module/src',
+        ),
         'Doctrine\\Instantiator\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/instantiator/src/Doctrine/Instantiator',
+        ),
+        'Doctrine\\Common\\Inflector\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/inflector/lib/Doctrine/Common/Inflector',
         ),
         'DeepCopy\\' => 
         array (
@@ -188,6 +290,14 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
             0 => __DIR__ . '/..' . '/codeception/base/src/Codeception',
             1 => __DIR__ . '/..' . '/codeception/stub/src',
         ),
+        'Adldap\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/adldap2/adldap2/src',
+        ),
+    );
+
+    public static $fallbackDirsPsr4 = array (
+        0 => __DIR__ . '/..' . '/nesbot/carbon/src',
     );
 
     public static $prefixesPsr0 = array (
@@ -771,6 +881,7 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f::$fallbackDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f::$prefixesPsr0;
             $loader->classMap = ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f::$classMap;
 
