@@ -33,6 +33,15 @@ Descargar el proyecto y extraer dentro de una carpeta en la raíz de tu servidor
 /var/www/html/sitic/
 ~~~
 
+Cambiar los archivos de configuración 'dist' en la carpeta `config/`
+
+~~~
+consolo-dist.php  =>  console.php
+db-dist.php       =>  db.php
+params-dist.php   =>  params.php
+web-dist.php      =>  web.php
+~~~
+
 Configurar una nueva llave secreta para la cookie en el archivo `config/web.php`. Puede utilizar el siguiente servicio web:
 
 ```php
