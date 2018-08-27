@@ -2,71 +2,35 @@
     <a href="https://github.com/yiisoft" target="_blank">
         <img src="https://avatars0.githubusercontent.com/u/993323" height="100px">
     </a>
-    <h1 align="center">Yii 2 Basic Project Template</h1>
+    <h1 align="center">Sistema Integrado para la Gestión de Tecnologías de la Información y Comunicación</h1>
     <br>
 </p>
 
-Yii 2 Basic Project Template is a skeleton [Yii 2](http://www.yiiframework.com/) application best for
-rapidly creating small projects.
+Este proyecto utiliza Yii 2 Framework Basic Project Template (http://www.yiiframework.com/).
 
-The template contains the basic features including user login/logout and a contact page.
-It includes all commonly used configurations that would allow you to focus on adding new
-features to your application.
-
-[![Latest Stable Version](https://img.shields.io/packagist/v/yiisoft/yii2-app-basic.svg)](https://packagist.org/packages/yiisoft/yii2-app-basic)
-[![Total Downloads](https://img.shields.io/packagist/dt/yiisoft/yii2-app-basic.svg)](https://packagist.org/packages/yiisoft/yii2-app-basic)
-[![Build Status](https://travis-ci.org/yiisoft/yii2-app-basic.svg?branch=master)](https://travis-ci.org/yiisoft/yii2-app-basic)
-
-DIRECTORY STRUCTURE
--------------------
-
-      assets/             contains assets definition
-      commands/           contains console commands (controllers)
-      config/             contains application configurations
-      controllers/        contains Web controller classes
-      mail/               contains view files for e-mails
-      models/             contains model classes
-      runtime/            contains files generated during runtime
-      tests/              contains various tests for the basic application
-      vendor/             contains dependent 3rd-party packages
-      views/              contains view files for the Web application
-      web/                contains the entry script and Web resources
+Proyecto creado para la Gestión de Departamentos, Unidades o Áreas de TI, utilizando fundamentos de la ISO/IEC 38500 y el marco de trabajo COBIT 5 (EN DESARROLLO).
 
 
+REQUERIMIENTOS
+--------------
 
-REQUIREMENTS
-------------
-
-The minimum requirement by this project template that your Web server supports PHP 5.4.0.
+El requerimiento mínimo para este proyecto es que tu servidor Web soporte PHP 5.4.0. El proyecto se está desarrollando utlizando PHP 7.0.31.
 
 
-INSTALLATION
-------------
+INSTALACIÓN
+-----------
 
-### Install via Composer
+### Instalar desde un fichero (ZIP)
 
-If you do not have [Composer](http://getcomposer.org/), you may install it by following the instructions
-at [getcomposer.org](http://getcomposer.org/doc/00-intro.md#installation-nix).
+https://github.com/puyutics/sitic/archive/master.zip
 
-You can then install this project template using the following command:
+Descargar el proyecto y extraer dentro de una carpeta en la raíz de tu servidor Web. Por ejemplo:
 
 ~~~
-php composer.phar create-project --prefer-dist --stability=dev yiisoft/yii2-app-basic basic
+/var/www/html/sitic/
 ~~~
 
-Now you should be able to access the application through the following URL, assuming `basic` is the directory
-directly under the Web root.
-
-~~~
-http://localhost/basic/web/
-~~~
-
-### Install from an Archive File
-
-Extract the archive file downloaded from [yiiframework.com](http://www.yiiframework.com/download/) to
-a directory named `basic` that is directly under the Web root.
-
-Set cookie validation key in `config/web.php` file to some random secret string:
+Configurar una nueva llave secreta para la cookie en el archivo `config/web.php`. Puede utilizar el siguiente servicio web:
 
 ```php
 'request' => [
@@ -75,159 +39,108 @@ Set cookie validation key in `config/web.php` file to some random secret string:
 ],
 ```
 
-You can then access the application through the following URL:
+Configurar una nueva llave secreta para la generación de llaves tokens en el archivo `config/params.php`. Puede utilizar el siguiente servicio web:
+
+```php
+//Generar un Código de Seguridad (SaltKey) en el siguiente enlace
+    'saltKey' => '<secret random string goes here>',
+    'algorithm' => 'sha256',
+    'tokenDateFormat' => date('Y-m-d'), //Duración de token en fecha actual desde 00:00 hasta 23:59
+```
+
+Puedes utilizar el siguiente servicio web para generar una nuevas cadenas alfanuméricas:
+http://www.sethcardoza.com/tools/random-password-generator/
+
+Probado con la opción -> 40 Characters Long (Good for Cakephp Security Salt)
+
+Puedes acceder a la aplicacion utilizando el siguiente URL:
 
 ~~~
-http://localhost/basic/web/
+http://localhost/sitic/web/
 ~~~
 
 
-### Install with Docker
-
-Update your vendor packages
-
-    docker-compose run --rm php composer update --prefer-dist
-    
-Run the installation triggers (creating cookie validation code)
-
-    docker-compose run --rm php composer install    
-    
-Start the container
-
-    docker-compose up -d
-    
-You can then access the application through the following URL:
-
-    http://127.0.0.1:8000
-
-**NOTES:** 
-- Minimum required Docker engine version `17.04` for development (see [Performance tuning for volume mounts](https://docs.docker.com/docker-for-mac/osxfs-caching/))
-- The default configuration uses a host-volume in your home directory `.docker-composer` for composer caches
-
-
-CONFIGURATION
+Configuración
 -------------
 
-### Database
+### Base de Datos
 
-Edit the file `config/db.php` with real data, for example:
+Editar el archivo `config/db.php` con datos reales, por ejemplo:
 
 ```php
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=yii2basic',
+    'dsn' => 'mysql:host=localhost;dbname=sitic',
     'username' => 'root',
-    'password' => '1234',
+    'password' => '',
     'charset' => 'utf8',
 ];
 ```
 
-**NOTES:**
-- Yii won't create the database for you, this has to be done manually before you can access it.
-- Check and edit the other files in the `config/` directory to customize your application as required.
-- Refer to the README in the `tests` directory for information specific to basic application tests.
+### Active Directory
 
+Editar el archivo `config/db.php` con datos reales, por ejemplo:
 
-TESTING
--------
-
-Tests are located in `tests` directory. They are developed with [Codeception PHP Testing Framework](http://codeception.com/).
-By default there are 3 test suites:
-
-- `unit`
-- `functional`
-- `acceptance`
-
-Tests can be executed by running
-
-```
-vendor/bin/codecept run
-```
-
-The command above will execute unit and functional tests. Unit tests are testing the system components, while functional
-tests are for testing user interaction. Acceptance tests are disabled by default as they require additional setup since
-they perform testing in real browser. 
-
-
-### Running  acceptance tests
-
-To execute acceptance tests do the following:  
-
-1. Rename `tests/acceptance.suite.yml.example` to `tests/acceptance.suite.yml` to enable suite configuration
-
-2. Replace `codeception/base` package in `composer.json` with `codeception/codeception` to install full featured
-   version of Codeception
-
-3. Update dependencies with Composer 
-
-    ```
-    composer update  
-    ```
-
-4. Download [Selenium Server](http://www.seleniumhq.org/download/) and launch it:
-
-    ```
-    java -jar ~/selenium-server-standalone-x.xx.x.jar
-    ```
-
-    In case of using Selenium Server 3.0 with Firefox browser since v48 or Google Chrome since v53 you must download [GeckoDriver](https://github.com/mozilla/geckodriver/releases) or [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) and launch Selenium with it:
-
-    ```
-    # for Firefox
-    java -jar -Dwebdriver.gecko.driver=~/geckodriver ~/selenium-server-standalone-3.xx.x.jar
-    
-    # for Google Chrome
-    java -jar -Dwebdriver.chrome.driver=~/chromedriver ~/selenium-server-standalone-3.xx.x.jar
-    ``` 
-    
-    As an alternative way you can use already configured Docker container with older versions of Selenium and Firefox:
-    
-    ```
-    docker run --net=host selenium/standalone-firefox:2.53.0
-    ```
-
-5. (Optional) Create `yii2_basic_tests` database and update it by applying migrations if you have them.
-
-   ```
-   tests/bin/yii migrate
-   ```
-
-   The database configuration can be found at `config/test_db.php`.
-
-
-6. Start web server:
-
-    ```
-    tests/bin/yii serve
-    ```
-
-7. Now you can run all available tests
-
-   ```
-   # run all available tests
-   vendor/bin/codecept run
-
-   # run acceptance tests
-   vendor/bin/codecept run acceptance
-
-   # run only unit and functional tests
-   vendor/bin/codecept run unit,functional
-   ```
-
-### Code coverage support
-
-By default, code coverage is disabled in `codeception.yml` configuration file, you should uncomment needed rows to be able
-to collect code coverage. You can run your tests and collect coverage with the following command:
-
-```
-#collect coverage for all tests
-vendor/bin/codecept run -- --coverage-html --coverage-xml
-
-#collect coverage only for unit tests
-vendor/bin/codecept run unit -- --coverage-html --coverage-xml
-
-#collect coverage for unit and functional tests
-vendor/bin/codecept run functional,unit -- --coverage-html --coverage-xml
+```php
+'ad' => [
+    'class' => 'Edvlerblog\Adldap2\Adldap2Wrapper',
+       'providers' => [
+           'default' => [
+               'autoconnect' => true,
+               'config' => [
+                   'domain_controllers' => [
+                       'dominio.com',
+                       'ipaddress',
+                    ],
+                    'account_suffix'      => '@dominio.com',
+                    'base_dn'             => 'dc=dominio,dc=com',
+                    'admin_username'      => 'administrador',
+                    'admin_password'      => '',
+                    'port'                => 636,
+                    'use_ssl'             => true,
+                    'use_tls'             => true,
+                ],
+            ],
+        ],
+     ],
+...
+//Adldap2 Conexión SSL/TLS sin comprobar certificado
+putenv('LDAPTLS_REQCERT=never');
+...
 ```
 
-You can see code coverage output under the `tests/_output` directory.
+Editar el archivo `config/params.php` con datos reales, por ejemplo:
+
+```php
+//Atributos Personalizados de Active Directory o LDAP
+    'dni'          => 'dni',
+    'personalmail' => 'personalmail',
+```
+
+### Envío de Email
+
+Editar el archivo `config/db.php` con datos reales, por ejemplo:
+
+```php
+'mailer' => [
+    'class' => 'yii\swiftmailer\Mailer',
+        'transport' => [
+            'class'      => 'Swift_SmtpTransport',
+            'host'       => 'smtp.dominio.com',
+            'username'   => 'usuario@dominio.com',
+            'password'   => '',
+            'port'       => '587',
+            'encryption' => 'tls',
+        ],
+     ],
+```
+
+Editar el archivo `config/params.php` con datos reales, por ejemplo:
+
+```php
+//Parámetros Personalizados Email Sender Gestión de identidad
+    'from'     => 'usuario@dominio.com',
+    'fromName' => 'Sistema de Gestión de Identidad',
+    'cc'       => 'usuario@dominio.com', //Opción para almacenar copias de Emails Enviados
+    'subject'  => 'Restablecer Contraseña',
+```
