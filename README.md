@@ -36,13 +36,13 @@ Descargar el proyecto y extraer dentro de una carpeta en la raíz de tu servidor
 Cambiar los archivos de configuración 'dist' en la carpeta `config/`
 
 ~~~
-consolo-dist.php  =>  console.php
+console-dist.php  =>  console.php
 db-dist.php       =>  db.php
 params-dist.php   =>  params.php
 web-dist.php      =>  web.php
 ~~~
 
-Configurar una nueva llave secreta para la cookie en el archivo `config/web.php`. Puede utilizar el siguiente servicio web:
+Configurar una nueva llave secreta para la cookie en el archivo `config/web.php`.
 
 ```php
 'request' => [
@@ -51,7 +51,7 @@ Configurar una nueva llave secreta para la cookie en el archivo `config/web.php`
 ],
 ```
 
-Configurar una nueva llave secreta para la generación de llaves tokens en el archivo `config/params.php`. Puede utilizar el siguiente servicio web:
+Configurar una nueva llave secreta para la generación de llaves tokens en el archivo `config/params.php`.
 
 ```php
 //Generar un Código de Seguridad (SaltKey) en el siguiente enlace
@@ -91,7 +91,7 @@ return [
 
 ### Active Directory
 
-Editar el archivo `config/db.php` y el archivo `config/console.php` con datos reales, por ejemplo:
+Editar el archivo `config/web.php` y el archivo `config/console.php` con datos reales, por ejemplo:
 
 ```php
 'ad' => [
@@ -131,7 +131,7 @@ Editar el archivo `config/params.php` con datos reales, por ejemplo:
 
 ### Envío de Email
 
-Editar el archivo `config/db.php` con datos reales, por ejemplo:
+Editar el archivo `config/web.php` con datos reales, por ejemplo:
 
 ```php
 'mailer' => [
@@ -156,3 +156,14 @@ Editar el archivo `config/params.php` con datos reales, por ejemplo:
     'cc'       => 'usuario@dominio.com', //Opción para almacenar copias de Emails Enviados
     'subject'  => 'Restablecer Contraseña',
 ```
+
+### Datos Companía, Empresa o Institución
+
+Editar el archivo `config/params.php` con datos reales, por ejemplo:
+
+```php
+//Parámetros Personalizados de la Companía, Empresa o Institución
+    'company'    => 'Nombre de la Empresa',
+    'adminEmail' => 'admin@dominio.com', //Cuenta para recibir correo del formulario de contacto.
+    'appURL'     => 'http://sitic.dominio.com/',
+    'contact'    => 'Unidad de TI. Contáctese al (+593) 3-2555-555 de lunes a viernes, en horario de atención 08h00 - 17h00.',
