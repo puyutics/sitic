@@ -15,6 +15,7 @@ class LoginForm extends Model
 {
     public $username;
     public $password;
+    public $authtype;
     public $rememberMe = true;
 
     private $_user = false;
@@ -23,15 +24,42 @@ class LoginForm extends Model
     /**
      * @return array the validation rules.
      */
+
     public function rules()
     {
+        /*if (Yii::$app->params['login'] == 'mail'){  //Login with Mail
+            return [
+                // username and password are both required
+                [['username', 'password','logintype'], 'required'],
+                // rememberMe must be a boolean value
+                ['rememberMe', 'boolean'],
+                // password is validated by validatePassword()
+                ['password', 'validatePassword'],
+                // Inicio de sesión con Email
+                [['username'], 'email'],
+            ];
+        } else {*/
+            return [
+                // username and password are both required
+                [['username', 'password','authtype'], 'required'],
+                // rememberMe must be a boolean value
+                ['rememberMe', 'boolean'],
+                // password is validated by validatePassword()
+                ['password', 'validatePassword'],
+            ];
+        //}
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
         return [
-            // username and password are both required
-            [['username', 'password'], 'required'],
-            // rememberMe must be a boolean value
-            ['rememberMe', 'boolean'],
-            // password is validated by validatePassword()
-            ['password', 'validatePassword'],
+            'username'   => 'Usuario / Correo',
+            'password'   => 'Contraseña',
+            'authtype'   => 'Autenticación',
+            'rememberMe' => 'Recordarme',
         ];
     }
 
@@ -47,9 +75,13 @@ class LoginForm extends Model
         if (!$this->hasErrors()) {
             $user = $this->getUser();
 
-            if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
+            if (!$user) {
+                $this->addError($attribute, 'Usuario incorrecto.');
             }
+            elseif (!$user->validatePassword($this->password)) {
+                $this->addError($attribute, 'Contraseña incorrecta.');
+            }
+
         }
     }
 
@@ -59,6 +91,7 @@ class LoginForm extends Model
      */
     public function login()
     {
+
         if ($this->validate()) {
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
         }
@@ -70,10 +103,21 @@ class LoginForm extends Model
      *
      * @return User|null
      */
+
     public function getUser()
     {
-        if ($this->_user === false) {
+        if ($this->authtype == 'local' and $this->_user === false) {
             $this->_user = User::findByUsername($this->username);
+        }
+
+        if ($this->authtype == 'adldap' and $this->_user === false) {
+            if (Yii::$app->params['login'] == 'username'){ //With Username
+                $this->_user = \Edvlerblog\Adldap2\model\UserDbLdap::findByUsername($this->username);
+            } elseif (Yii::$app->params['login'] == 'userPrincipalName'){ //With Principal Name
+                $this->_user = \Edvlerblog\Adldap2\model\UserDbLdap::findByAttribute('userPrincipalName',$this->username);
+            } elseif (Yii::$app->params['login'] == 'mail'){  //With Mail
+                $this->_user =\Edvlerblog\Adldap2\model\UserDbLdap::findByAttribute('mail',$this->username);
+            }
         }
 
         return $this->_user;

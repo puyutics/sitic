@@ -1,5 +1,4 @@
 <?php
-
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
 /* @var $model app\models\LoginForm */
@@ -7,41 +6,65 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-$this->title = 'Login';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Iniciar Sesión';
+//$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to login:</p>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3" align="center">
+            <p><h1><b>Sistema Integrado</b> | Tecnologías Información y Comunicación</h1></p>
+        </div>
+    </div>
 
-    <?php $form = ActiveForm::begin([
-        'id' => 'login-form',
-        'layout' => 'horizontal',
-        'fieldConfig' => [
-            'template' => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
-            'labelOptions' => ['class' => 'col-lg-1 control-label'],
-        ],
-    ]); ?>
+    &nbsp
 
-        <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+    <div class="row">
 
-        <?= $form->field($model, 'password')->passwordInput() ?>
+        <div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3" align="center">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><?= 'Ingrese sus credenciales' ?></h3>
+                </div>
+                <div class="panel-body">
+                    <?php $form = ActiveForm::begin([
+                        'id' => 'login-form',
+                        'layout' => 'horizontal',
+                        'fieldConfig' => [
+                            'template' => "{label}\n<div class=\"col-lg-7\">{input}</div>\n<div class=\"col-lg-12\">{error}</div>",
+                            'labelOptions' => ['class' => 'col-lg-4 control-label'],
+                        ],
+                    ]); ?>
 
-        <?= $form->field($model, 'rememberMe')->checkbox([
-            'template' => "<div class=\"col-lg-offset-1 col-lg-3\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
-        ]) ?>
+                    <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
-        <div class="form-group">
-            <div class="col-lg-offset-1 col-lg-11">
-                <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                    <?= $form->field($model, 'password')->passwordInput() ?>
+
+                    <?= $form->field($model, 'authtype')->dropDownList(
+                            [
+                                'adldap' => 'Active Directory / LDAP',
+                                'local' => 'Base de datos interna de SITIC',
+                            ]); ?>
+
+                    <?= $form->field($model, 'rememberMe')->checkbox([
+                        'template' => "<div class=\"col-lg-offset-2 col-lg-8\">{input} {label}</div>\n
+                                        <div class=\"col-lg-8\">{error}</div>",
+                    ]) ?>
+
+                    <div class="form-group">
+                        <div class="col-lg-offset-1 col-lg-10">
+                            <?= Html::submitButton('Iniciar Sesión', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                        </div>
+                    </div>
+
+                    <?php ActiveForm::end(); ?>
+                </div>
             </div>
         </div>
+    </div>
 
-    <?php ActiveForm::end(); ?>
-
-    <div class="col-lg-offset-1" style="color:#999;">
-        You may login with <strong>admin/admin</strong> or <strong>demo/demo</strong>.<br>
-        To modify the username/password, please check out the code <code>app\models\User::$users</code>.
+    <div class="col-lg-offset-1" style="color:#999;" align="center">
+        Puedes seleccionar la base de datos disponible para iniciar sesión: .<br>
+        <code><strong>Active Directory / LDAP</strong> o <strong>Base de datos interna</strong></code>.
     </div>
 </div>

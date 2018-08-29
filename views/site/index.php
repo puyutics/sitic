@@ -13,7 +13,7 @@ $this->title = 'SITIC - Sistema Integrado para la Gestión de Tecnologías de la
 
     </div>
 
-    <div class="body-content">
+    <div class="bo d-content">
 
         <div class="row">
             <div class="col-lg-4">
