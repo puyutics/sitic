@@ -10,6 +10,11 @@ return [
     //https://windowserver.wordpress.com/2014/10/09/active-directory-agregar-atributos-personalizados/
     //https://www.solvetic.com/tutoriales/article/4340-anadir-atributos-personalizados-directorio-activo-windows-server-2016/
 
+    //Tipo de inicio de sesión: username, userPrincipalName o mail
+    // 'login' => 'username',
+    // 'login' => 'userPrincipalName',
+    // 'login' => 'mail',
+    'login' => 'username',
 
     //Parámetros Personalizados de la Companía, Empresa o Institución
     'company'    => 'Nombre de la Empresa',
