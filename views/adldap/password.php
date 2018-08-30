@@ -54,7 +54,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php $form = ActiveForm::begin([
                         'id' => 'password-form', 'options' => ['class' => 'form']]) ?>
 
-                    <?php if (isset(Yii::$app->user->identity->username)) { ?>
+                    <?php if (isset(Yii::$app->user->identity->username)
+                                and !Yii::$app->session->get('authtype') == 'local') { ?>
                         <?= $form->field($model, 'mail')
                             ->textInput(['autofocus' => true,'readOnly'=>true,
                                 'value'=> $user->getAttribute('mail', 0)])
@@ -64,6 +65,10 @@ $this->params['breadcrumbs'][] = $this->title;
                             ->textInput(['autofocus' => true])
                         ?>
                     <?php } ?>
+
+                    <?= $form->field($model, 'mail')
+                        ->textInput(['autofocus' => true])
+                    ?>
 
                     <?= $form->field($model, 'oldPassword')->passwordInput()
                         ->label('Contraseña Actual') ?>

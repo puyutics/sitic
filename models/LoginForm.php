@@ -93,6 +93,9 @@ class LoginForm extends Model
     {
 
         if ($this->validate()) {
+            //Agregar variable de sesión authtype
+            Yii::$app->session->set('authtype',$this->authtype);
+
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
         }
         return false;
