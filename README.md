@@ -82,11 +82,11 @@ Editar el archivo `config/db.php` con datos reales, por ejemplo:
 
 ```php
 return [
-    'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=sitic',
+    'class'    => 'yii\db\Connection',
+    'dsn'      => 'mysql:host=localhost;dbname=sitic',
     'username' => 'root',
     'password' => '',
-    'charset' => 'utf8',
+    'charset'  => 'utf8',
 ];
 ```
 
@@ -105,13 +105,13 @@ Editar el archivo `config/web.php` y el archivo `config/console.php` con datos r
                        'dominio.com',
                        'ipaddress',
                     ],
-                    'account_suffix'      => '@dominio.com',
-                    'base_dn'             => 'dc=dominio,dc=com',
-                    'admin_username'      => 'administrador',
-                    'admin_password'      => '',
-                    'port'                => 636,
-                    'use_ssl'             => true,
-                    'use_tls'             => true,
+                    'account_suffix'    =>  '@dominio.com',
+                    'base_dn'           =>  'dc=dominio,dc=com',
+                    'admin_username'    =>  'administrador',
+                    'admin_password'    =>  '',
+                    'port'              =>  636,
+                    'use_ssl'           =>  true,
+                    'use_tls'           =>  true,
                 ],
             ],
         ],
