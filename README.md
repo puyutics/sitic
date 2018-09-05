@@ -97,7 +97,7 @@ return [
 ```
 
 <h5>NOTA:</h5>
-Para la creación de la base de datos utiliza el archivo `db_model.mwb` y el software MySQL Workbench.
+Para la creación de la base de datos utiliza el archivo `sitic.sql`.
 
 ### Active Directory
 
