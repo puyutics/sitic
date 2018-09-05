@@ -16,7 +16,7 @@ La configuración de este plugin la podemos encontrar en el siguiente enlace:
 https://github.com/edvler/yii2-adldap-module
 
 
-<h2>DEMO ONLINE disponible<h2/>
+<h2>DEMO ONLINE disponible</h2>
 https://www.uea.edu.ec/sitic-demo/
 
 ~~~
