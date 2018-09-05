@@ -7,6 +7,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
+use app\models\Logs;
 use app\models\LoginForm;
 use app\models\ContactForm;
 
@@ -77,6 +78,12 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            $username = Yii::$app->user->identity->username;
+            $description =
+                'Inicio de sesión exitoso, usuario: ' . $username
+            ;
+            $this->saveLog('login', $username, $description, 'user');
+
             return $this->goBack();
         }
 
@@ -124,5 +131,22 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+
+
+    public function saveLog($type, $username, $description, $external_type)
+    {
+        //Registro (Log) Evento sendToken
+        $modelLogs              = new Logs();
+        $modelLogs->type        = $type;
+        $modelLogs->username    = $username;
+        $modelLogs->datetime    = date('Y-m-d H:i:s');
+        $modelLogs->description = $description;
+        ;
+        $modelLogs->ipaddress       = Yii::$app->request->userIP;
+        $modelLogs->external_id     = $username;
+        $modelLogs->external_type   = $external_type;
+        $modelLogs->save(false);
     }
 }

@@ -39,6 +39,37 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-left'],
         'items' => [
             ['label' => 'Inicio', 'url' => ['/site/index']],
+            [
+                'label' => 'Gestión TI',
+                'items' => [
+                    ['label' => 'Bienes', 'url' => 'index.php?r=invpurchaseitem/index'],
+                    //'<li class="divider"></li>',
+                    //'<li class="dropdown-header">Dropdown Header</li>',
+                    ['label' => 'Compras', 'url' => 'index.php?r=invpurchase/index'],
+                    ['label' => 'Procesos', 'url' => 'index.php?r=itprocesses/index'],
+                    ['label' => 'Proyectos', 'url' => 'index.php?r=itprojects/index'],
+                    ['label' => 'Servicios', 'url' => 'index.php?r=itservices/index'],
+                    //['label' => 'Usuarios', 'url' => 'index.php?r=adldap/index'],
+                ],
+            ],
+            [
+                'label' => 'Documentación TI',
+                'items' => [
+                    ['label' => 'Documentación (Global)', 'url' => 'index.php?r=documents/index'],
+                    ['label' => 'Manuales TI', 'url' => 'index.php?r=documents/index'],
+                    ['label' => 'Normativa TI', 'url' => 'index.php?r=documents/index'],
+                    ['label' => 'Políticas TI', 'url' => 'index.php?r=documents/index'],
+                    ['label' => 'Reglamentos TI', 'url' => 'index.php?r=documents/index'],
+                ],
+            ],
+            [
+                'label' => 'Reportes TI',
+                'items' => [
+                    ['label' => 'Reporte(s) Incidentes', 'url' => 'index.php?r=itincidentsreports/index'],
+                    ['label' => 'Reporte(s) Power BI', 'url' => 'index.php?r=itreportspowerbi/index'],
+                    ['label' => 'Registros del Sistema', 'url' => 'index.php?r=logs/index'],
+                ],
+            ],
             //['label' => 'Acerca de', 'url' => ['/site/about']],
             //['label' => 'Contacto', 'url' => ['/site/contact']],
         ],

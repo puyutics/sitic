@@ -28,7 +28,7 @@ $this->title = 'SITIC - Sistema Integrado para la Gestión de Tecnologías de la
 
                 <p align="center">Utilizando fundamentos de la ISO/IEC 38500 y el marco de trabajo COBIT 5 (EN DESARROLLO).</p>
 
-                <p align="center"><a class="btn btn-danger" href="index.php?r=site/login">Proyectos, Procesos, Servicios &raquo;</a></p>
+                <p align="center"><a class="btn btn-success" href="index.php?r=site/login">Proyectos, Procesos, Servicios &raquo;</a></p>
             </div>
             <div class="col-lg-4">
                 <h2 align="center">Inventario de TI</h2>

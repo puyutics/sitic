@@ -9,6 +9,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+use yii\filters\AccessControl;
+
 /**
  * LogsController implements the CRUD actions for Logs model.
  */
@@ -20,6 +22,22 @@ class LogsController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['create','index','update', 'view',
+                    'ipinfo'],
+                'rules' => [
+                    [
+                        'actions' => ['index','ipinfo'],
+                        'allow' => true,
+                        'roles' => ['rolAdministrador'],
+                    ],
+                    [
+                        'actions' => ['create','update','view'],
+                        'allow' => false,
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -37,6 +55,9 @@ class LogsController extends Controller
     {
         $searchModel = new LogsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->sort->defaultOrder = [
+            'datetime' => SORT_DESC,
+        ];
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -123,5 +144,13 @@ class LogsController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+
+    //Funciones Personalizadas
+    //Función IP Address
+    public function actionIpinfo()
+    {
+        return $this->render('ipinfo');
     }
 }

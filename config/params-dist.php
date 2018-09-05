@@ -37,4 +37,9 @@ return [
     'algorithm'       => 'sha256',
     'tokenDateFormat' => date('Y-m-d'), //Duración de token en fecha actual desde 00:00 hasta 23:59
 
+    //IPinfo - Logs Module
+    //Generate a new AccessKey for you
+    'ipInfoAccessKey' => '',
+
+
 ];

@@ -1,24 +1,29 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
 use yii\widgets\Pjax;
+
+use kartik\grid\GridView;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
+
+use kartik\ipinfo\IpInfo;
+use kartik\popover\PopoverX;
+
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\LogsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Logs');
+$this->title = Yii::t('app', 'Registros del sistema');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="logs-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin(); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?= Html::a(Yii::t('app', 'Create Logs'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <div align="center">
+        <h3><?= Html::encode($this->title) ?></h3>
+    </div>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -26,16 +31,84 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'type',
+            //'id',
+            [
+                'attribute'=>'type',
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>ArrayHelper::map(\app\models\Logs::find()->all(), 'type', 'type'),
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>['allowClear'=>true],
+                ],
+                'filterInputOptions'=>['placeholder'=>'Seleccionar tipo'],
+                'format'=>'raw'
+            ],
             'username',
             'datetime',
             'description:ntext',
-            //'ipaddress',
-            //'external_id',
-            //'external_type',
+            'ipaddress',
+            'external_id',
+            'external_type',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'kartik\grid\ActionColumn',
+                'template'=>'{ipinfo}',
+                'buttons'=>[
+                    'ipinfo' => function ($url, $model) {
+                        return Html::a(
+                                '<span class="btn btn-primary center-block">
+                                        <i class="fa fa-fw fa-info"></i>
+                                         IP</span>',
+                            Url::to(['logs/ipinfo', 'ipaddress' => $model->ipaddress]),
+                            [
+                                'title' => Yii::t('yii', 'IP info'),
+                                'target'=>'_blank',
+                                'data-pjax'=>"0",
+                            ]);
+                    },
+                ]
+            ],
+
+            ['class' => 'kartik\grid\ActionColumn',
+                'template'=>'{admin}',
+                'buttons'=>[
+                    'admin' => function ($url, $model) {
+                        return Html::a(
+                                '<span class="btn btn-success center-block">
+                                        <i class="fa fa-fw fa-folder"></i>
+                                         Origen</span>',
+                            Url::to([strtolower($model->external_type) . '/view', 'id' => $model->external_id]),
+                            [
+                                'title' => Yii::t('yii', 'Abrir Origen'),
+                                'target'=>'_blank',
+                                'data-pjax'=>"0",
+                            ]);
+                    },
+                ]
+            ],
+
+            //['class' => 'yii\grid\ActionColumn'],
+
+        ],
+        'containerOptions' => ['style'=>'overflow: auto'],
+        'toolbar' =>  [
+            [
+                'content'=>
+
+                    Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], [
+                        'class' => 'btn btn-default',
+                        'title' => ('Reset Grid')
+                    ]),
+            ],
+            '{export}',
+            '{toggleData}'
+        ],
+        'pjax' => true,
+        'bordered' => true,
+        'striped' => false,
+        'condensed' => false,
+        'responsive' => true,
+        'hover' => true,
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY
         ],
     ]); ?>
     <?php Pjax::end(); ?>

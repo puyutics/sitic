@@ -2,6 +2,7 @@
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
+use kartik\mpdf\Pdf;
 
 $config = [
     'id' => 'basic',
@@ -12,6 +13,14 @@ $config = [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+    ],
+    'modules' => [
+        'gridview' =>  [
+            'class' => '\kartik\grid\Module',
+        ],
+        'pdfjs' => [
+            'class' => '\yii2assets\pdfjs\Module',
+        ],
     ],
     'components' => [
         'request' => [
@@ -91,6 +100,15 @@ $config = [
                 ],
             ],
 
+        ],
+
+        // setup Krajee Pdf component
+        'pdf' => [
+            'class' => Pdf::classname(),
+            'format' => Pdf::FORMAT_A4,
+            'orientation' => Pdf::ORIENT_PORTRAIT,
+            'destination' => Pdf::DEST_BROWSER,
+            // refer settings section for all configuration options
         ],
     ],
     'params' => $params,
