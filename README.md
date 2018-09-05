@@ -18,6 +18,7 @@ https://github.com/edvler/yii2-adldap-module
 
 <h2>DEMO ONLINE disponible<h2/>
 https://www.uea.edu.ec/sitic-demo/
+
 ~~~
 Usuario / Contraseña: admin / admin
 ~~~
