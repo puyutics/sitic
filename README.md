@@ -96,7 +96,8 @@ return [
 ];
 ```
 
-<h5>NOTA:</h5> Para la creación de la base de datos utiliza el archivo `db_model.mwb` y el software MySQL Workbench.
+<h5>NOTA:</h5>
+Para la creación de la base de datos utiliza el archivo `db_model.mwb` y el software MySQL Workbench.
 
 ### Active Directory
 
