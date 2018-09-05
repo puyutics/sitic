@@ -19,7 +19,7 @@ return array(
     'kartik\\popover\\' => array($vendorDir . '/kartik-v/yii2-popover-x'),
     'kartik\\plugins\\strengthmeter\\' => array($vendorDir . '/kartik-v/strength-meter'),
     'kartik\\plugins\\popover\\' => array($vendorDir . '/kartik-v/bootstrap-popover-x'),
-    'kartik\\password\\' => array($vendorDir . '/kartik-v/yii2-password'),
+    'kartik\\password\\' => array($vendorDir . '/kartik-v/yii2-password/src'),
     'kartik\\ipinfo\\' => array($vendorDir . '/kartik-v/yii2-ipinfo/src'),
     'kartik\\icons\\' => array($vendorDir . '/kartik-v/yii2-icons'),
     'kartik\\base\\' => array($vendorDir . '/kartik-v/yii2-krajee-base/src'),

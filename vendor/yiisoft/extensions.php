@@ -57,22 +57,13 @@ return array (
       '@Edvlerblog/Adldap2' => $vendorDir . '/edvlerblog/yii2-adldap-module/src',
     ),
   ),
-  'kartik-v/yii2-krajee-base' => 
-  array (
-    'name' => 'kartik-v/yii2-krajee-base',
-    'version' => '1.9.2.0',
-    'alias' => 
-    array (
-      '@kartik/base' => $vendorDir . '/kartik-v/yii2-krajee-base/src',
-    ),
-  ),
   'kartik-v/yii2-password' => 
   array (
     'name' => 'kartik-v/yii2-password',
     'version' => '9999999-dev',
     'alias' => 
     array (
-      '@kartik/password' => $vendorDir . '/kartik-v/yii2-password',
+      '@kartik/password' => $vendorDir . '/kartik-v/yii2-password/src',
     ),
   ),
   'yiisoft/yii2-jui' => 
@@ -127,6 +118,15 @@ return array (
     'alias' => 
     array (
       '@himiklab/yii2/recaptcha' => $vendorDir . '/himiklab/yii2-recaptcha-widget',
+    ),
+  ),
+  'kartik-v/yii2-krajee-base' => 
+  array (
+    'name' => 'kartik-v/yii2-krajee-base',
+    'version' => '1.9.3.0',
+    'alias' => 
+    array (
+      '@kartik/base' => $vendorDir . '/kartik-v/yii2-krajee-base/src',
     ),
   ),
 );
