@@ -16,7 +16,6 @@ La configuración de este plugin la podemos encontrar en el siguiente enlace:
 https://github.com/edvler/yii2-adldap-module
 
 DEMO ONLINE disponible: https://www.uea.edu.ec/sitic-demo/
-
 Usuario / Contraseña: admin / admin
 
 REQUERIMIENTOS
