@@ -66,8 +66,8 @@ Configurar una nueva llave secreta para la generación de llaves tokens en el ar
 
 ```php
 //Generar un Código de Seguridad (SaltKey) en el siguiente enlace
-    'saltKey' => '<secret random string goes here>',
-    'algorithm' => 'sha256',
+    'saltKey'         => '<secret random string goes here>',
+    'algorithm'       => 'sha256',
     'tokenDateFormat' => date('Y-m-d'), //Duración de token en fecha actual desde 00:00 hasta 23:59
 ```
 
@@ -76,6 +76,14 @@ http://www.sethcardoza.com/tools/random-password-generator/
 
 Probado con la opción -> 40 Characters Long (Good for Cakephp Security Salt)
 
+Actualizar todos los componentes
+--------------------------------
+~~~
+php /var/www/html/sitic/composer.phar update
+~~~
+
+Acceder al sistema
+------------------
 Puedes acceder a la aplicacion utilizando el siguiente URL:
 
 ~~~
@@ -141,6 +149,7 @@ Editar el archivo `config/params.php` con datos reales, por ejemplo:
 //Atributos Personalizados de Active Directory o LDAP
     'dni'          => 'dni',
     'personalmail' => 'personalmail',
+    'mobile'       => 'mobile',
 ```
 
 ### Envío de Email
