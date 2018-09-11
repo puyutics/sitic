@@ -21,7 +21,7 @@ $this->title = 'SITIC - Sistema Integrado para la Gestión de Tecnologías de la
 
                 <p align="center">Autoservicio y manejo de información de identidad de los usuarios.</p>
 
-                <p align="center"><a class="btn btn-success" href="index.php?r=adldap/forgetpass">Olvidaste tu usuario o contraseña &raquo;</a></p>
+                <p align="center"><a class="btn btn-success" href="index.php?r=adldap/edit">Olvidaste tu usuario o contraseña &raquo;</a></p>
             </div>
             <div class="col-lg-4">
                 <h2 align="center">Gestión de TI - ITSM</h2>

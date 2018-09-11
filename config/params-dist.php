@@ -5,6 +5,7 @@ return [
     //Atributos Personalizados de Active Directory o LDAP
     'dni'          => 'dni',
     'personalmail' => 'personalmail',
+    'mobile'       => 'mobile',
 
     //Para agregar los atributos personalizados en Active Directory lea los siguientes enlaces:
     //https://windowserver.wordpress.com/2014/10/09/active-directory-agregar-atributos-personalizados/

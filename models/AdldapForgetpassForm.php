@@ -33,7 +33,7 @@ class AdldapForgetpassForm extends Model
     public function attributeLabels()
     {
         return [
-            'dni' => 'Identificador (DNI, Cédula, Pasaporte)',
+            'dni' => 'Identificador (DNI/Cédula/Pasaporte)',
             'mail' => 'Usuario / Correo institucional',
             'verifyCode' => 'Código de verificación',
         ];

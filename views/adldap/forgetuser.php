@@ -30,14 +30,14 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
 
         <div class="col-md-1 col-md-offset-1 col-sm-6 col-sm-offset-3">
-            <p align="center"><a class="btn btn-default" href="index.php?r=adldap/forgetuser">Olvidaste tu usuario &raquo;</a></p>
-            <p align="center"><a class="btn btn-default" href="index.php?r=adldap/forgetpass">Olvidaste tu contraseña &raquo;</a></p>
+            <p align="center"><a class="btn btn-default" href="index.php?r=adldap/edit">Mi perfil &raquo;</a></p>
             <p align="center"><a class="btn btn-default" href="index.php?r=adldap/password">Cambiar contraseña &raquo;</a></p>
-            <p align="center"><a class="btn btn-default" href="index.php?r=site/login">Verificar mi perfil &raquo;</a></p>
-
+            <p align="center"><a class="btn btn-primary" href="index.php?r=adldap/forgetuser">Olvidaste tu usuario &raquo;</a></p>
+            <p align="center"><a class="btn btn-default" href="index.php?r=adldap/forgetpass">Olvidaste tu contraseña &raquo;</a></p>
         </div>
 
-        <div class="col-md-5 col-md-offset-2 col-sm-6 col-sm-offset-3">            <div class="panel panel-default">
+        <div class="col-md-5 col-md-offset-2 col-sm-6 col-sm-offset-3">
+            <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title"><?= Html::encode($this->title) ?></h3>
                 </div>

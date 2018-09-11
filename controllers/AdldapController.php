@@ -13,6 +13,7 @@ use app\models\AdldapForgetpassForm;
 use app\models\AdldapForgetuserForm;
 use app\models\AdldapPasswordForm;
 use app\models\AdldapResetForm;
+use app\models\AdldapEditForm;
 
 class AdldapController extends Controller
 {
@@ -24,17 +25,17 @@ class AdldapController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['forgetpass','forgetuser','password','reset',
+                'only' => ['index','edit','forgetpass','forgetuser','password','reset',
                             'saveLog','sendToken'],
                 'rules' => [
                     [
-                        'actions' => ['forgetpass','forgetuser','password','reset',
+                        'actions' => ['index','edit','forgetpass','forgetuser','password','reset',
                                         'saveLog','sendToken'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
                     [
-                        'actions' => ['forgetpass','forgetuser','password','reset',
+                        'actions' => ['index','forgetpass','forgetuser','password','reset',
                                         'saveLog','sendToken'],
                         'allow' => true,
                     ],
@@ -63,6 +64,61 @@ class AdldapController extends Controller
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
         ];
+    }
+
+
+    public function actionIndex()
+    {
+        return $this->render('index');
+    }
+
+
+    public function actionEdit()
+    {
+        if (isset(Yii::$app->user->identity->username)
+            and (Yii::$app->session->get('authtype') == 'adldap')) {
+
+            $model = new AdldapEditForm();
+            $sAMAccountname = Yii::$app->user->identity->username;
+            $user = Yii::$app->ad->getProvider('default')->search()
+                ->findBy('sAMAccountname', $sAMAccountname);
+            $model->dni = $user->getAttribute(Yii::$app->params['dni'],0);
+            $model->firstname = $user->getFirstName();
+            $model->lastname = $user->getLastName();
+            $model->commonname = $user->getCommonName();
+            $model->displayname = $user->getDisplayName();
+            $model->mail = $user->getEmail();
+            $model->personalmail = $user->getAttribute(Yii::$app->params['personalmail'], 0);
+            $model->mobile = $user->getAttribute(Yii::$app->params['mobile'], 0);
+
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                $post_form = Yii::$app->request->post('AdldapEditForm');
+                $post_personalmail = $post_form['personalmail'];
+                $post_mobile = $post_form['mobile'];
+
+                if (isset($post_personalmail)) {
+                    $user->setAttribute(Yii::$app->params['personalmail'],$post_personalmail);
+                    $user->setAttribute(Yii::$app->params['mobile'],$post_mobile);
+                    $user->save();
+
+                    Yii::$app->session->setFlash('success', "Actualizado Correctamente");
+
+                    //Crear Registro de Log en la base de datos
+                    $description =
+                        'Información actualizada del usuario: ' . $sAMAccountname
+                    ;
+                    $this->saveLog('adldapEdit', $sAMAccountname, $description, 'adldap');
+
+                    return $this->render('edit',
+                        ['model'=>$model]);
+                }
+            } else {
+                return $this->render('edit',
+                    ['model'=>$model]);
+            }
+        } else {
+            return $this->redirect('index.php?r=site/index');
+        }
     }
 
 
@@ -233,6 +289,10 @@ class AdldapController extends Controller
                         ['model'=>$model]); //Email incorrecto
                 }
         } else {
+            Yii::$app->session->setFlash('error',
+                'Su nueva contraseña debe contener al menos 8 dígitos
+                        entre mayúsculas, minúsculas y números. 
+                        NO UTILICE SUS NOMBRES y/o APELLIDOS');
             return $this->render('reset', [
                 'model' => $model,
             ]);
@@ -293,6 +353,10 @@ class AdldapController extends Controller
                         ['model'=>$model]); //Email incorrecto
                 }
         } else {
+            Yii::$app->session->setFlash('error',
+                'Su nueva contraseña debe contener al menos 8 dígitos
+                        entre mayúsculas, minúsculas y números. 
+                        NO UTILICE SUS NOMBRES y/o APELLIDOS');
             return $this->render('password', [
                 'model' => $model,
             ]);

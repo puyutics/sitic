@@ -8,7 +8,8 @@ use yii\widgets\ActiveForm;
 use app\models\AdldapPasswordForm;
 use kartik\password\PasswordInput;
 
-if (isset(Yii::$app->user->identity->username)) {
+if (isset(Yii::$app->user->identity->username)
+    and (Yii::$app->session->get('authtype') == 'adldap')) {
     $user = Yii::$app->ad->getProvider('default')->search()->findBy('sAMAccountname', Yii::$app->user->identity->username);
 }
 
@@ -38,11 +39,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
 
         <div class="col-md-1 col-md-offset-1 col-sm-6 col-sm-offset-3">
+            <p align="center"><a class="btn btn-default" href="index.php?r=adldap/edit">Mi perfil &raquo;</a></p>
+            <p align="center"><a class="btn btn-primary" href="index.php?r=adldap/password">Cambiar contraseña &raquo;</a></p>
             <p align="center"><a class="btn btn-default" href="index.php?r=adldap/forgetuser">Olvidaste tu usuario &raquo;</a></p>
             <p align="center"><a class="btn btn-default" href="index.php?r=adldap/forgetpass">Olvidaste tu contraseña &raquo;</a></p>
-            <p align="center"><a class="btn btn-default" href="index.php?r=adldap/password">Cambiar contraseña &raquo;</a></p>
-            <p align="center"><a class="btn btn-default" href="index.php?r=site/login">Verificar mi perfil &raquo;</a></p>
-
         </div>
 
         <div class="col-md-5 col-md-offset-2 col-sm-6 col-sm-offset-3">
@@ -55,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'id' => 'password-form', 'options' => ['class' => 'form']]) ?>
 
                     <?php if (isset(Yii::$app->user->identity->username)
-                                and !Yii::$app->session->get('authtype') == 'local') { ?>
+                                and (Yii::$app->session->get('authtype') == 'adldap')) { ?>
                         <?= $form->field($model, 'mail')
                             ->textInput(['autofocus' => true,'readOnly'=>true,
                                 'value'=> $user->getAttribute('mail', 0)])
@@ -66,16 +66,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         ?>
                     <?php } ?>
 
-                    <?= $form->field($model, 'mail')
-                        ->textInput(['autofocus' => true])
-                    ?>
-
                     <?= $form->field($model, 'oldPassword')->passwordInput()
                         ->label('Contraseña Actual') ?>
-
-                    <p align="center"> >>>> LEER ESTAS INDICACIONES <<<< </p>
-                    <p>Su nueva contraseña debe contener al menos 8 dígitos entre mayúsculas, minúsculas y números.
-                        <code>NO UTILICE SUS NOMBRES y/o APELLIDOS</code></p>
 
                     <?= $form->field($model, 'newPassword')->widget(PasswordInput::classname(), [
                         'pluginOptions' => [
