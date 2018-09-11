@@ -241,7 +241,7 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         ),
         'kartik\\tabs\\' => 
         array (
-            0 => __DIR__ . '/..' . '/kartik-v/yii2-tabs-x',
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-tabs-x/src',
         ),
         'kartik\\switchinput\\' => 
         array (
@@ -265,7 +265,7 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         ),
         'kartik\\range\\' => 
         array (
-            0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-rangeinput',
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-rangeinput/src',
         ),
         'kartik\\popover\\' => 
         array (
@@ -329,7 +329,7 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         ),
         'kartik\\file\\' => 
         array (
-            0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-fileinput',
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-fileinput/src',
         ),
         'kartik\\editable\\' => 
         array (
@@ -337,7 +337,7 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         ),
         'kartik\\dialog\\' => 
         array (
-            0 => __DIR__ . '/..' . '/kartik-v/yii2-dialog',
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-dialog/src',
         ),
         'kartik\\detail\\' => 
         array (
