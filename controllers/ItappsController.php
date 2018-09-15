@@ -9,6 +9,9 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+use yii\filters\AccessControl;
+use yii\helpers\Json;
+
 /**
  * ItappsController implements the CRUD actions for ItApps model.
  */
@@ -20,6 +23,21 @@ class ItappsController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['create','index','update', 'view','admin'],
+                'rules' => [
+                    [
+                        'actions' => ['create','index','update','view','admin'],
+                        'allow' => true,
+                        'roles' => ['rolAdministrador'],
+                    ],
+                    [
+                        'actions' => ['delete'],
+                        'allow' => false,
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -57,6 +75,14 @@ class ItappsController extends Controller
         ]);
     }
 
+
+    public function actionAdmin($id)
+    {
+        return $this->render('admin', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+
     /**
      * Creates a new ItApps model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -66,9 +92,13 @@ class ItappsController extends Controller
     {
         $model = new ItApps();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->password = $model->setPassword($model->password);
+            if ($model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
+
 
         return $this->render('create', [
             'model' => $model,

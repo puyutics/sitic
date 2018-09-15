@@ -18,7 +18,7 @@ class ItAppsSearch extends ItApps
     public function rules()
     {
         return [
-            [['id', 'it_apps_category_id'], 'integer'],
+            [['id', 'status', 'it_apps_category_id'], 'integer'],
             [['title', 'description', 'username', 'password', 'email', 'url'], 'safe'],
         ];
     }
@@ -60,6 +60,7 @@ class ItAppsSearch extends ItApps
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'status' => $this->status,
             'it_apps_category_id' => $this->it_apps_category_id,
         ]);
 

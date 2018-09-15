@@ -5,16 +5,16 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\ItApps */
 
-$this->title = Yii::t('app', 'Update It Apps: ' . $model->title, [
+$this->title = Yii::t('app', 'Editar Aplicación: ' . $model->title, [
     'nameAttribute' => '' . $model->title,
 ]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'It Apps'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Aplicaciones TI'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
+$this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
 ?>
 <div class="it-apps-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1><?php //= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
         'model' => $model,

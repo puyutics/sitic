@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\ItApps */
 
-$this->title = Yii::t('app', 'Create It Apps');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'It Apps'), 'url' => ['index']];
+$this->title = Yii::t('app', 'Nueva Aplicación');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Aplicaciones TI'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="it-apps-create">

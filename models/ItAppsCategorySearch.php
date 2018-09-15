@@ -18,7 +18,7 @@ class ItAppsCategorySearch extends ItAppsCategory
     public function rules()
     {
         return [
-            [['id'], 'integer'],
+            [['id', 'parent_id', 'level', 'status'], 'integer'],
             [['category'], 'safe'],
         ];
     }
@@ -60,6 +60,9 @@ class ItAppsCategorySearch extends ItAppsCategory
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'parent_id' => $this->parent_id,
+            'level' => $this->level,
+            'status' => $this->status,
         ]);
 
         $query->andFilterWhere(['like', 'category', $this->category]);

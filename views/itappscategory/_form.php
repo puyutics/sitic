@@ -14,6 +14,12 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'category')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'parent_id')->textInput() ?>
+
+    <?= $form->field($model, 'level')->textInput() ?>
+
+    <?= $form->field($model, 'status')->textInput() ?>
+
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
     </div>
