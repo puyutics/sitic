@@ -64,7 +64,6 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
             'kartik\\money\\' => 13,
             'kartik\\ipinfo\\' => 14,
             'kartik\\icons\\' => 13,
-            'kartik\\helpers\\' => 15,
             'kartik\\growl\\' => 13,
             'kartik\\grid\\' => 12,
             'kartik\\form\\' => 12,
@@ -311,10 +310,6 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-icons',
         ),
-        'kartik\\helpers\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/kartik-v/yii2-helpers',
-        ),
         'kartik\\growl\\' => 
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-growl',
@@ -341,7 +336,7 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         ),
         'kartik\\detail\\' => 
         array (
-            0 => __DIR__ . '/..' . '/kartik-v/yii2-detail-view',
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-detail-view/src',
         ),
         'kartik\\depdrop\\' => 
         array (

@@ -183,24 +183,6 @@ return array (
       '@dmstr' => $vendorDir . '/dmstr/yii2-adminlte-asset',
     ),
   ),
-  'kartik-v/yii2-helpers' => 
-  array (
-    'name' => 'kartik-v/yii2-helpers',
-    'version' => '1.3.6.0',
-    'alias' => 
-    array (
-      '@kartik/helpers' => $vendorDir . '/kartik-v/yii2-helpers',
-    ),
-  ),
-  'kartik-v/yii2-detail-view' => 
-  array (
-    'name' => 'kartik-v/yii2-detail-view',
-    'version' => '1.7.6.0',
-    'alias' => 
-    array (
-      '@kartik/detail' => $vendorDir . '/kartik-v/yii2-detail-view',
-    ),
-  ),
   'kartik-v/yii2-editable' => 
   array (
     'name' => 'kartik-v/yii2-editable',
@@ -417,15 +399,6 @@ return array (
       '@kartik/daterange' => $vendorDir . '/kartik-v/yii2-date-range/src',
     ),
   ),
-  'kartik-v/yii2-grid' => 
-  array (
-    'name' => 'kartik-v/yii2-grid',
-    'version' => '9999999-dev',
-    'alias' => 
-    array (
-      '@kartik/grid' => $vendorDir . '/kartik-v/yii2-grid/src',
-    ),
-  ),
   'kartik-v/yii2-password' => 
   array (
     'name' => 'kartik-v/yii2-password',
@@ -444,15 +417,6 @@ return array (
       '@kartik/form' => $vendorDir . '/kartik-v/yii2-widget-activeform/src',
     ),
   ),
-  'kartik-v/yii2-widget-colorinput' => 
-  array (
-    'name' => 'kartik-v/yii2-widget-colorinput',
-    'version' => '9999999-dev',
-    'alias' => 
-    array (
-      '@kartik/color' => $vendorDir . '/kartik-v/yii2-widget-colorinput/src',
-    ),
-  ),
   'kartik-v/yii2-widget-select2' => 
   array (
     'name' => 'kartik-v/yii2-widget-select2',
@@ -460,6 +424,33 @@ return array (
     'alias' => 
     array (
       '@kartik/select2' => $vendorDir . '/kartik-v/yii2-widget-select2/src',
+    ),
+  ),
+  'kartik-v/yii2-detail-view' => 
+  array (
+    'name' => 'kartik-v/yii2-detail-view',
+    'version' => '1.7.7.0',
+    'alias' => 
+    array (
+      '@kartik/detail' => $vendorDir . '/kartik-v/yii2-detail-view/src',
+    ),
+  ),
+  'kartik-v/yii2-grid' => 
+  array (
+    'name' => 'kartik-v/yii2-grid',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@kartik/grid' => $vendorDir . '/kartik-v/yii2-grid/src',
+    ),
+  ),
+  'kartik-v/yii2-widget-colorinput' => 
+  array (
+    'name' => 'kartik-v/yii2-widget-colorinput',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@kartik/color' => $vendorDir . '/kartik-v/yii2-widget-colorinput/src',
     ),
   ),
 );

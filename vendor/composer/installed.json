@@ -931,17 +931,17 @@
     },
     {
         "name": "composer/installers",
-        "version": "v1.5.0",
-        "version_normalized": "1.5.0.0",
+        "version": "v1.6.0",
+        "version_normalized": "1.6.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/composer/installers.git",
-            "reference": "049797d727261bf27f2690430d935067710049c2"
+            "reference": "cfcca6b1b60bc4974324efb5783c13dca6932b5b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/composer/installers/zipball/049797d727261bf27f2690430d935067710049c2",
-            "reference": "049797d727261bf27f2690430d935067710049c2",
+            "url": "https://api.github.com/repos/composer/installers/zipball/cfcca6b1b60bc4974324efb5783c13dca6932b5b",
+            "reference": "cfcca6b1b60bc4974324efb5783c13dca6932b5b",
             "shasum": ""
         },
         "require": {
@@ -955,7 +955,7 @@
             "composer/composer": "1.0.*@dev",
             "phpunit/phpunit": "^4.8.36"
         },
-        "time": "2017-12-29T09:13:20+00:00",
+        "time": "2018-08-27T06:10:37+00:00",
         "type": "composer-plugin",
         "extra": {
             "class": "Composer\\Installers\\Plugin",
@@ -1658,8 +1658,8 @@
     },
     {
         "name": "illuminate/contracts",
-        "version": "v5.7.2",
-        "version_normalized": "5.7.2.0",
+        "version": "v5.7.3",
+        "version_normalized": "5.7.3.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/contracts.git",
@@ -1704,17 +1704,17 @@
     },
     {
         "name": "illuminate/support",
-        "version": "v5.7.2",
-        "version_normalized": "5.7.2.0",
+        "version": "v5.7.3",
+        "version_normalized": "5.7.3.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/support.git",
-            "reference": "3dabc8fe2eebf614ba133fa34a4c160119ec7241"
+            "reference": "966c3198b5f82c00f8e5f7b6f16c35ffcb636acc"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/support/zipball/3dabc8fe2eebf614ba133fa34a4c160119ec7241",
-            "reference": "3dabc8fe2eebf614ba133fa34a4c160119ec7241",
+            "url": "https://api.github.com/repos/illuminate/support/zipball/966c3198b5f82c00f8e5f7b6f16c35ffcb636acc",
+            "reference": "966c3198b5f82c00f8e5f7b6f16c35ffcb636acc",
             "shasum": ""
         },
         "require": {
@@ -1734,7 +1734,7 @@
             "symfony/process": "Required to use the composer class (^4.1).",
             "symfony/var-dumper": "Required to use the dd function (^4.1)."
         },
-        "time": "2018-09-06T13:40:39+00:00",
+        "time": "2018-09-07T22:44:17+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -2117,26 +2117,25 @@
     },
     {
         "name": "kartik-v/yii2-detail-view",
-        "version": "v1.7.6",
-        "version_normalized": "1.7.6.0",
+        "version": "v1.7.7",
+        "version_normalized": "1.7.7.0",
         "source": {
             "type": "git",
             "url": "https://github.com/kartik-v/yii2-detail-view.git",
-            "reference": "16b7a94d56db8372e3c5e9c5e2dc96f94aa6a91e"
+            "reference": "ee2ca3036ed225919437ec1700a3e89a84a4ada5"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/kartik-v/yii2-detail-view/zipball/16b7a94d56db8372e3c5e9c5e2dc96f94aa6a91e",
-            "reference": "16b7a94d56db8372e3c5e9c5e2dc96f94aa6a91e",
+            "url": "https://api.github.com/repos/kartik-v/yii2-detail-view/zipball/ee2ca3036ed225919437ec1700a3e89a84a4ada5",
+            "reference": "ee2ca3036ed225919437ec1700a3e89a84a4ada5",
             "shasum": ""
         },
         "require": {
             "kartik-v/yii2-dialog": "~1.0",
-            "kartik-v/yii2-helpers": ">=1.3.5",
-            "kartik-v/yii2-krajee-base": "~1.7",
+            "kartik-v/yii2-krajee-base": ">=1.9",
             "kartik-v/yii2-widget-activeform": "~1.4"
         },
-        "time": "2017-05-05T05:14:12+00:00",
+        "time": "2018-09-11T15:22:20+00:00",
         "type": "yii2-extension",
         "extra": {
             "branch-alias": {
@@ -2146,7 +2145,7 @@
         "installation-source": "dist",
         "autoload": {
             "psr-4": {
-                "kartik\\detail\\": ""
+                "kartik\\detail\\": "src"
             }
         },
         "notification-url": "https://packagist.org/downloads/",
@@ -2287,12 +2286,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/kartik-v/yii2-grid.git",
-            "reference": "30ee1f8b519454ec5e9f0cea0cd556a0ee2e637e"
+            "reference": "951eada4f20593ace18295336c75fd16b353ded0"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/30ee1f8b519454ec5e9f0cea0cd556a0ee2e637e",
-            "reference": "30ee1f8b519454ec5e9f0cea0cd556a0ee2e637e",
+            "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/951eada4f20593ace18295336c75fd16b353ded0",
+            "reference": "951eada4f20593ace18295336c75fd16b353ded0",
             "shasum": ""
         },
         "require": {
@@ -2302,7 +2301,7 @@
         "suggest": {
             "kartik-v/yii2-mpdf": "For exporting grids to PDF"
         },
-        "time": "2018-09-10T07:38:15+00:00",
+        "time": "2018-09-12T11:02:54+00:00",
         "type": "yii2-extension",
         "extra": {
             "branch-alias": {
@@ -2332,59 +2331,6 @@
             "extension",
             "grid",
             "widget",
-            "yii2"
-        ]
-    },
-    {
-        "name": "kartik-v/yii2-helpers",
-        "version": "v1.3.6",
-        "version_normalized": "1.3.6.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/kartik-v/yii2-helpers.git",
-            "reference": "0b9d5f17464df9f68e249ed4411f9f1381927b83"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/kartik-v/yii2-helpers/zipball/0b9d5f17464df9f68e249ed4411f9f1381927b83",
-            "reference": "0b9d5f17464df9f68e249ed4411f9f1381927b83",
-            "shasum": ""
-        },
-        "require": {
-            "yiisoft/yii2-bootstrap": "*"
-        },
-        "time": "2016-11-26T06:03:52+00:00",
-        "type": "yii2-extension",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.3.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "kartik\\helpers\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Kartik Visweswaran",
-                "email": "kartikv2@gmail.com",
-                "homepage": "http://www.krajee.com/"
-            }
-        ],
-        "description": "A collection of useful helper functions for Yii Framework 2.0",
-        "homepage": "https://github.com/kartik-v/yii2-helpers",
-        "keywords": [
-            "bootstrap",
-            "extension",
-            "helper",
-            "utilities",
-            "yii",
             "yii2"
         ]
     },
@@ -2998,18 +2944,18 @@
         "source": {
             "type": "git",
             "url": "https://github.com/kartik-v/yii2-widget-colorinput.git",
-            "reference": "f3530ae8300450a57d72f0696f9f431c0f018c6f"
+            "reference": "65f2c4b603ef0c26c3c85b0246a6a59f59045a43"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/kartik-v/yii2-widget-colorinput/zipball/f3530ae8300450a57d72f0696f9f431c0f018c6f",
-            "reference": "f3530ae8300450a57d72f0696f9f431c0f018c6f",
+            "url": "https://api.github.com/repos/kartik-v/yii2-widget-colorinput/zipball/65f2c4b603ef0c26c3c85b0246a6a59f59045a43",
+            "reference": "65f2c4b603ef0c26c3c85b0246a6a59f59045a43",
             "shasum": ""
         },
         "require": {
             "kartik-v/yii2-krajee-base": ">=1.9"
         },
-        "time": "2018-09-06T13:23:09+00:00",
+        "time": "2018-09-12T03:12:07+00:00",
         "type": "yii2-extension",
         "extra": {
             "branch-alias": {
