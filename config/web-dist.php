@@ -26,7 +26,7 @@ $config = [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             //http://www.sethcardoza.com/tools/random-password-generator/
-            'cookieValidationKey' => 'EoFgS2DJuEY1HgxpzSwuq8rrDUNZ4bUEiVTAC5fl',
+            'cookieValidationKey' => 'ENTER COOKIE KEY HERE',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -42,17 +42,17 @@ $config = [
             'errorAction' => 'site/error',
         ],
         'mailer' => [
-            'class' => 'yii\swiftmailer\Mailer',
+            'class'          => 'yii\swiftmailer\Mailer',
             // send all mails to a file by default. You have to set
             // 'useFileTransport' to false and configure a transport
             // for the mailer to send real emails.
             //'useFileTransport' => true,
-            'transport' => [
-                'class' => 'Swift_SmtpTransport',
-                'host' => 'smtp.dominio.com',
-                'username' => 'usuario@dominio.com',
-                'password' => '',
-                'port' => '587',
+            'transport'      => [
+                'class'      => 'Swift_SmtpTransport',
+                'host'       => 'smtp.dominio.com',
+                'username'   => 'usuario@dominio.com',
+                'password'   => '',
+                'port'       => '587',
                 'encryption' => 'tls',
             ],
         ],

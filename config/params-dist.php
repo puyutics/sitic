@@ -34,13 +34,13 @@ return [
     //Generar un Código de Seguridad (SaltKey) en el siguiente enlace
     //http://www.sethcardoza.com/tools/random-password-generator/
     //Tested -> 40 Characters Long (Good for Cakephp Security Salt)
-    'saltKey'         => 'SvaD6oysdY4oGh97D9Ejtw6RXROr85Olq2yxBjH7',
+    'saltKey'         => 'ENTER SALTKEY HERE',
     'algorithm'       => 'sha256',
     'tokenDateFormat' => date('Y-m-d'), //Duración de token en fecha actual desde 00:00 hasta 23:59
 
     //IPinfo - Logs Module
     //Generate a new AccessKey for you
-    'ipInfoAccessKey' => '',
+    'ipInfoAccessKey' => 'ENTER IPINFOKEY HERE',
 
 
 ];
