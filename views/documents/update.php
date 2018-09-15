@@ -6,10 +6,10 @@ use yii\helpers\Html;
 /* @var $model app\models\Documents */
 
 $this->title = Yii::t('app', 'Actualizar Documento: {nameAttribute}', [
-    'nameAttribute' => $model->id,
+    'nameAttribute' => $model->description,
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Documents'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = ['label' => $model->description, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
 <div class="documents-update">

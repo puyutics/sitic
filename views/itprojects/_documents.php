@@ -156,7 +156,7 @@ use yii\data\ActiveDataProvider;
                             'external_id' => $model->id,
                             'external_type' => 'itProjects',], [
                             'class' => 'btn btn-success',
-                            'title' => ('Agregar Compra')
+                            'title' => ('Agregar Documento')
                         ]
                     ),
             ],
