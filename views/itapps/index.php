@@ -13,6 +13,7 @@ use kartik\editable\Editable;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app', 'Aplicaciones TI');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Inventario TI'), 'url' => ['site/inventory']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="it-apps-index">

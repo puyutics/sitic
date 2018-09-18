@@ -10,6 +10,7 @@ use kartik\tabs\TabsX;
 /* @var $model app\models\ItApps */
 
 $this->title = $model->title;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Inventario TI'), 'url' => ['site/inventory']];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Aplicaciones TI'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

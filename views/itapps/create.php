@@ -7,6 +7,7 @@ use yii\helpers\Html;
 /* @var $model app\models\ItApps */
 
 $this->title = Yii::t('app', 'Nueva Aplicación');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Inventario TI'), 'url' => ['site/inventory']];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Aplicaciones TI'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

@@ -35,6 +35,7 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
+
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-left'],
         'items' => [
@@ -43,26 +44,62 @@ AppAsset::register($this);
             //['label' => 'Contacto', 'url' => ['/site/contact']],
         ],
     ]);
-    if (!Yii::$app->user->isGuest) {
+
+    echo Nav::widget([
+        'options' => ['class' => 'navbar-nav navbar-left'],
+        'items' => [
+            [
+                'label' => 'Identidad',
+                'items' => [
+                    //['label' => 'Identidad', 'url' => 'index.php?r=site/identity'],
+                    //'<li class="divider"></li>',
+                    ['label' => 'Editar perfil', 'url' => 'index.php?r=adldap/edit'],
+                    ['label' => 'Cambiar Contraseña', 'url' => 'index.php?r=adldap/password'],
+                    '<li class="divider"></li>',
+                    //'<li class="dropdown-header">Dropdown Header</li>',
+                    ['label' => 'Olvidaste tu usuario', 'url' => 'index.php?r=adldap/forgetuser'],
+                    ['label' => 'Olvidaste tu contraseña', 'url' => 'index.php?r=adldap/forgetpass'],
+                ],
+            ],
+        ],
+    ]);
+
+
+    if (
+            (!Yii::$app->user->isGuest)
+            and (Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId()))
+    ) {
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-left'],
             'items' => [
                 [
+                    'label' => 'Inventario TI',
+                    'items' => [
+                        //['label' => 'Inventario TI', 'url' => 'index.php?r=site/inventory'],
+                        //'<li class="divider"></li>',
+                        ['label' => 'Aplicaciones', 'url' => 'index.php?r=itapps/index'],
+                        ['label' => 'Impresoras', 'url' => 'index.php?r=printers/index'],
+                        ['label' => 'Telefonía', 'url' => 'index.php?r=phonesextensions/index'],
+                    ],
+                ],
+                [
                     'label' => 'Gestión TI',
                     'items' => [
-                        ['label' => 'Aplicaciones', 'url' => 'index.php?r=itapps/index'],
+                        //['label' => 'Gestión TI', 'url' => 'index.php?r=site/management'],
+                        //'<li class="divider"></li>',
                         ['label' => 'Bienes', 'url' => 'index.php?r=invpurchaseitem/index'],
                         ['label' => 'Compras', 'url' => 'index.php?r=invpurchase/index'],
                         ['label' => 'Procesos', 'url' => 'index.php?r=itprocesses/index'],
                         ['label' => 'Proyectos', 'url' => 'index.php?r=itprojects/index'],
                         ['label' => 'Servicios', 'url' => 'index.php?r=itservices/index'],
-                        //['label' => 'Usuarios', 'url' => 'index.php?r=adldap/index'],
+                        ['label' => 'Usuarios', 'url' => 'index.php?r=user/index'],
                     ],
                 ],
                 [
                     'label' => 'Documentación TI',
                     'items' => [
                         ['label' => 'Documentación (Global)', 'url' => 'index.php?r=documents/index'],
+                        //'<li class="divider"></li>',
                         ['label' => 'Manuales TI', 'url' => 'index.php?r=documents/index'],
                         ['label' => 'Normativa TI', 'url' => 'index.php?r=documents/index'],
                         ['label' => 'Políticas TI', 'url' => 'index.php?r=documents/index'],
@@ -72,6 +109,8 @@ AppAsset::register($this);
                 [
                     'label' => 'Reportes TI',
                     'items' => [
+                        //['label' => 'Reportes TI', 'url' => 'index.php?r=site/reports'],
+                        //'<li class="divider"></li>',
                         ['label' => 'Reporte(s) Incidentes', 'url' => 'index.php?r=itincidentsreports/index'],
                         ['label' => 'Reporte(s) Power BI', 'url' => 'index.php?r=itreportspowerbi/index'],
                         ['label' => 'Registros del Sistema', 'url' => 'index.php?r=logs/index'],
@@ -82,6 +121,7 @@ AppAsset::register($this);
             ],
         ]);
     }
+
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
@@ -100,25 +140,7 @@ AppAsset::register($this);
         ],
     ]);
 
-    if ((!Yii::$app->user->isGuest)
-    and (Yii::$app->session->get('authtype') == 'adldap')) {
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav navbar-right'],
-            'items' => [
-                [
-                    'label' => 'Identidad',
-                    'items' => [
-                        ['label' => 'Mi perfil', 'url' => 'index.php?r=adldap/edit'],
-                        ['label' => 'Cambiar Contraseña', 'url' => 'index.php?r=adldap/password'],
-                        '<li class="divider"></li>',
-                        //'<li class="dropdown-header">Dropdown Header</li>',
-                        ['label' => 'Olvidaste tu usuario', 'url' => 'index.php?r=adldap/forgetuser'],
-                        ['label' => 'Olvidaste tu contraseña', 'url' => 'index.php?r=adldap/forgetpass'],
-                    ],
-                ],
-            ],
-        ]);
-    }
+
     NavBar::end();
     ?>
 

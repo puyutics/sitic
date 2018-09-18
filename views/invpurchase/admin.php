@@ -10,6 +10,7 @@ use kartik\tabs\TabsX;
 /* @var $model app\models\InvPurchase */
 
 $this->title = $model->code;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Gestión TI'), 'url' => ['site/management']];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Compras'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

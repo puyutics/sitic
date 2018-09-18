@@ -7,6 +7,7 @@ use kartik\tabs\TabsX;
 /* @var $searchModel app\models\InvPurchaseItemSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Gestión TI'), 'url' => ['site/management']];
 $this->title = Yii::t('app', 'Bienes TI');
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -35,7 +36,7 @@ $dataProviderInvModels->sort->defaultOrder = [
         'enableStickyTabs' => true,
         'items' => [
             [
-                'label'=>'<i class="glyphicon glyphicon-list-alt"></i> Global',
+                'label'=>'<i class="glyphicon glyphicon-list-alt"></i> Bienes (Global)',
                 'content' => $this->render('indexGridview', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
@@ -51,17 +52,17 @@ $dataProviderInvModels->sort->defaultOrder = [
                 'content' => $this->render('_unassigned')
             ],
             [
-                'label'=>'<i class="glyphicon glyphicon-list-alt"></i> Fabricantes',
-                'content' => $this->render('../invmanufacturers/index',[
-                        'searchModel' => $searchModelInvManufacturers,
-                    'dataProvider' => $dataProviderInvManufacturers
+                'label'=>'<i class="glyphicon glyphicon-list-alt"></i> Modelos',
+                'content' => $this->render('_models',[
+                    'searchModel' => $searchModelInvModels,
+                    'dataProvider' => $dataProviderInvModels
                 ])
             ],
             [
-                'label'=>'<i class="glyphicon glyphicon-list-alt"></i> Modelos',
-                'content' => $this->render('../invmodels/index',[
-                        'searchModel' => $searchModelInvModels,
-                    'dataProvider' => $dataProviderInvModels
+                'label'=>'<i class="glyphicon glyphicon-list-alt"></i> Fabricantes',
+                'content' => $this->render('_manufacturers',[
+                    'searchModel' => $searchModelInvManufacturers,
+                    'dataProvider' => $dataProviderInvManufacturers
                 ])
             ],
         ],
