@@ -66,6 +66,36 @@ class SiteController extends Controller
     }
 
     /**
+     * Displays management.
+     *
+     * @return string
+     */
+    public function actionManagement()
+    {
+        return $this->render('management');
+    }
+
+    /**
+     * Displays identify.
+     *
+     * @return string
+     */
+    public function actionIdentity()
+    {
+        return $this->render('identity');
+    }
+
+    /**
+     * Displays inventory.
+     *
+     * @return string
+     */
+    public function actionInventory()
+    {
+        return $this->render('inventory');
+    }
+
+    /**
      * Login action.
      *
      * @return Response|string
@@ -83,6 +113,22 @@ class SiteController extends Controller
                 'Inicio de sesión exitoso, usuario: ' . $username
             ;
             $this->saveLog('login', $username, $description, 'user');
+
+            //Cached adldap password on local database
+            if(
+                isset($model->username)
+                and isset($model->password)
+                and ($model->authtype == 'adldap')
+            ) {
+                $post_username = explode("@", $model->username);
+                $post_username = $post_username[0];
+                $password_hash = hash(Yii::$app->params['algorithm'],$model->password);
+
+                \Yii::$app->db->createCommand(
+                    'UPDATE `user` SET `password`=\''.$password_hash .'\' 
+                          WHERE `username` = \'' . $post_username . '\'')
+                    ->execute();
+            }
 
             return $this->goBack();
         }

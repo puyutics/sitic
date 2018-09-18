@@ -23,6 +23,21 @@ return [
     'appURL'     => 'http://sitic.dominio.com/',
     'contact'    => 'Unidad de TI. Contáctese al (+593) 3-2555-555 de lunes a viernes, en horario de atención 08h00 - 17h00.',
 
+    //ADldap2 options
+    'LDAP-User-Sync-Options' => [
+        'ON_LOGIN_CREATE_USER' => true,
+        'ON_LOGIN_REFRESH_GROUP_ASSIGNMENTS' => false,
+        'ON_LOGIN_REFRESH_LDAP_ACCOUNT_STATUS' => true,
+        'ON_REQUEST_REFRESH_LDAP_ACCOUNT_STATUS' => false,
+    ],
+    /*'LDAP-Group-Assignment-Options' => [
+        'LOGIN_POSSIBLE_WITH_ROLE_ASSIGNED_MATCHING_REGEX' => "/^(yii2|app)(.*)/", // a role has to be assign, which is starting with yii2 or with app
+        'REGEX_GROUP_MATCH_IN_LDAP' => "/^(yii2|app)(.*)/", // Active Directory groups beginning with yii2 or app ar filtered and if a yii2 role with the same name exists the role would be added to the user
+        'ADD_GROUPS_FROM_LDAP_MATCHING_REGEX' => true, //add matches between groups and roles to the user
+        'REMOVE_ALL_GROUPS_NOT_FOUND_IN_LDAP' => false,
+        'REMOVE_ONLY_GROUPS_MATCHING_REGEX' => true, //Only remove groups matching regex REGEX_GROUP_MATCH_IN_LDAP
+        'SEARCH_NESTED_GROUPS' => false,
+    ],*/
 
     //Parámetros Personalizados Email Sender Gestión de identidad
     'from'     => 'usuario@dominio.com',

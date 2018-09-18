@@ -6,7 +6,7 @@ use yii\widgets\ActiveForm;
 $this->title = Yii::t('app', 'Editar: {nameAttribute}', [
     'nameAttribute' => Yii::$app->user->identity->username,
 ]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Perfil'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Identidad'), 'url' => ['site/identity']];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
 
 if (isset(Yii::$app->user->identity->username)
@@ -26,7 +26,7 @@ if (isset(Yii::$app->user->identity->username)
         <div class="row">
 
             <div class="col-md-1 col-md-offset-1 col-sm-6 col-sm-offset-3">
-                <p align="center"><a class="btn btn-primary" href="index.php?r=adldap/edit">Mi perfil &raquo;</a></p>
+                <p align="center"><a class="btn btn-primary" href="index.php?r=adldap/edit">Editar perfil &raquo;</a></p>
                 <p align="center"><a class="btn btn-default" href="index.php?r=adldap/password">Cambiar contraseña &raquo;</a></p>
                 <p align="center"><a class="btn btn-default" href="index.php?r=adldap/forgetuser">Olvidaste tu usuario &raquo;</a></p>
                 <p align="center"><a class="btn btn-default" href="index.php?r=adldap/forgetpass">Olvidaste tu contraseña &raquo;</a></p>
@@ -87,7 +87,7 @@ if (isset(Yii::$app->user->identity->username)
 
                             <?= Html::submitButton(Yii::t('app','Guardar'),['class' => 'btn btn-success']) ?>
 
-                            <a class="btn btn-sg btn-primary" href="./index.php?r=adldap/index">Regresar</a>
+                            <a class="btn btn-sg btn-primary" href="./index.php?r=adldap/password">Cambiar contraseña</a>
 
                         </div>
 

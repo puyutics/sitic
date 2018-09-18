@@ -117,7 +117,7 @@ class AdldapController extends Controller
                     ['model'=>$model]);
             }
         } else {
-            return $this->redirect('index.php?r=site/index');
+            return $this->redirect('index.php?r=site/identity');
         }
     }
 
@@ -289,7 +289,7 @@ class AdldapController extends Controller
                         ['model'=>$model]); //Email incorrecto
                 }
         } else {
-            Yii::$app->session->setFlash('error',
+            Yii::$app->session->setFlash('recommendation',
                 'Su nueva contraseña debe contener al menos 8 dígitos
                         entre mayúsculas, minúsculas y números. 
                         NO UTILICE SUS NOMBRES y/o APELLIDOS');
@@ -353,7 +353,7 @@ class AdldapController extends Controller
                         ['model'=>$model]); //Email incorrecto
                 }
         } else {
-            Yii::$app->session->setFlash('error',
+            Yii::$app->session->setFlash('recommendation',
                 'Su nueva contraseña debe contener al menos 8 dígitos
                         entre mayúsculas, minúsculas y números. 
                         NO UTILICE SUS NOMBRES y/o APELLIDOS');

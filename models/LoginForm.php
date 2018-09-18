@@ -27,18 +27,6 @@ class LoginForm extends Model
 
     public function rules()
     {
-        /*if (Yii::$app->params['login'] == 'mail'){  //Login with Mail
-            return [
-                // username and password are both required
-                [['username', 'password','logintype'], 'required'],
-                // rememberMe must be a boolean value
-                ['rememberMe', 'boolean'],
-                // password is validated by validatePassword()
-                ['password', 'validatePassword'],
-                // Inicio de sesión con Email
-                [['username'], 'email'],
-            ];
-        } else {*/
             return [
                 // username and password are both required
                 [['username', 'password','authtype'], 'required'],
@@ -47,7 +35,6 @@ class LoginForm extends Model
                 // password is validated by validatePassword()
                 ['password', 'validatePassword'],
             ];
-        //}
     }
 
     /**

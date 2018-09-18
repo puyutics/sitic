@@ -31,12 +31,13 @@ $config = [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
-        'authManager' => [
-            'class' => 'yii\rbac\DbManager',
-        ],
         'user' => [
             //'identityClass' => 'app\models\User',
+            //'enableAutoLogin' => true,
             'identityClass' => 'Edvlerblog\Adldap2\model\UserDbLdap',
+        ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',

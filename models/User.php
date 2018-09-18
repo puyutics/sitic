@@ -9,15 +9,22 @@ use Yii;
  *
  * @property int $id ID
  * @property string $username USUARIO
- * @property string $auth_key CLAVE
+ * @property string $password
+ * @property string $auth_key LLAVE
  * @property int $status ESTADO
  * @property int $created_at CREADO
  * @property int $updated_at ACTUALIZADO
+ *
+ * @property InvItemUser[] $invItemUsers
+ * @property InvPurchase[] $invPurchases
+ * @property ItIncidentsReportsUser[] $itIncidentsReportsUsers
+ * @property ItProcessesUser[] $itProcessesUsers
+ * @property ItProjectsUser[] $itProjectsUsers
+ * @property ItServicesUser[] $itServicesUsers
+ * @property UserDepartment[] $userDepartments
  */
-
 class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
-
     /**
      * {@inheritdoc}
      */
@@ -34,9 +41,10 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return [
             [['username', 'auth_key', 'created_at', 'updated_at'], 'required'],
             [['status', 'created_at', 'updated_at'], 'integer'],
-            [['username', 'auth_key'], 'string', 'max' => 255],
+            [['username', 'password', 'auth_key'], 'string', 'max' => 255],
             [['username'], 'unique'],
             [['auth_key'], 'unique'],
+
         ];
     }
 
@@ -48,12 +56,70 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return [
             'id' => Yii::t('app', 'ID'),
             'username' => Yii::t('app', 'USUARIO'),
-            'auth_key' => Yii::t('app', 'CLAVE'),
+            'password' => Yii::t('app', 'Password'),
+            'auth_key' => Yii::t('app', 'LLAVE'),
             'status' => Yii::t('app', 'ESTADO'),
             'created_at' => Yii::t('app', 'CREADO'),
             'updated_at' => Yii::t('app', 'ACTUALIZADO'),
         ];
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getInvItemUsers()
+    {
+        return $this->hasMany(InvItemUser::className(), ['username' => 'username']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getInvPurchases()
+    {
+        return $this->hasMany(InvPurchase::className(), ['username' => 'username']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getItIncidentsReportsUsers()
+    {
+        return $this->hasMany(ItIncidentsReportsUser::className(), ['username' => 'username']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getItProcessesUsers()
+    {
+        return $this->hasMany(ItProcessesUser::className(), ['username' => 'username']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getItProjectsUsers()
+    {
+        return $this->hasMany(ItProjectsUser::className(), ['username' => 'username']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getItServicesUsers()
+    {
+        return $this->hasMany(ItServicesUser::className(), ['username' => 'username']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserDepartments()
+    {
+        return $this->hasMany(UserDepartment::className(), ['username' => 'username']);
+    }
+
 
     /**
      * {@inheritdoc}
@@ -111,6 +177,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         }
         return new static($user);
     }
+
     /**
      * {@inheritdoc}
      */
@@ -118,6 +185,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         return $this->id;
     }
+
     /**
      * {@inheritdoc}
      */
@@ -125,14 +193,15 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         return $this->auth_key;
     }
+
     /**
      * {@inheritdoc}
      */
     public function validateAuthKey($authKey)
     {
-        //return $this->auth_key  === $authKey;
-        return $this->auth_key === hash('sha256',$authKey); //Algoritmo de encriptación sha256 para AuthKey
+        return $this->auth_key  === $authKey;
     }
+
     /**
      * Validates password
      *
@@ -142,7 +211,19 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function validatePassword($password)
     {
         //return $this->password === $password;
-        return $this->auth_key === hash('sha256',$password); //Algoritmo de encriptación sha256 para AuthKey
+        return $this->password === hash(Yii::$app->params['algorithm'],
+                $password); //Algoritmo de encriptación para validar Password
+    }
 
+    /**
+     * Validates password
+     *
+     * @param string $password password to validate
+     * @return bool if password provided is valid for current user
+     */
+    public function setPassword($password)
+    {
+        $this->password = hash(Yii::$app->params['algorithm'],
+                $password); //Algoritmo de encriptación para fijar Password
     }
 }
