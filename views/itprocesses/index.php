@@ -12,6 +12,7 @@ use yii\data\ActiveDataProvider;
 /* @var $searchModel app\models\ItProcessesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Gestión TI'), 'url' => ['site/management']];
 $this->title = Yii::t('app', 'Procesos TI');
 $this->params['breadcrumbs'][] = $this->title;
 ?>

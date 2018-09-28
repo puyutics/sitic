@@ -18,7 +18,7 @@ $this->title = 'SITIC - Sistema Integrado para la Gestión de Tecnologías de la
                     <a href="index.php?r=user/index"><?= Html::img('images/users.png');?></a>
                 </div>
 
-                <p align="center"><a class="btn btn-success" href="index.php?r=user/index"> Usuarios &raquo;</a></p>
+                <p align="center"><a class="btn btn-success" href="index.php?r=user/index"> Usuarios Active Directory / LDAP, BD local &raquo;</a></p>
             </div>
             <div class="col-lg-4">
                 <h2 align="center">Gestión de Bienes</h2>
@@ -27,7 +27,7 @@ $this->title = 'SITIC - Sistema Integrado para la Gestión de Tecnologías de la
                     <a href="index.php?r=invpurchaseitem/index"><?= Html::img('images/invpurchasesitems.png');?></a>
                 </div>
 
-                <p align="center"><a class="btn btn-success" href="index.php?r=invpurchaseitem/index"> Bienes, Fabricantes y Modelos &raquo;</a></p>
+                <p align="center"><a class="btn btn-success" href="index.php?r=invpurchaseitem/index"> Bienes, Asignaciones, Fabricantes y Modelos &raquo;</a></p>
             </div>
             <div class="col-lg-4">
                 <h2 align="center">Gestión de Compras</h2>
@@ -36,7 +36,7 @@ $this->title = 'SITIC - Sistema Integrado para la Gestión de Tecnologías de la
                     <a href="index.php?r=invpurchase/index"><?= Html::img('images/invpurchases.png');?></a>
                 </div>
 
-                <p align="center"><a class="btn btn-success" href="index.php?r=invpurchase/index"> Compras &raquo;</a></p>
+                <p align="center"><a class="btn btn-success" href="index.php?r=invpurchase/index"> Compras, Asignaciones &raquo;</a></p>
             </div>
         </div>
 

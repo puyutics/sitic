@@ -7,6 +7,7 @@ use yii\helpers\Html;
 /* @var $model app\models\ItProcesses */
 
 $this->title = Yii::t('app', 'Agregar Proceso');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Gestión TI'), 'url' => ['site/management']];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Procesos'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

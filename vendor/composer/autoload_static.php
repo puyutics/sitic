@@ -44,6 +44,7 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         array (
             'kartik\\widgets\\' => 15,
             'kartik\\typeahead\\' => 17,
+            'kartik\\tree\\' => 12,
             'kartik\\touchspin\\' => 17,
             'kartik\\time\\' => 12,
             'kartik\\tabs\\' => 12,
@@ -96,6 +97,7 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         ),
         'c' => 
         array (
+            'creocoder\\nestedsets\\' => 21,
             'cebe\\markdown\\' => 14,
         ),
         'b' => 
@@ -230,6 +232,10 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-typeahead/src',
         ),
+        'kartik\\tree\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-tree-manager/src',
+        ),
         'kartik\\touchspin\\' => 
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-touchspin/src',
@@ -260,7 +266,7 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         ),
         'kartik\\rating\\' => 
         array (
-            0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-rating',
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-rating/src',
         ),
         'kartik\\range\\' => 
         array (
@@ -389,6 +395,10 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         'dmstr\\' => 
         array (
             0 => __DIR__ . '/..' . '/dmstr/yii2-adminlte-asset',
+        ),
+        'creocoder\\nestedsets\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/creocoder/yii2-nested-sets/src',
         ),
         'cebe\\markdown\\' => 
         array (

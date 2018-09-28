@@ -14,6 +14,7 @@ use dosamigos\chartjs\ChartJs;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app', 'Proyectos TI');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Gestión TI'), 'url' => ['site/management']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="it-projects-index">

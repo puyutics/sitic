@@ -10,6 +10,7 @@ use kartik\tabs\TabsX;
 /* @var $model app\models\ItProcesses */
 
 $this->title = $model->process;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Gestión TI'), 'url' => ['site/management']];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Procesos'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

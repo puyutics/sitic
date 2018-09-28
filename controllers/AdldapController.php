@@ -25,12 +25,12 @@ class AdldapController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index','edit','forgetpass','forgetuser','password','reset',
-                            'saveLog','sendToken'],
+                'only' => ['index','editprofile','edituser','forgetpass',
+                    'forgetuser','password','reset','saveLog','sendToken'],
                 'rules' => [
                     [
-                        'actions' => ['index','edit','forgetpass','forgetuser','password','reset',
-                                        'saveLog','sendToken'],
+                        'actions' => ['index','editprofile','edituser','forgetpass',
+                            'forgetuser','password','reset','saveLog','sendToken'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -73,7 +73,98 @@ class AdldapController extends Controller
     }
 
 
-    public function actionEdit()
+    public function actionEdituser()
+    {
+
+        $model = new AdldapEditForm();
+
+        /*if (!isset($_GET['search'])
+            and (Yii::$app->session->get('authtype') == 'adldap')) {
+            $_GET['search'] = Yii::$app->user->identity->username;
+        }*/
+
+
+        if (Yii::$app->request->post('searchButton')==='searchButton') {
+            $post_data = $_POST['AdldapEditForm'];
+            return $this->redirect(
+                'index.php?r=adldap/edituser&search='
+                . $post_data['search']);
+        }
+
+
+        if (isset($_GET['search'])
+            and (Yii::$app->session->get('authtype') == 'adldap')) {
+            $search = $_GET['search'];
+            $user = Yii::$app->ad->getProvider('default')->search()->users()->find($search);
+            $sAMAccountname = $user->getAttribute('samaccountname',0);
+            $model->dni = $user->getAttribute(Yii::$app->params['dni'],0);
+            $model->firstname = $user->getFirstName();
+            $model->lastname = $user->getLastName();
+            $model->mail = $user->getEmail();
+            $model->commonname = $user->getAttribute('cn',0);
+            $model->displayname = $user->getDisplayName();
+            $model->personalmail = $user->getAttribute(Yii::$app->params['personalmail'], 0);
+            $model->mobile = $user->getAttribute(Yii::$app->params['mobile'], 0);
+
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                if (Yii::$app->request->post('sendToken')==='sendToken') {
+
+                    //Crear un Reset TOKEN
+                    $resetToken = hash(Yii::$app->params['algorithm'],
+                        Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->mail);
+
+                    //Enviar Reset TOKEN por email
+                    $this->sendToken($model->dni,$model->commonname,$model->mail,$model->personalmail,$resetToken);
+
+                    //Crear Registro de Log en la base de datos
+                    $description =
+                        'Envío de Token para el usuario: ' . $sAMAccountname
+                        . ', al correo electrónico personal: ' . $model->personalmail
+                    ;
+                    $this->saveLog('sendToken', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
+
+                    //Mensaje de email enviado
+                    Yii::$app->session->setFlash('successMail', $model->personalmail);
+
+                    return $this->render('edit_user',
+                        ['model'=>$model]);
+                }
+
+                if (Yii::$app->request->post('submit')==='submit') {
+                    $user->setAttribute(Yii::$app->params['dni'],$model->dni);
+                    $user->setFirstName($model->firstname);
+                    $user->setLastName($model->lastname);
+                    //$user->setEmail($model->mail);
+                    //$user->setCommonName($model->commonname);
+                    $user->setDisplayName($model->displayname);
+                    $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);
+                    $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
+                    $user->save();
+
+                    Yii::$app->session->setFlash('success', "Actualizado Correctamente");
+                    $username = Yii::$app->user->identity->username;
+
+                    //Crear Registro de Log en la base de datos
+                    $description =
+                        'Información actualizada del usuario: ' . $sAMAccountname
+                    ;
+                    $this->saveLog('adldapEditUser', $username, $description, $sAMAccountname,'adldap');
+
+                    return $this->render('edit_user',
+                        ['model'=>$model]);
+                }
+
+            } else {
+                return $this->render('edit_user',
+                    ['model'=>$model]);
+            }
+        }
+        return $this->render('edit_user',
+            ['model'=>$model]);
+    }
+
+
+    public function actionEditprofile()
     {
         if (isset(Yii::$app->user->identity->username)
             and (Yii::$app->session->get('authtype') == 'adldap')) {
@@ -107,13 +198,13 @@ class AdldapController extends Controller
                     $description =
                         'Información actualizada del usuario: ' . $sAMAccountname
                     ;
-                    $this->saveLog('adldapEdit', $sAMAccountname, $description, 'adldap');
+                    $this->saveLog('adldapEditProfile', $sAMAccountname, $description, $sAMAccountname,'adldap');
 
-                    return $this->render('edit',
+                    return $this->render('edit_profile',
                         ['model'=>$model]);
                 }
             } else {
-                return $this->render('edit',
+                return $this->render('edit_profile',
                     ['model'=>$model]);
             }
         } else {
@@ -157,7 +248,7 @@ class AdldapController extends Controller
                         'Envío de Token para el usuario: ' . $sAMAccountname
                         . ', al correo electrónico personal: ' . $personalmail
                     ;
-                    $this->saveLog('sendToken', $sAMAccountname, $description, 'adldap');
+                    $this->saveLog('sendToken', $sAMAccountname, $description, $sAMAccountname,'adldap');
 
                     //Mensaje de email enviado
                     Yii::$app->session->setFlash('successMail', $personalmail);
@@ -206,7 +297,7 @@ class AdldapController extends Controller
                 $description =
                     'Consulta de nombre de usuario: ' . $sAMAccountname
                 ;
-                $this->saveLog('forgetUser', $sAMAccountname, $description, 'adldap');
+                $this->saveLog('forgetUser', $sAMAccountname, $description, $sAMAccountname,'adldap');
 
                 //Mensaje de email enviado
                 Yii::$app->session->setFlash('successMail', $mail);
@@ -264,7 +355,7 @@ class AdldapController extends Controller
                             $description =
                                 'Cambio correcto de contraseña del usuario: ' . $sAMAccountname
                             ;
-                            $this->saveLog('resetPasswordToken', $sAMAccountname, $description, 'adldap');
+                            $this->saveLog('resetPasswordToken', $sAMAccountname, $description, $sAMAccountname,'adldap');
 
 
                             Yii::$app->session->setFlash('successReset');
@@ -330,7 +421,7 @@ class AdldapController extends Controller
                             $description =
                                 'Cambio correcto de contraseña del usuario: ' . $sAMAccountname
                             ;
-                            $this->saveLog('resetPassword', $sAMAccountname, $description, 'adldap');
+                            $this->saveLog('resetPassword', $sAMAccountname, $description, $sAMAccountname,'adldap');
 
                             Yii::$app->session->setFlash('successPassword');
                             return $this->render('password', ['model' => $model]); //Contraseña cambiada con éxito
@@ -364,17 +455,17 @@ class AdldapController extends Controller
     }
 
 
-    public function saveLog($type, $sAMAccountname, $description, $external_type)
+    public function saveLog($type, $username, $description, $external_id, $external_type)
     {
         //Registro (Log) Evento sendToken
         $modelLogs              = new Logs();
         $modelLogs->type        = $type;
-        $modelLogs->username    = $sAMAccountname;
+        $modelLogs->username    = $username;
         $modelLogs->datetime    = date('Y-m-d H:i:s');
         $modelLogs->description = $description;
         ;
         $modelLogs->ipaddress       = Yii::$app->request->userIP;
-        $modelLogs->external_id     = $sAMAccountname;
+        $modelLogs->external_id     = $external_id;
         $modelLogs->external_type   = $external_type;
         $modelLogs->save(false);
     }

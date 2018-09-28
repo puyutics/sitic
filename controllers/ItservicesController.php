@@ -72,7 +72,7 @@ class ItservicesController extends Controller
     }
 
     /**
-     * Function admin (Vista detallada de Proyectos)
+     * Function admin (Vista detallada de Servicios)
      */
     public function actionAdmin($id)
     {

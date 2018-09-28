@@ -10,6 +10,7 @@ use yii\base\Model;
  */
 class AdldapEditForm extends Model
 {
+    public $search;
     public $dni;
     public $firstname;
     public $lastname;
@@ -25,11 +26,10 @@ class AdldapEditForm extends Model
     public function rules()
     {
         return [
-            [['dni','firstname', 'lastname','mail','commonname',
+            [['search','dni','firstname', 'lastname','mail','commonname',
                 'displayname','personalmail','mobile'], 'required'],
             [['mobile'],'number'],
             [['mail','personalmail'], 'email'],
-
         ];
     }
 
@@ -39,6 +39,7 @@ class AdldapEditForm extends Model
     public function attributeLabels()
     {
         return [
+            'search'       => 'Buscar',
             'dni'          => 'DNI/Cédula/Pasaporte',
             'firstname'    => 'Nombres',
             'lastname'     => 'Apellidos',

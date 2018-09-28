@@ -110,12 +110,13 @@ class InvpurchaseController extends Controller
 
             //Registro (Log) Evento purchaseCreated
             $username = Yii::$app->user->identity->username;
+            $external_id = $model->getPrimaryKey();
             $description =
                 'Nueva compra asignada al usuario: ' . $model->username
                 . '. Código: ' . $model->code
                 . '. Detalle: ' . $model->description
             ;            ;
-            $this->saveLog('purchaseCreated', $username, $description, 'invPurchase');
+            $this->saveLog('purchaseCreated', $username, $description, $external_id,'invPurchase');
 
             return $this->redirect(['admin', 'id' => $model->id]);
         }
@@ -240,7 +241,7 @@ class InvpurchaseController extends Controller
     }
 
 
-    public function saveLog($type, $username, $description, $external_type)
+    public function saveLog($type, $username, $description, $external_id, $external_type)
     {
         //Registro (Log) Evento sendToken
         $modelLogs              = new Logs();
@@ -248,9 +249,8 @@ class InvpurchaseController extends Controller
         $modelLogs->username    = $username;
         $modelLogs->datetime    = date('Y-m-d H:i:s');
         $modelLogs->description = $description;
-        ;
         $modelLogs->ipaddress       = Yii::$app->request->userIP;
-        $modelLogs->external_id     = $username;
+        $modelLogs->external_id     = $external_id;
         $modelLogs->external_type   = $external_type;
         $modelLogs->save(false);
     }

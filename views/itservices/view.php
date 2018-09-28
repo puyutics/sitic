@@ -7,6 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model app\models\ItServices */
 
 $this->title = $model->service;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Gestión TI'), 'url' => ['site/management']];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Servicios'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

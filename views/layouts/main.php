@@ -53,7 +53,7 @@ AppAsset::register($this);
                 'items' => [
                     //['label' => 'Identidad', 'url' => 'index.php?r=site/identity'],
                     //'<li class="divider"></li>',
-                    ['label' => 'Editar perfil', 'url' => 'index.php?r=adldap/edit'],
+                    ['label' => 'Editar perfil', 'url' => 'index.php?r=adldap/editprofile'],
                     ['label' => 'Cambiar Contraseña', 'url' => 'index.php?r=adldap/password'],
                     '<li class="divider"></li>',
                     //'<li class="dropdown-header">Dropdown Header</li>',
@@ -79,6 +79,7 @@ AppAsset::register($this);
                         //'<li class="divider"></li>',
                         ['label' => 'Aplicaciones', 'url' => 'index.php?r=itapps/index'],
                         ['label' => 'Impresoras', 'url' => 'index.php?r=printers/index'],
+                        ['label' => 'Licencias', 'url' => 'index.php?r=itlicenses/index'],
                         ['label' => 'Telefonía', 'url' => 'index.php?r=phonesextensions/index'],
                     ],
                 ],
@@ -92,7 +93,7 @@ AppAsset::register($this);
                         ['label' => 'Procesos', 'url' => 'index.php?r=itprocesses/index'],
                         ['label' => 'Proyectos', 'url' => 'index.php?r=itprojects/index'],
                         ['label' => 'Servicios', 'url' => 'index.php?r=itservices/index'],
-                        ['label' => 'Usuarios', 'url' => 'index.php?r=user/index'],
+                        ['label' => 'Usuarios', 'url' => 'index.php?r=adldap/edituser'],
                     ],
                 ],
                 [

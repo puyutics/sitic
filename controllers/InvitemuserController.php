@@ -108,11 +108,12 @@ class InvitemuserController extends Controller
 
             //Registro (Log) Evento itemAssigned
             $username = Yii::$app->user->identity->username;
+            $external_id = $model->getPrimaryKey();
             $description =
                 'Bien asignado al usuario: ' . $model->username
                 . '. Detalle: ' . $model->description
             ;            ;
-            $this->saveLog('itemAssigned', $username, $description, 'invitemuser');
+            $this->saveLog('itemAssigned', $username, $description,  $external_id, 'invitemuser');
 
             return $this->redirect(['invpurchaseitem/view', 'id' => $model->inv_purchase_item_id]);
         }
@@ -269,7 +270,7 @@ class InvitemuserController extends Controller
     }
 
 
-    public function saveLog($type, $username, $description, $external_type)
+    public function saveLog($type, $username, $description, $external_id, $external_type)
     {
         //Registro (Log) Evento sendToken
         $modelLogs              = new Logs();
@@ -277,9 +278,8 @@ class InvitemuserController extends Controller
         $modelLogs->username    = $username;
         $modelLogs->datetime    = date('Y-m-d H:i:s');
         $modelLogs->description = $description;
-        ;
         $modelLogs->ipaddress       = Yii::$app->request->userIP;
-        $modelLogs->external_id     = $username;
+        $modelLogs->external_id     = $external_id;
         $modelLogs->external_type   = $external_type;
         $modelLogs->save(false);
     }

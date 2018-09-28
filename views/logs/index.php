@@ -47,7 +47,16 @@ $this->params['breadcrumbs'][] = $this->title;
             'description:ntext',
             'ipaddress',
             'external_id',
-            'external_type',
+            [
+                'attribute'=>'external_type',
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>ArrayHelper::map(\app\models\Logs::find()->all(), 'external_type', 'external_type'),
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>['allowClear'=>true],
+                ],
+                'filterInputOptions'=>['placeholder'=>'Seleccionar tipo'],
+                'format'=>'raw'
+            ],
 
             ['class' => 'kartik\grid\ActionColumn',
                 'template'=>'{ipinfo}',

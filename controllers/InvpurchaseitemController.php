@@ -113,19 +113,14 @@ class InvpurchaseitemController extends Controller
             //return $this->redirect(['view', 'id' => $model->id]);
 
             //Registro (Log) Evento itemCreated
-            $modelLogs = new Logs();
-            $modelLogs->type = 'itemCreated';
-            $modelLogs->username = Yii::$app->user->identity->username;
-            $modelLogs->datetime = date('Y-m-d H:i:s');
-            $modelLogs->description =
+            $username = Yii::$app->user->identity->username;
+            $external_id = $model->getPrimaryKey();
+            $description =
                 'Nuevo item creado por el usuario: ' . $modelLogs->username
                 . '. Detalle: ' . $model->description
                 . '. Serie: ' . $model->serial_number
             ;
-            $modelLogs->ipaddress = Yii::$app->request->userIP;
-            $modelLogs->external_id = $model->getPrimaryKey();
-            $modelLogs->external_type = 'invPurchaseItem';
-            $modelLogs->save(false);
+            $this->saveLog('itemCreated', $username, $description,  $external_id, 'invpurchaseitem');
 
             return $this->redirect(['invpurchase/admin', 'id' => $model->inv_purchase_id]);
         }
@@ -149,18 +144,13 @@ class InvpurchaseitemController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             //return $this->redirect(['view', 'id' => $model->id]);
 
-            //Registro (Log) Evento itemUpdated
-            $modelLogs = new Logs();
-            $modelLogs->type = 'itemUpdated';
-            $modelLogs->username = Yii::$app->user->identity->username;
-            $modelLogs->datetime = date('Y-m-d H:i:s');
-            $modelLogs->description =
+            //Registro (Log) Evento itemUpdate
+            $username = Yii::$app->user->identity->username;
+            $external_id = $model->getPrimaryKey();
+            $description =
                 'Item modificado: ' . $model->description
             ;
-            $modelLogs->ipaddress = Yii::$app->request->userIP;
-            $modelLogs->external_id = $model->getPrimaryKey();
-            $modelLogs->external_type = 'invpurchaseitem';
-            $modelLogs->save(false);
+            $this->saveLog('itemUpdated', $username, $description,  $external_id, 'invpurchaseitem');
 
             return $this->redirect(['invpurchase/admin', 'id' => $model->inv_purchase_id]);
         }
@@ -289,6 +279,21 @@ class InvpurchaseitemController extends Controller
             echo $out;
             return;
         }
+    }
+
+
+    public function saveLog($type, $username, $description, $external_id, $external_type)
+    {
+        //Registro (Log) Evento
+        $modelLogs              = new Logs();
+        $modelLogs->type        = $type;
+        $modelLogs->username    = $username;
+        $modelLogs->datetime    = date('Y-m-d H:i:s');
+        $modelLogs->description = $description;
+        $modelLogs->ipaddress       = Yii::$app->request->userIP;
+        $modelLogs->external_id     = $external_id;
+        $modelLogs->external_type   = $external_type;
+        $modelLogs->save(false);
     }
 
 }

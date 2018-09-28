@@ -37,7 +37,7 @@ $dataProviderInvModels->sort->defaultOrder = [
         'items' => [
             [
                 'label'=>'<i class="glyphicon glyphicon-list-alt"></i> Bienes (Global)',
-                'content' => $this->render('indexGridview', [
+                'content' => $this->render('_items', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
                 ])

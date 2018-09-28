@@ -14,7 +14,8 @@ use app\models\User;
 /* @var $searchModel app\models\UserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Users');
+$this->title = Yii::t('app', 'Usuarios');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Gestión TI'), 'url' => ['site/management']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">
@@ -26,6 +27,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?php //Html::a(Yii::t('app', 'Agregar Usuario'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+
+    <div align="center">
+        <h3><?= Html::encode($this->title) ?></h3>
+    </div>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -42,6 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $user->getAttribute('cn',0);
                 },
             ],*/
+            //'password',
             //'auth_key',
             [
                 'attribute' => 'created_at',
@@ -77,6 +83,18 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
 
             //['class' => 'yii\grid\ActionColumn'],
+
+            ['class' => 'kartik\grid\ActionColumn',
+                'template'=>'{admin}',
+                'buttons'=>[
+                    'admin' => function ($url, $model) {
+                        return Html::a('<span class="btn btn-success center-block">Perfil</span>',
+                            Url::to(['/userprofile/admin', 'username' => $model->username]), [
+                                'title' => Yii::t('yii', 'Abrir Perfil'),
+                            ]);
+                    },
+                ]
+            ],
         ],
         'containerOptions' => ['style'=>'overflow: auto'],
         'toolbar' =>  [

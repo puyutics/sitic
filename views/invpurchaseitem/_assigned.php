@@ -16,12 +16,17 @@ use yii\data\ActiveDataProvider;
 ?>
 <div class="inv-item-user-index">
 
-    <?php Pjax::begin(); ?>
-
     <?php
     $searchModelItemsAssigned = new \app\models\InvItemsAssignedSearch();
     $dataProviderItemsAssigned = $searchModelItemsAssigned->search(Yii::$app->request->queryParams);
     ?>
+
+    <?php Pjax::begin(); ?>
+    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+
+    <div align="center">
+        <h3>Bienes TI (Asignados)</h3>
+    </div>
 
     <?= GridView::widget([
         'dataProvider' => $dataProviderItemsAssigned,

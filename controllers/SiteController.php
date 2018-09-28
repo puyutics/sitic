@@ -112,9 +112,9 @@ class SiteController extends Controller
             $description =
                 'Inicio de sesión exitoso, usuario: ' . $username
             ;
-            $this->saveLog('login', $username, $description, 'user');
+            $this->saveLog('login', $username, $description, 'adldap');
 
-            //Cached adldap password on local database
+            //Cached adldap data on local database
             if(
                 isset($model->username)
                 and isset($model->password)
@@ -124,10 +124,64 @@ class SiteController extends Controller
                 $post_username = $post_username[0];
                 $password_hash = hash(Yii::$app->params['algorithm'],$model->password);
 
+                //Cached adldap password on local database
                 \Yii::$app->db->createCommand(
-                    'UPDATE `user` SET `password`=\''.$password_hash .'\' 
+                    'UPDATE `user` SET `password`=\''. $password_hash .'\' 
                           WHERE `username` = \'' . $post_username . '\'')
                     ->execute();
+
+                $user = Yii::$app->ad->getProvider('default')->search()
+                    ->findBy('sAMAccountname', $post_username);
+                $dni = $user->getAttribute(Yii::$app->params['dni'],0);
+                $firstname = $user->getFirstName();
+                $lastname = $user->getLastName();
+                $commonname = $user->getCommonName();
+                $displayname = $user->getDisplayName();
+                $mail = $user->getEmail();
+                $personalmail = $user->getAttribute(Yii::$app->params['personalmail'], 0);
+                $mobile = $user->getAttribute(Yii::$app->params['mobile'], 0);
+
+                $userprofile = \app\models\UserProfile::findByUsername($post_username);
+                if (isset($userprofile)) {
+                    \Yii::$app->db->createCommand(
+                        'UPDATE `user_profile` SET 
+                          `dni`            = \''. $dni .'\',
+                          `firstname`      = \''. $firstname .'\',
+                          `lastname`       = \''. $lastname .'\',
+                          `commonname`     = \''. $commonname .'\',
+                          `displayname`    = \''. $displayname .'\',
+                          `mail`           = \''. $mail .'\',
+                          `personalmail`   = \''. $personalmail .'\',
+                          `mobile`         = \''. $mobile .'\'
+                          WHERE `username` = \''. $post_username . '\'
+                        ')
+                        ->execute();
+                } elseif (!isset($userprofile)) {
+                    \Yii::$app->db->createCommand(
+                        'INSERT INTO `user_profile` (
+                          `dni`,
+                          `username`,
+                          `firstname`,
+                          `lastname`,
+                          `commonname`,
+                          `displayname`,
+                          `mail`,
+                          `personalmail`,
+                          `mobile`
+                          ) VALUES (
+                          \'' . $dni . '\',
+                          \'' . $post_username . '\',
+                          \'' . $firstname . '\',
+                          \'' . $lastname . '\',
+                          \'' . $commonname . '\',
+                          \'' . $displayname . '\',
+                          \'' . $mail . '\',
+                          \'' . $personalmail . '\',
+                          \'' . $mobile . '\'
+                          )
+                        ')
+                        ->execute();
+                }
             }
 
             return $this->goBack();

@@ -13,7 +13,7 @@ use Yii;
  * @property string $serial_number NUMERO SERIE
  * @property int $department_id ID DEPARTAMENTO
  * @property int $inv_models_id ID MODELO
- * @property string $status ESTADO IMPRESORA
+ * @property int $status ESTADO IMPRESORA
  *
  * @property Department $department
  * @property InvModels $invModels
@@ -21,7 +21,7 @@ use Yii;
 class Printers extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -29,23 +29,23 @@ class Printers extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return [
             [['printer', 'ipv4_address', 'serial_number', 'department_id', 'inv_models_id', 'status'], 'required'],
-            [['department_id', 'inv_models_id'], 'integer'],
+            [['department_id', 'inv_models_id', 'status'], 'integer'],
             [['printer'], 'string', 'max' => 255],
             [['ipv4_address'], 'string', 'max' => 15],
-            [['serial_number', 'status'], 'string', 'max' => 45],
+            [['serial_number'], 'string', 'max' => 45],
             [['department_id'], 'exist', 'skipOnError' => true, 'targetClass' => Department::className(), 'targetAttribute' => ['department_id' => 'id']],
             [['inv_models_id'], 'exist', 'skipOnError' => true, 'targetClass' => InvModels::className(), 'targetAttribute' => ['inv_models_id' => 'id']],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {

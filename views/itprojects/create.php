@@ -7,6 +7,7 @@ use yii\helpers\Html;
 /* @var $model app\models\ItProjects */
 
 $this->title = Yii::t('app', 'Agregar Proyecto');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Gestión TI'), 'url' => ['site/management']];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Proyectos TI'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

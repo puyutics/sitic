@@ -12,6 +12,9 @@ $this->title = 'SITIC - Sistema Integrado para la Gestión de Tecnologías de la
 
         <div class="row">
             <div class="col-lg-4">
+
+            </div>
+            <div class="col-lg-4">
                 <h2 align="center">Aplicaciones</h2>
 
                 <div align="center">
@@ -19,6 +22,20 @@ $this->title = 'SITIC - Sistema Integrado para la Gestión de Tecnologías de la
                 </div>
 
                 <p align="center"><a class="btn btn-success" href="index.php?r=itapps/index"> Aplicaciones &raquo;</a></p>
+            </div>
+            <div class="col-lg-4">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <h2 align="center">Licencias</h2>
+
+                <div align="center">
+                    <a href="index.php?r=itlicenses/index"><?= Html::img('images/itlicenses.png');?></a>
+                </div>
+
+                <p align="center"><a class="btn btn-success" href="index.php?r=itlicenses/index"> Licencias &raquo;</a></p>
             </div>
             <div class="col-lg-4">
                 <h2 align="center">Sistema Impresiones</h2>
