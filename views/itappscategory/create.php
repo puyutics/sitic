@@ -6,13 +6,14 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\ItAppsCategory */
 
-$this->title = Yii::t('app', 'Create It Apps Category');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'It Apps Categories'), 'url' => ['index']];
+$this->title = Yii::t('app', 'Agregar Categoría');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Inventario TI'), 'url' => ['site/inventory']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Aplicaciones TI'), 'url' => ['itapps/index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="it-apps-category-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1><?php //= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
         'model' => $model,

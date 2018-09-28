@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'password',
                 'value' => '**********',
             ],
-            'password',
+            //'password',
             'email:email',
             [
                 'attribute' => 'url',
@@ -82,7 +82,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) */?>
         <?php
         Modal::begin([
-            'header' => '<h4 class="modal-title" align="center"> INFORMACIÓN CONFIDENCIAL </h4>',
+            'header' => '<h4 class="modal-title" align="center"> <code>INFORMACIÓN CONFIDENCIAL</code> </h4>',
             'toggleButton' => [
                 'label' => '<i class="glyphicon glyphicon-eye-open"></i> Mostrar Contraseña',
                 'class' => 'btn btn-primary'],

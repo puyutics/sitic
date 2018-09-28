@@ -25,10 +25,12 @@ class ItappsController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','index','update', 'view','admin'],
+                'only' => ['create','index','update', 'view','admin',
+                    'eitappscategoryid','etitle','estatus'],
                 'rules' => [
                     [
-                        'actions' => ['create','index','update','view','admin'],
+                        'actions' => ['create','index','update','view','admin',
+                            'eitappscategoryid','etitle','estatus'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
@@ -153,5 +155,54 @@ class ItappsController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+
+    /*
+    ** Funciones personalizadas
+    */
+    public function actionEitappscategoryid(){
+        if(Yii::$app->request->post('hasEditable')){
+            $id=Yii::$app->request->post('editableKey');
+            $model = ItApps::findOne($id);
+            $posted = current($_POST['ItApps']);
+            $post = ['ItApps' => $posted];
+            if ($model->load($post) && $model->save()){
+                $value=$model->itAppsCategory->category;
+                $out=Json::encode(['output'=>$value,'message'=>'']);}
+            else $out=Json::encode(['output'=>'','message'=>'Error en el Ingreso']);
+            echo $out;
+            return;
+        }
+    }
+
+    public function actionEtitle(){
+        if(Yii::$app->request->post('hasEditable')){
+            $id=Yii::$app->request->post('editableKey');
+            $model = ItApps::findOne($id);
+            $posted = current($_POST['ItApps']);
+            $post = ['ItApps' => $posted];
+            if ($model->load($post) && $model->save()){
+                $value=$model->title;
+                $out=Json::encode(['output'=>$value,'message'=>'']);}
+            else $out=Json::encode(['output'=>'','message'=>'Error en el Ingreso']);
+            echo $out;
+            return;
+        }
+    }
+
+    public function actionEstatus(){
+        if(Yii::$app->request->post('hasEditable')){
+            $id=Yii::$app->request->post('editableKey');
+            $model = ItApps::findOne($id);
+            $posted = current($_POST['ItApps']);
+            $post = ['ItApps' => $posted];
+            if ($model->load($post) && $model->save()){
+                $value=$model->status;
+                $out=Json::encode(['output'=>$value,'message'=>'']);}
+            else $out=Json::encode(['output'=>'','message'=>'Error en el Ingreso']);
+            echo $out;
+            return;
+        }
     }
 }
