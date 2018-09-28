@@ -21,6 +21,9 @@ $config = [
         'pdfjs' => [
             'class' => '\yii2assets\pdfjs\Module',
         ],
+        'treemanager' =>  [
+            'class' => '\kartik\tree\Module',
+        ]
     ],
     'components' => [
         'request' => [
