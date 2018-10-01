@@ -17,10 +17,10 @@ $this->title = 'SITIC - Sistema Integrado para la Gestión de Tecnologías de la
                 <h2 align="center">Active Directory - LDAP</h2>
 
                 <div align="center">
-                    <a href="index.php?r=adldap/edit"><?= Html::img('images/userprofile.png');?></a>
+                    <a href="index.php?r=adldap/editprofile"><?= Html::img('images/userprofile.png');?></a>
                 </div>
 
-                <p align="center"><a class="btn btn-success" href="index.php?r=adldap/edit"> Editar perfil &raquo;</a></p>
+                <p align="center"><a class="btn btn-success" href="index.php?r=adldap/editprofile"> Editar perfil &raquo;</a></p>
             </div>
             <div class="col-lg-4">
             </div>

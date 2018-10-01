@@ -28,21 +28,23 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
 
         <div class="row">
 
-            <div class="col-md-1 col-md-offset-1 col-sm-6 col-sm-offset-3">
+            <!--<div class="col-md-1 col-md-offset-1 col-sm-6 col-sm-offset-3">
                 <p align="center"><a class="btn btn-primary" href="index.php?r=adldap/edit">Editar perfil &raquo;</a></p>
                 <p align="center"><a class="btn btn-default" href="index.php?r=adldap/password">Cambiar contraseña &raquo;</a></p>
                 <p align="center"><a class="btn btn-default" href="index.php?r=adldap/forgetuser">Olvidaste tu usuario &raquo;</a></p>
                 <p align="center"><a class="btn btn-default" href="index.php?r=adldap/forgetpass">Olvidaste tu contraseña &raquo;</a></p>
-            </div>
+            </div>-->
 
-            <div class="col-md-5 col-md-offset-2 col-sm-6 col-sm-offset-3">
+            <div class="col-sm-offset-2 col-sm-8">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Editar datos del usuario</h3>
                     </div>
                     <div class="panel-body">
 
-                        <?php $form = ActiveForm::begin(); ?>
+                        <?php $form = ActiveForm::begin([
+                            'method' => 'post',
+                        ]); ?>
 
                         <?= $form->field($model, 'dni')->textInput(['readOnly'=>true]) ?>
 
@@ -78,10 +80,23 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
                             </div>
                         </div>
 
+                        <?php echo "<p><b>Grupo(s)</b></p>";
+                        foreach($model->groups as $group)
+                        {
+                            echo $group->getName().", ";
+                        }
+                        ?>
+
+                        <?php echo "<p></p>";
+                        echo "<p><b>Unidad Organizativa</b></p>";
+                        echo $model->dn;
+                        ?>
+
                         <div align="center">
+                            <p></p>
                             <p><b>Último cambio de contraseña: </b>
                                 <?php
-                                    echo $diff . ' días (' . $user->getPasswordLastSetDate() . ')';
+                                echo $diff . ' días (' . $user->getPasswordLastSetDate() . ')';
                                 ?>
                             </p>
                         </div>

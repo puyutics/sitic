@@ -19,6 +19,8 @@ class AdldapEditForm extends Model
     public $commonname;
     public $displayname;
     public $mobile;
+    public $groups;
+    public $dn;
 
     /**
      * @return array the validation rules.
@@ -26,8 +28,8 @@ class AdldapEditForm extends Model
     public function rules()
     {
         return [
-            [['search','dni','firstname', 'lastname','mail','commonname',
-                'displayname','personalmail','mobile'], 'required'],
+            [['dni','firstname', 'lastname','mail','commonname',
+                'displayname','personalmail'], 'required'],
             [['mobile'],'number'],
             [['mail','personalmail'], 'email'],
         ];
@@ -48,6 +50,8 @@ class AdldapEditForm extends Model
             'displayname'  => 'Nombre para mostrar',
             'personalmail' => 'Correo personal',
             'mobile'       => 'Celular',
+            'groups'       => 'Grupo(s)',
+            'dn'           => 'Unidad Organizativa',
         ];
     }
 }

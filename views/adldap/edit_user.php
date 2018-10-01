@@ -24,14 +24,12 @@ if (isset($_GET['search'])) {
     ]);
 }
 
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Identidad'), 'url' => ['site/identity']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Gestión TI'), 'url' => ['site/management']];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
 ?>
 
 <?php $form = ActiveForm::begin([
-    //'type' => ActiveForm::TYPE_HORIZONTAL,
     'method' => 'post',
-    //'formConfig' => ['labelSpan' => 2, 'deviceSize' => ActiveForm::SIZE_TINY]
 ]); ?>
 
 <div class="search-form">
@@ -59,14 +57,6 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
                 'onClick'=>'buttonClicked']) ?>
         <?php } ?>
     </div>
-
-    <p>
-        <?php if (isset($_GET['search'])) { ?>
-
-        <?php } else { ?>
-
-        <?php } ?>
-    </p>
 </div>
 
 <?php
@@ -83,9 +73,18 @@ if (isset($_GET['search'])) { ?>
 
                     <?= $form->field($model, 'dni')->textInput() ?>
 
-                    <?= $form->field($model, 'firstname')->textInput() ?>
+                    <div class="row">
+                        <div class="col-md-6">
 
-                    <?= $form->field($model, 'lastname')->textInput() ?>
+                            <?= $form->field($model, 'firstname')->textInput() ?>
+
+                        </div>
+                        <div class="col-md-6">
+
+                            <?= $form->field($model, 'lastname')->textInput() ?>
+
+                        </div>
+                    </div>
 
                     <?= $form->field($model, 'commonname')->textInput(['readOnly'=> true]) ?>
 
@@ -93,11 +92,34 @@ if (isset($_GET['search'])) { ?>
 
                     <?= $form->field($model, 'mail')->textInput(['readOnly'=> true]) ?>
 
-                    <?= $form->field($model, 'personalmail')->textInput(['maxlength' => true]) ?>
 
-                    <?= $form->field($model, 'mobile')->textInput(['maxlength' => true]) ?>
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <?= $form->field($model, 'personalmail')->textInput(['maxlength' => true]) ?>
+
+                        </div>
+                        <div class="col-md-6">
+
+                            <?= $form->field($model, 'mobile')->textInput(['maxlength' => true]) ?>
+
+                        </div>
+                    </div>
+
+                    <?php echo "<p><b>Grupo(s)</b></p>";
+                        foreach($model->groups as $group)
+                        {
+                            echo $group->getName().", ";
+                        }
+                    ?>
+
+                    <?php echo "<p></p>";
+                        echo "<p><b>Unidad Organizativa</b></p>";
+                        echo $model->dn;
+                    ?>
 
                     <div align="center">
+                        <p></p>
                         <p><b>Último cambio de contraseña: </b>
                             <?php
                             echo $diff . ' días (' . $user->getPasswordLastSetDate() . ')';
@@ -116,8 +138,6 @@ if (isset($_GET['search'])) { ?>
                 </div>
             </div>
         </div>
-
-
     </div>
 
 <?php }?>

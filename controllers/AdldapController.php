@@ -78,19 +78,21 @@ class AdldapController extends Controller
 
         $model = new AdldapEditForm();
 
-        /*if (!isset($_GET['search'])
+        if (Yii::$app->request->post('searchButton')==='searchButton'
             and (Yii::$app->session->get('authtype') == 'adldap')) {
-            $_GET['search'] = Yii::$app->user->identity->username;
-        }*/
-
-
-        if (Yii::$app->request->post('searchButton')==='searchButton') {
             $post_data = $_POST['AdldapEditForm'];
-            return $this->redirect(
-                'index.php?r=adldap/edituser&search='
-                . $post_data['search']);
-        }
+            if ($post_data['search'] != '') {
+                return $this->redirect(
+                    'index.php?r=adldap/edituser&search='
+                    . $post_data['search']);
+            } else {
+                Yii::$app->session->setFlash('error',
+                    "Buscar no puede estar en blanco");
+                return $this->render('edit_user',
+                    ['model'=>$model]);
+            }
 
+        }
 
         if (isset($_GET['search'])
             and (Yii::$app->session->get('authtype') == 'adldap')) {
@@ -105,6 +107,8 @@ class AdldapController extends Controller
             $model->displayname = $user->getDisplayName();
             $model->personalmail = $user->getAttribute(Yii::$app->params['personalmail'], 0);
             $model->mobile = $user->getAttribute(Yii::$app->params['mobile'], 0);
+            $model->groups = $user->getGroups();
+            $model->dn = $user->getDn();
 
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
                 if (Yii::$app->request->post('sendToken')==='sendToken') {
@@ -139,19 +143,23 @@ class AdldapController extends Controller
                     $user->setDisplayName($model->displayname);
                     $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);
                     $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
-                    $user->save();
+                    if ($user->save()) {
+                        Yii::$app->session->setFlash('success', "Actualizado Correctamente");
+                        $username = Yii::$app->user->identity->username;
 
-                    Yii::$app->session->setFlash('success', "Actualizado Correctamente");
-                    $username = Yii::$app->user->identity->username;
+                        //Crear Registro de Log en la base de datos
+                        $description =
+                            'Información actualizada del usuario: ' . $sAMAccountname
+                        ;
+                        $this->saveLog('adldapEditUser', $username, $description, $sAMAccountname,'adldap');
 
-                    //Crear Registro de Log en la base de datos
-                    $description =
-                        'Información actualizada del usuario: ' . $sAMAccountname
-                    ;
-                    $this->saveLog('adldapEditUser', $username, $description, $sAMAccountname,'adldap');
-
-                    return $this->render('edit_user',
-                        ['model'=>$model]);
+                        return $this->render('edit_user',
+                            ['model'=>$model]);
+                    } else {
+                        Yii::$app->session->setFlash('error', "Problemas de Actualización");
+                        return $this->render('edit_user',
+                            ['model'=>$model]);
+                    }
                 }
 
             } else {
@@ -181,28 +189,30 @@ class AdldapController extends Controller
             $model->mail = $user->getEmail();
             $model->personalmail = $user->getAttribute(Yii::$app->params['personalmail'], 0);
             $model->mobile = $user->getAttribute(Yii::$app->params['mobile'], 0);
+            $model->groups = $user->getGroups();
+            $model->dn = $user->getDn();
 
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-                $post_form = Yii::$app->request->post('AdldapEditForm');
-                $post_personalmail = $post_form['personalmail'];
-                $post_mobile = $post_form['mobile'];
-
-                if (isset($post_personalmail)) {
-                    $user->setAttribute(Yii::$app->params['personalmail'],$post_personalmail);
-                    $user->setAttribute(Yii::$app->params['mobile'],$post_mobile);
-                    $user->save();
+                $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);
+                $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
+                if ($user->save()){
 
                     Yii::$app->session->setFlash('success', "Actualizado Correctamente");
+                    $username = Yii::$app->user->identity->username;
 
                     //Crear Registro de Log en la base de datos
                     $description =
-                        'Información actualizada del usuario: ' . $sAMAccountname
-                    ;
-                    $this->saveLog('adldapEditProfile', $sAMAccountname, $description, $sAMAccountname,'adldap');
+                        'Información actualizada del perfil: ' . $sAMAccountname;
+                    $this->saveLog('adldapEditProfile', $username, $description, $sAMAccountname, 'adldap');
 
+                    return $this->render('edit_profile',
+                        ['model' => $model]);
+                } else {
+                    Yii::$app->session->setFlash('error', "Problemas de Actualización");
                     return $this->render('edit_profile',
                         ['model'=>$model]);
                 }
+
             } else {
                 return $this->render('edit_profile',
                     ['model'=>$model]);

@@ -30,14 +30,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="row">
 
-        <div class="col-md-1 col-md-offset-1 col-sm-6 col-sm-offset-3">
+        <!--<div class="col-md-1 col-md-offset-1 col-sm-6 col-sm-offset-3">
             <p align="center"><a class="btn btn-default" href="index.php?r=adldap/editprofile">Editar perfil &raquo;</a></p>
             <p align="center"><a class="btn btn-default" href="index.php?r=adldap/password">Cambiar contraseña &raquo;</a></p>
             <p align="center"><a class="btn btn-primary" href="index.php?r=adldap/forgetuser">Olvidaste tu usuario &raquo;</a></p>
             <p align="center"><a class="btn btn-default" href="index.php?r=adldap/forgetpass">Olvidaste tu contraseña &raquo;</a></p>
-        </div>
+        </div>-->
 
-        <div class="col-md-5 col-md-offset-2 col-sm-6 col-sm-offset-3">
+        <div class="col-sm-offset-3 col-sm-5">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title"><?= Html::encode($this->title) ?></h3>
@@ -65,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     <div class="form-group">
                         <div class="col-md-1 col-md-offset-4">
-                            <?= Html::submitButton('Buscar usuario o correo', ['class' => 'btn btn-primary']) ?>
+                            <?= Html::submitButton('Buscar usuario', ['class' => 'btn btn-primary']) ?>
                         </div>
                     </div>
 
