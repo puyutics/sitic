@@ -22,11 +22,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'license') ?>
 
+    <?= $form->field($model, 'quantity') ?>
+
     <?= $form->field($model, 'description') ?>
 
     <?= $form->field($model, 'serial_number') ?>
 
-    <?= $form->field($model, 'valid_since') ?>
+    <?php // echo $form->field($model, 'valid_since') ?>
 
     <?php // echo $form->field($model, 'valid_until') ?>
 

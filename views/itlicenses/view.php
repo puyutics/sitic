@@ -7,7 +7,6 @@ use yii\widgets\DetailView;
 /* @var $model app\models\ItLicenses */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Inventario TI'), 'url' => ['site/inventory']];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'It Licenses'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -31,6 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'license',
+            'quantity',
             'description:ntext',
             'serial_number',
             'valid_since',

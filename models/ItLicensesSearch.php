@@ -19,7 +19,7 @@ class ItLicensesSearch extends ItLicenses
     {
         return [
             [['id', 'status', 'inv_manufacturers_id'], 'integer'],
-            [['license', 'description', 'serial_number', 'valid_since', 'valid_until'], 'safe'],
+            [['license', 'quantity', 'description', 'serial_number', 'valid_since', 'valid_until'], 'safe'],
         ];
     }
 
@@ -67,6 +67,7 @@ class ItLicensesSearch extends ItLicenses
         ]);
 
         $query->andFilterWhere(['like', 'license', $this->license])
+            ->andFilterWhere(['like', 'quantity', $this->quantity])
             ->andFilterWhere(['like', 'description', $this->description])
             ->andFilterWhere(['like', 'serial_number', $this->serial_number]);
 

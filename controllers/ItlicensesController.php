@@ -25,10 +25,10 @@ class ItlicensesController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','index','update', 'view'],
+                'only' => ['create','index','update', 'view','admin'],
                 'rules' => [
                     [
-                        'actions' => ['create','index','update','view'],
+                        'actions' => ['create','index','update','view','admin'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
@@ -75,6 +75,14 @@ class ItlicensesController extends Controller
         ]);
     }
 
+
+    public function actionAdmin($id)
+    {
+        return $this->render('admin', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+
     /**
      * Creates a new ItLicenses model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -85,7 +93,8 @@ class ItlicensesController extends Controller
         $model = new ItLicenses();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            //return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['admin', 'id' => $model->id]);
         }
 
         return $this->render('create', [
@@ -105,7 +114,8 @@ class ItlicensesController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            //return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['admin', 'id' => $model->id]);
         }
 
         return $this->render('update', [

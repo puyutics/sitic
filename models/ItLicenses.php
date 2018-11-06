@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int $id ID
  * @property string $license LICENCIA
+ * @property string $quantity CANTIDAD
  * @property string $description DETALLE
  * @property string $serial_number NUMERO DE SERIE
  * @property string $valid_since VALIDO DESDE
@@ -35,11 +36,12 @@ class ItLicenses extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['license', 'description', 'status', 'inv_manufacturers_id'], 'required'],
+            [['license', 'quantity', 'description', 'status', 'inv_manufacturers_id'], 'required'],
             [['description'], 'string'],
             [['valid_since', 'valid_until'], 'safe'],
             [['status', 'inv_manufacturers_id'], 'integer'],
             [['license', 'serial_number'], 'string', 'max' => 255],
+            [['quantity'], 'string', 'max' => 45],
             [['inv_manufacturers_id'], 'exist', 'skipOnError' => true, 'targetClass' => InvManufacturers::className(), 'targetAttribute' => ['inv_manufacturers_id' => 'id']],
         ];
     }
@@ -52,6 +54,7 @@ class ItLicenses extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'license' => Yii::t('app', 'LICENCIA'),
+            'quantity' => Yii::t('app', 'CANTIDAD'),
             'description' => Yii::t('app', 'DETALLE'),
             'serial_number' => Yii::t('app', 'NUMERO DE SERIE'),
             'valid_since' => Yii::t('app', 'VALIDO DESDE'),

@@ -53,8 +53,9 @@ use kartik\editable\Editable;
                 'format'=>'raw'
             ],
             'license',
-            'description:ntext',
-            'serial_number',
+            'quantity',
+            //'description:ntext',
+            //'serial_number',
             'valid_since',
             'valid_until',
             [
@@ -78,7 +79,18 @@ use kartik\editable\Editable;
                 },
                 'filter'=>['0'=>'INACTIVO','1'=>'ACTIVO'],
             ],
-            //['class' => 'yii\grid\ActionColumn'],
+
+            ['class' => 'kartik\grid\ActionColumn',
+                'template'=>'{admin}',
+                'buttons'=>[
+                    'admin' => function ($url, $model) {
+                        return Html::a('<span class="btn btn-success center-block">Abrir</span>', $url, [
+                            'title' => Yii::t('yii', 'Abrir Licencia'),
+                        ]);
+                    }
+                ]
+            ],
+
         ],
         'containerOptions' => ['style'=>'overflow: auto'],
         'toolbar' =>  [
