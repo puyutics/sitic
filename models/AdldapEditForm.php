@@ -30,8 +30,8 @@ class AdldapEditForm extends Model
     {
         return [
             [['dni','firstname', 'lastname','mail','commonname',
-                'displayname','personalmail'], 'required'],
-            [['mobile'],'number'],
+                'displayname','personalmail','uac'], 'required'],
+            [['mobile','uac'],'number'],
             [['mail','personalmail'], 'email'],
         ];
     }

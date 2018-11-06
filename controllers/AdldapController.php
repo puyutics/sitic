@@ -144,6 +144,8 @@ class AdldapController extends Controller
                     $user->setDisplayName($model->displayname);
                     $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);
                     $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
+                    $user->setUserAccountControl($model->uac);
+
                     if ($user->save()) {
                         Yii::$app->session->setFlash('success', "Actualizado Correctamente");
                         $username = Yii::$app->user->identity->username;
@@ -151,6 +153,7 @@ class AdldapController extends Controller
                         //Crear Registro de Log en la base de datos
                         $description =
                             'Información actualizada del usuario: ' . $sAMAccountname
+                            . " ($model->uac)"
                         ;
                         $this->saveLog('adldapEditUser', $username, $description, $sAMAccountname,'adldap');
 

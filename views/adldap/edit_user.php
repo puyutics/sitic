@@ -112,15 +112,32 @@ if (isset($_GET['search'])) { ?>
                     //https://jackstromberg.com/2013/01/useraccountcontrol-attributeflag-values/
                     ?>
 
-                    <?php echo "<p></p>";
-                    echo "<p><b>Estado</b> (UAC = $model->uac)</p>";
-                    //NORMAL_ACCOUNT	0x0200	512
-                    if ($model->uac == 512) { ?><span class="label label-success">CUENTA ACTIVA</span><?php }
-                    //Disabled Account	0x0202	514
-                    if ($model->uac == 514) { ?><span class="label label-danger">CUENTA DESACTIVADA</span><?php }
-                    //Enabled, Password Doesn’t Expire	0x10200	66048
-                    if ($model->uac == 66048) { ?><span class="label label-success">CUENTA ACTIVA, CONTRASEÑA NUNCA EXPIRA</span><?php }
-                    ?>
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <?php echo "<p></p>";
+                            echo $form->field($model, 'uac')->dropDownList([
+                                '512'=>'Cuenta activada',
+                                '66048'=>'Cuenta activada. Contraseña nunca expira',
+                                '514'=>'Cuenta desactivada',
+                            ])
+                            ?>
+
+                        </div>
+                        <div class="col-md-6">
+
+                            <?php echo "<p></p>";
+                            echo "<p><b>Estado Actual</b></p>";
+                            //NORMAL_ACCOUNT	0x0200	512
+                            if ($model->uac == 512) { ?><span class="label label-success">CUENTA ACTIVADA</span><?php }
+                            //Disabled Account	0x0202	514
+                            if ($model->uac == 514) { ?><span class="label label-danger">CUENTA DESACTIVADA</span><?php }
+                            //Enabled, Password Doesn’t Expire	0x10200	66048
+                            if ($model->uac == 66048) { ?><span class="label label-success">CUENTA ACTIVADA, CONTRASEÑA NUNCA EXPIRA</span><?php }
+                            ?>
+
+                        </div>
+                    </div>
 
                     <?php echo "<p></p>";
                     echo "<p><b>Grupo(s)</b></p>";

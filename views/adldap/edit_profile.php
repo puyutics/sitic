@@ -81,7 +81,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
                         </div>
 
                         <?php echo "<p></p>";
-                        echo "<p><b>Estado</b> (UAC = $model->uac)</p>";
+                        echo "<p><b>Estado</b></p>";
                         //NORMAL_ACCOUNT	0x0200	512
                         if ($model->uac == 512) { ?><span class="label label-success">CUENTA ACTIVA</span><?php }
                         //Disabled Account	0x0202	514
