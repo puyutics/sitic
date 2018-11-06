@@ -19,6 +19,7 @@ class AdldapEditForm extends Model
     public $commonname;
     public $displayname;
     public $mobile;
+    public $uac;
     public $groups;
     public $dn;
 
@@ -50,6 +51,7 @@ class AdldapEditForm extends Model
             'displayname'  => 'Nombre para mostrar',
             'personalmail' => 'Correo personal',
             'mobile'       => 'Celular',
+            'uac'          => 'Estado',
             'groups'       => 'Grupo(s)',
             'dn'           => 'Unidad Organizativa',
         ];

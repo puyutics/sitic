@@ -116,7 +116,7 @@ class InvpurchaseitemController extends Controller
             $username = Yii::$app->user->identity->username;
             $external_id = $model->getPrimaryKey();
             $description =
-                'Nuevo item creado por el usuario: ' . $modelLogs->username
+                'Nuevo item creado por el usuario: ' . $username
                 . '. Detalle: ' . $model->description
                 . '. Serie: ' . $model->serial_number
             ;

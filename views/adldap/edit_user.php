@@ -10,6 +10,8 @@ use yii\helpers\Html;
 use kartik\form\ActiveForm;
 use yii\helpers\Url;
 
+use kartik\widgets\SwitchInput;
+
 if (isset($_GET['search'])) {
     $search = $_GET['search'];
     $user = Yii::$app->ad->getProvider('default')->search()->users()->find($search);
@@ -67,7 +69,7 @@ if (isset($_GET['search'])) { ?>
         <div class="col-sm-offset-2 col-sm-8">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Editar datos del usuario</h3>
+                    <h3 class="panel-title">Editar datos del usuario:</h3>
                 </div>
                 <div class="panel-body">
 
@@ -76,12 +78,12 @@ if (isset($_GET['search'])) { ?>
                     <div class="row">
                         <div class="col-md-6">
 
-                            <?= $form->field($model, 'firstname')->textInput() ?>
+                            <?= $form->field($model, 'lastname')->textInput() ?>
 
                         </div>
                         <div class="col-md-6">
 
-                            <?= $form->field($model, 'lastname')->textInput() ?>
+                            <?= $form->field($model, 'firstname')->textInput() ?>
 
                         </div>
                     </div>
@@ -106,7 +108,22 @@ if (isset($_GET['search'])) { ?>
                         </div>
                     </div>
 
-                    <?php echo "<p><b>Grupo(s)</b></p>";
+                    <?php //Más códigos UAC cuentas Active Directory
+                    //https://jackstromberg.com/2013/01/useraccountcontrol-attributeflag-values/
+                    ?>
+
+                    <?php echo "<p></p>";
+                    echo "<p><b>Estado</b> (UAC = $model->uac)</p>";
+                    //NORMAL_ACCOUNT	0x0200	512
+                    if ($model->uac == 512) { ?><span class="label label-success">CUENTA ACTIVA</span><?php }
+                    //Disabled Account	0x0202	514
+                    if ($model->uac == 514) { ?><span class="label label-danger">CUENTA DESACTIVADA</span><?php }
+                    //Enabled, Password Doesn’t Expire	0x10200	66048
+                    if ($model->uac == 66048) { ?><span class="label label-success">CUENTA ACTIVA, CONTRASEÑA NUNCA EXPIRA</span><?php }
+                    ?>
+
+                    <?php echo "<p></p>";
+                    echo "<p><b>Grupo(s)</b></p>";
                         foreach($model->groups as $group)
                         {
                             echo $group->getName().", ";
@@ -117,6 +134,16 @@ if (isset($_GET['search'])) { ?>
                         echo "<p><b>Unidad Organizativa</b></p>";
                         echo $model->dn;
                     ?>
+
+                    <?php /*echo "<p></p>";
+                        echo $form->field($model, 'uac')->widget(SwitchInput::classname(), [
+                        'pluginOptions' => [
+                            'onText' => 'Habilitada',
+                            'offText' => 'Deshabilitada',
+                            'onColor' => 'success',
+                            'offColor' => 'danger',
+                        ]
+                    ]) */?>
 
                     <div align="center">
                         <p></p>

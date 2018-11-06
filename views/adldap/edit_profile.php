@@ -51,12 +51,12 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
                                 <div class="row">
                                     <div class="col-md-6">
 
-                                        <?= $form->field($model, 'firstname')->textInput(['readOnly'=>true]) ?>
+                                        <?= $form->field($model, 'lastname')->textInput(['readOnly'=>true]) ?>
 
                                     </div>
                                     <div class="col-md-6">
 
-                                        <?= $form->field($model, 'lastname')->textInput(['readOnly'=>true]) ?>
+                                        <?= $form->field($model, 'firstname')->textInput(['readOnly'=>true]) ?>
 
                                     </div>
                                 </div>
@@ -80,7 +80,18 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
                             </div>
                         </div>
 
-                        <?php echo "<p><b>Grupo(s)</b></p>";
+                        <?php echo "<p></p>";
+                        echo "<p><b>Estado</b> (UAC = $model->uac)</p>";
+                        //NORMAL_ACCOUNT	0x0200	512
+                        if ($model->uac == 512) { ?><span class="label label-success">CUENTA ACTIVA</span><?php }
+                        //Disabled Account	0x0202	514
+                        if ($model->uac == 514) { ?><span class="label label-danger">CUENTA DESACTIVADA</span><?php }
+                        //Enabled, Password Doesn’t Expire	0x10200	66048
+                        if ($model->uac == 66048) { ?><span class="label label-success">CUENTA ACTIVA, CONTRASEÑA NUNCA EXPIRA</span><?php }
+                        ?>
+
+                        <?php echo "<p></p>";
+                        echo "<p><b>Grupo(s)</b></p>";
                         foreach($model->groups as $group)
                         {
                             echo $group->getName().", ";

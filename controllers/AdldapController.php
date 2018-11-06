@@ -109,6 +109,7 @@ class AdldapController extends Controller
             $model->mobile = $user->getAttribute(Yii::$app->params['mobile'], 0);
             $model->groups = $user->getGroups();
             $model->dn = $user->getDn();
+            $model->uac = $user->getUserAccountControl();
 
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
                 if (Yii::$app->request->post('sendToken')==='sendToken') {
@@ -191,6 +192,7 @@ class AdldapController extends Controller
             $model->mobile = $user->getAttribute(Yii::$app->params['mobile'], 0);
             $model->groups = $user->getGroups();
             $model->dn = $user->getDn();
+            $model->uac = $user->getUserAccountControl();
 
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
                 $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);

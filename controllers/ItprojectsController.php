@@ -60,7 +60,7 @@ class ItprojectsController extends Controller
         $searchModel = new ItProjectsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->sort->defaultOrder = [
-            'project' => SORT_ASC,
+            'date_creation' => SORT_DESC,
         ];
 
         return $this->render('index', [
