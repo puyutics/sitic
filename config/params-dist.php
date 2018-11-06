@@ -57,5 +57,9 @@ return [
     //Generate a new AccessKey for you
     'ipInfoAccessKey' => 'ENTER IPINFOKEY HERE',
 
+    //Google Analytics CODE
+    'ga-code'         => 'ENTER CODE HERE',
+    'ga-status'       => 'disabled', //Uncomment if analytics is disabled
+    //'ga-status'     => 'enabled',  //Uncomment if analytic is enabled
 
 ];
