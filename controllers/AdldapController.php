@@ -25,15 +25,27 @@ class AdldapController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index','editprofile','edituser','forgetpass',
+                'only' => ['index','editprofile','edituser','viewuser','forgetpass',
                     'forgetuser','password','reset','saveLog','sendToken'],
                 'rules' => [
                     [
-                        'actions' => ['index','editprofile','edituser','forgetpass',
-                            'forgetuser','password','reset','saveLog','sendToken'],
+                        'actions' => ['index','editprofile','edituser','viewuser',
+                            'forgetpass','forgetuser','password','reset','saveLog',
+                            'sendToken'],
+                        'allow' => true,
+                        'roles' => ['rolAdministrador'],
+                    ],
+                    [
+                        'actions' => ['viewuser','saveLog','sendToken'],
+                        'allow' => true,
+                        'roles' => ['rolDirector'],
+                    ],
+                    [
+                        'actions' => ['editprofile'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
+
                     [
                         'actions' => ['index','forgetpass','forgetuser','password','reset',
                                         'saveLog','sendToken'],
@@ -176,6 +188,78 @@ class AdldapController extends Controller
     }
 
 
+    public function actionViewuser()
+    {
+
+        $model = new AdldapEditForm();
+
+        if (Yii::$app->request->post('searchButton')==='searchButton'
+            and (Yii::$app->session->get('authtype') == 'adldap')) {
+            $post_data = $_POST['AdldapEditForm'];
+            if ($post_data['search'] != '') {
+                return $this->redirect(
+                    'index.php?r=adldap/viewuser&search='
+                    . $post_data['search']);
+            } else {
+                Yii::$app->session->setFlash('error',
+                    "Buscar no puede estar en blanco");
+                return $this->render('view_user',
+                    ['model'=>$model]);
+            }
+
+        }
+
+        if (isset($_GET['search'])
+            and (Yii::$app->session->get('authtype') == 'adldap')) {
+            $search = $_GET['search'];
+            $user = Yii::$app->ad->getProvider('default')->search()->users()->find($search);
+            $sAMAccountname = $user->getAttribute('samaccountname',0);
+            $model->dni = $user->getAttribute(Yii::$app->params['dni'],0);
+            $model->firstname = $user->getFirstName();
+            $model->lastname = $user->getLastName();
+            $model->mail = $user->getEmail();
+            $model->commonname = $user->getAttribute('cn',0);
+            $model->displayname = $user->getDisplayName();
+            $model->personalmail = $user->getAttribute(Yii::$app->params['personalmail'], 0);
+            $model->mobile = $user->getAttribute(Yii::$app->params['mobile'], 0);
+            $model->groups = $user->getGroups();
+            $model->dn = $user->getDn();
+            $model->uac = $user->getUserAccountControl();
+
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                if (Yii::$app->request->post('sendToken')==='sendToken') {
+
+                    //Crear un Reset TOKEN
+                    $resetToken = hash(Yii::$app->params['algorithm'],
+                        Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->mail);
+
+                    //Enviar Reset TOKEN por email
+                    $this->sendToken($model->dni,$model->commonname,$model->mail,$model->personalmail,$resetToken);
+
+                    //Crear Registro de Log en la base de datos
+                    $description =
+                        'Envío de Token para el usuario: ' . $sAMAccountname
+                        . ', al correo electrónico personal: ' . $model->personalmail
+                    ;
+                    $this->saveLog('sendToken', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
+
+                    //Mensaje de email enviado
+                    Yii::$app->session->setFlash('successMail', $model->personalmail);
+
+                    return $this->render('view_user',
+                        ['model'=>$model]);
+                }
+
+            } else {
+                return $this->render('view_user',
+                    ['model'=>$model]);
+            }
+        }
+        return $this->render('view_user',
+            ['model'=>$model]);
+    }
+
+
     public function actionEditprofile()
     {
         if (isset(Yii::$app->user->identity->username)
@@ -249,7 +333,7 @@ class AdldapController extends Controller
                 $personalmail = $user->getAttribute(Yii::$app->params['personalmail'],0);
                 $fullname = $user->getAttribute('cn',0);
 
-                if (($post_mail == $mail) and ($post_dni == $dni)) {
+                if (Yii::$app->request->post('sendToken')==='sendToken') {
 
                     //Crear un Reset TOKEN
                     $resetToken = hash(Yii::$app->params['algorithm'],
@@ -271,6 +355,22 @@ class AdldapController extends Controller
                     return $this->render('forgetpass', [
                         'model'=>$model]); //Success
                 }
+
+                if (($post_mail == $mail) and ($post_dni == $dni)) {
+
+                    $model->dni = $dni;
+                    $model->commonname = $fullname;
+                    $model->mail = $mail;
+                    $model->personalmail = $personalmail;
+
+                    Yii::$app->session->setFlash('personalmail', $model->personalmail);
+
+                    return $this->render('forgetpass', [
+                        'model'=>$model]); //Success
+
+                }
+
+                //
                 Yii::$app->session->setFlash('error','DNI, Cédula o Pasaporte incorrecto');
 
                 return $this->render('forgetpass',

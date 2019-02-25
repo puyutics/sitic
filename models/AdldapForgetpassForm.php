@@ -14,6 +14,7 @@ class AdldapForgetpassForm extends Model
     public $mail;
     public $personalmail;
     public $verifyCode;
+    public $commonname;
 
     /**
      * @return array the validation rules.
@@ -35,7 +36,9 @@ class AdldapForgetpassForm extends Model
         return [
             'dni' => 'Identificador (DNI/Cédula/Pasaporte)',
             'mail' => 'Usuario / Correo institucional',
+            'personalmail' => 'Correo personal',
             'verifyCode' => 'Código de verificación',
+            'commonname' => 'Nombre completo',
         ];
     }
 

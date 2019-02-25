@@ -8,8 +8,6 @@ $this->title = 'SITIC - Sistema Integrado para la Gestión de Tecnologías de la
 ?>
 <div class="site-index">
 
-
-
     <div class="bo d-content">
 
         <div class="row">

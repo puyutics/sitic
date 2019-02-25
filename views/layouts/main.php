@@ -22,6 +22,17 @@ AppAsset::register($this);
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-107054549-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-107054549-1');
+    </script>
+
 </head>
 <body>
 <?php $this->beginBody() ?>
@@ -51,8 +62,8 @@ AppAsset::register($this);
             [
                 'label' => 'Identidad',
                 'items' => [
-                    //['label' => 'Identidad', 'url' => 'index.php?r=site/identity'],
-                    //'<li class="divider"></li>',
+                    ['label' => '.. Identidad', 'url' => 'index.php?r=site/identity'],
+                    '<li class="divider"></li>',
                     ['label' => 'Editar perfil', 'url' => 'index.php?r=adldap/editprofile'],
                     ['label' => 'Cambiar Contraseña', 'url' => 'index.php?r=adldap/password'],
                     '<li class="divider"></li>',
@@ -67,7 +78,28 @@ AppAsset::register($this);
 
     if (
             (!Yii::$app->user->isGuest)
+            and (Yii::$app->user->identity->username == 'dmartinez')
+    ) {
+        echo Nav::widget([
+            'options' => ['class' => 'navbar-nav navbar-left'],
+            'items' => [
+                [
+                    'label' => 'Gestión TI',
+                    'items' => [
+                        ['label' => '.. Gestión TI', 'url' => 'index.php?r=site/management'],
+                        '<li class="divider"></li>',
+                        ['label' => 'Usuarios (Ver)', 'url' => 'index.php?r=adldap/viewuser'],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+
+    if (
+            (!Yii::$app->user->isGuest)
             and (Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId()))
+            and (Yii::$app->user->identity->username != 'dmartinez')
     ) {
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-left'],
@@ -75,8 +107,8 @@ AppAsset::register($this);
                 [
                     'label' => 'Inventario TI',
                     'items' => [
-                        //['label' => 'Inventario TI', 'url' => 'index.php?r=site/inventory'],
-                        //'<li class="divider"></li>',
+                        ['label' => '.. Inventario TI', 'url' => 'index.php?r=site/inventory'],
+                        '<li class="divider"></li>',
                         ['label' => 'Aplicaciones', 'url' => 'index.php?r=itapps/index'],
                         ['label' => 'Impresoras', 'url' => 'index.php?r=printers/index'],
                         ['label' => 'Licencias', 'url' => 'index.php?r=itlicenses/index'],
@@ -86,8 +118,8 @@ AppAsset::register($this);
                 [
                     'label' => 'Gestión TI',
                     'items' => [
-                        //['label' => 'Gestión TI', 'url' => 'index.php?r=site/management'],
-                        //'<li class="divider"></li>',
+                        ['label' => '.. Gestión TI', 'url' => 'index.php?r=site/management'],
+                        '<li class="divider"></li>',
                         ['label' => 'Bienes', 'url' => 'index.php?r=invpurchaseitem/index'],
                         ['label' => 'Compras', 'url' => 'index.php?r=invpurchase/index'],
                         ['label' => 'Procesos', 'url' => 'index.php?r=itprocesses/index'],
@@ -99,8 +131,8 @@ AppAsset::register($this);
                 [
                     'label' => 'Documentación TI',
                     'items' => [
-                        ['label' => 'Documentación (Global)', 'url' => 'index.php?r=documents/index'],
-                        //'<li class="divider"></li>',
+                        ['label' => '.. Documentación (Global)', 'url' => 'index.php?r=documents/index'],
+                        '<li class="divider"></li>',
                         ['label' => 'Manuales TI', 'url' => 'index.php?r=documents/index'],
                         ['label' => 'Normativa TI', 'url' => 'index.php?r=documents/index'],
                         ['label' => 'Políticas TI', 'url' => 'index.php?r=documents/index'],
@@ -110,7 +142,7 @@ AppAsset::register($this);
                 [
                     'label' => 'Reportes TI',
                     'items' => [
-                        //['label' => 'Reportes TI', 'url' => 'index.php?r=site/reports'],
+                        //['label' => '..Reportes TI', 'url' => 'index.php?r=site/reports'],
                         //'<li class="divider"></li>',
                         ['label' => 'Reporte(s) Incidentes', 'url' => 'index.php?r=itincidentsreports/index'],
                         ['label' => 'Reporte(s) Power BI', 'url' => 'index.php?r=itreportspowerbi/index'],

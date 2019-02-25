@@ -37,7 +37,14 @@ class CurlTransport extends Transport
         $token = $request->client->createRequestLogToken($request->getMethod(), $curlOptions[CURLOPT_URL], $curlOptions[CURLOPT_HTTPHEADER], $request->getContent());
         Yii::info($token, __METHOD__);
         Yii::beginProfile($token, __METHOD__);
-        $responseContent = curl_exec($curlResource);
+
+        try {
+            $responseContent = curl_exec($curlResource);
+        } catch (\Exception $e) {
+            Yii::endProfile($token, __METHOD__);
+            throw new Exception($e->getMessage(), $e->getCode(), $e);
+        }
+
         Yii::endProfile($token, __METHOD__);
 
         // check cURL error

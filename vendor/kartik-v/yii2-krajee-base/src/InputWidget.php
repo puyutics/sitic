@@ -4,7 +4,7 @@
  * @package   yii2-krajee-base
  * @author    Kartik Visweswaran <kartikv2@gmail.com>
  * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2018
- * @version   1.9.9
+ * @version   1.9.4
  */
 
 namespace kartik\base;
@@ -35,7 +35,7 @@ use yii\widgets\InputWidget as YiiInputWidget;
  * @author Kartik Visweswaran <kartikv2@gmail.com>
  * @since 1.0
  */
-class InputWidget extends YiiInputWidget implements BootstrapInterface
+class InputWidget extends YiiInputWidget
 {
     use TranslationTrait;
     use WidgetTrait;

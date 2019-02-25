@@ -1,30 +1,6 @@
 Change Log: `yii2-detail-view`
 ==============================
 
-## Version 1.8.1
-
-**Date:** 27-Sep-2018
-
-- Enhancement for `BootstrapTrait::getCssClass`.
-
-## Version 1.8.0
-
-**Date:** 27-Sep-2018
-
-- Bump up version.
-
-## Version 1.7.9
-
-**Date:** 26-Sep-2018
-
-- Enhancements in parsing Bootstrap CSS classes (ref: kartik-v/yii2-krajee-base#100).
-
-## Version 1.7.8
-
-**Date:** 23-Sep-2018
-
-- (enh #166): Refactor code to implement `kartik\base\BootstrapInterface`.
-
 ## Version 1.7.7
 
 **Date:** 11-Sep-2018

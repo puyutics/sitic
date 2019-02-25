@@ -4,7 +4,7 @@
  * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2018
  * @package yii2-widgets
  * @subpackage yii2-widget-fileinput
- * @version 1.0.8
+ * @version 1.0.7
  */
 
 namespace kartik\file;
@@ -30,6 +30,8 @@ use kartik\base\TranslationTrait;
  */
 class FileInput extends InputWidget
 {
+    use TranslationTrait;
+
     /**
      * @var boolean whether to resize images on client side
      */

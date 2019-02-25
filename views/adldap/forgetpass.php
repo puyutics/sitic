@@ -5,8 +5,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use app\models\AdldapForgetPassForm;
 use yii\captcha\Captcha;
+use yii\helpers\Url;
 
 $this->title = 'Olvidaste tu contraseña';
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Identidad'), 'url' => ['site/identity']];
@@ -30,8 +30,6 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 
-    <?php $model = new AdldapForgetpassForm() ?>
-
     <div class="row">
 
         <!--<div class="col-md-1 col-md-offset-1 col-sm-6 col-sm-offset-3">
@@ -47,35 +45,85 @@ $this->params['breadcrumbs'][] = $this->title;
                     <h3 class="panel-title"><?= Html::encode($this->title) ?></h3>
                 </div>
                 <div class="panel-body">
-                    <?php $form = ActiveForm::begin([
+
+                    <?php if (Yii::$app->session->hasFlash('personalmail')): ?>
+
+                        <?php $form = ActiveForm::begin([
                         'id' => 'forgetpass-form', 'options' => ['class' => 'form']]) ?>
 
-                    <?= $form->field($model, 'dni')
-                        ->textInput(['autofocus' => true])
-                    ?>
+                        <?= $form->field($model, 'dni')
+                        ->hiddenInput(['readOnly' => true, 'autofocus' => true])->label(false)
+                        ?>
 
-                    <?= $form->field($model, 'mail')
-                        ->textInput()
-                    ?>
+                        <?= $form->field($model, 'mail')
+                        ->hiddenInput(['readOnly' => true])->label(false)
+                        ?>
 
-                    <?= $form->field($model, 'verifyCode')
+                        <p><div align="center">
+                            <b><code><?php
+                                echo 'Es correcto el correo personal: ' .
+                                     Yii::$app->session->getFlash('personalmail');
+                                ?>
+                            </code></b>
+                        </div></p>
+
+                        <?php $model->verifyCode = ''; ?>
+
+                        <?= $form->field($model, 'verifyCode')
                         ->widget(Captcha::className(),
                             [
                                 'template' =>
                                     '<div class="row">
+                                            <div class="col-lg-4">{image}</div>
+                                            <div class="col-lg-4">{input}</div>
+                                            </div>',
+                                'value'=> ''
+                            ])->label(false)
+                        ?>
+
+                        <p><div class="form-group" align="center">
+                            <?= Html::a(Yii::t('app', 'No, cambiar correo personal'),
+                                Url::toRoute(['adldap/forgetpass']), ['class' => 'btn btn-default']) ?>
+                            <?= Html::submitButton('Sí, Enviar TOKEN',['class' => 'btn btn-danger',
+                                'value'=>'sendToken', 'name'=>'sendToken',
+                                'onClick'=>'buttonClicked']) ?>
+                        </div></p>
+
+                        <?php ActiveForm::end() ?>
+
+                    <?php else: ?>
+
+                        <?php $form = ActiveForm::begin([
+                            'id' => 'forgetpass-form', 'options' => ['class' => 'form']]) ?>
+
+                        <?= $form->field($model, 'dni')
+                            ->textInput(['autofocus' => true])
+                        ?>
+
+                        <?= $form->field($model, 'mail')
+                            ->textInput()
+                        ?>
+
+                        <?= $form->field($model, 'verifyCode')
+                            ->widget(Captcha::className(),
+                                [
+                                    'template' =>
+                                        '<div class="row">
                                        <div class="col-lg-4">{image}</div>
                                        <div class="col-lg-4">{input}</div>
                                     </div>',
-                            ])
-                    ?>
+                                ])
+                        ?>
 
-                    <div class="form-group">
-                        <div class="col-md-1 col-md-offset-4">
-                            <?= Html::submitButton('Enviar TOKEN', ['class' => 'btn btn-primary']) ?>
+                        <div class="form-group">
+                            <div class="col-md-1 col-md-offset-4">
+                                <?= Html::submitButton('Comprobar datos', ['class' => 'btn btn-primary']) ?>
+                            </div>
                         </div>
-                    </div>
 
-                    <?php ActiveForm::end() ?>
+                        <?php ActiveForm::end() ?>
+
+                    <?php endif; ?>
 
                 </div>
             </div>

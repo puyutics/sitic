@@ -26,11 +26,11 @@ class ItreportspowerbiController extends Controller
             'access' => [
                 'class' => AccessControl::className(),
                 'only' => ['create','index','update', 'view',
-                            'edescription','estatus'],
+                            'report','edescription','estatus'],
                 'rules' => [
                     [
                         'actions' => ['create','index','update','view',
-                                        'edescription','estatus'],
+                            'report','edescription','estatus'],
                             'allow' => true,
                             'roles' => ['rolAdministrador'],
                     ],
