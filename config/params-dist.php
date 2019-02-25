@@ -59,7 +59,6 @@ return [
 
     //Google Analytics CODE
     'ga-code'         => 'ENTER CODE HERE',
-    'ga-status'       => 'disabled', //Uncomment if analytics is disabled
-    //'ga-status'     => 'enabled',  //Uncomment if analytic is enabled
+    'ga-status'       => 'enable',
 
 ];
