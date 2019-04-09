@@ -21,7 +21,7 @@ use yii\helpers\ArrayHelper;
 
     <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'password')->passwordInput(['maxlength' => true, 'value' => '']) ?>
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 

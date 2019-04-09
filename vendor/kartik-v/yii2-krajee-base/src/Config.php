@@ -4,7 +4,7 @@
  * @package   yii2-krajee-base
  * @author    Kartik Visweswaran <kartikv2@gmail.com>
  * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2018
- * @version   1.9.4
+ * @version   2.0.4
  */
 
 namespace kartik\base;
@@ -17,7 +17,6 @@ use yii\base\InvalidConfigException;
  * Global configuration helper class for Krajee extensions.
  *
  * @author Kartik Visweswaran <kartikv2@gmail.com>
- * @since 1.0
  */
 class Config
 {
@@ -266,7 +265,7 @@ class Config
     }
 
     /**
-     * Initializes and validates the module (deprecated since v1.9.4 - use `getModule` instead directly)
+     * Initializes and validates the module (deprecated since v1.9.0 - use `getModule` instead directly)
      *
      * @param string $class the Module class name
      *
@@ -314,5 +313,21 @@ class Config
             throw new InvalidConfigException("The '{$m}' module MUST be an instance of '{$class}'.");
         }
         return $module;
+    }
+
+    /**
+     * Check if HTML options has specified CSS class
+     * @param array $options the HTML options
+     * @param string $cssClass the css class to test
+     * @return bool
+     */
+    public static function hasCssClass($options, $cssClass)
+    {
+        if (!isset($options['class'])) {
+            return false;
+        }
+        $classes = is_array($options['class']) ? $options['class'] :
+            preg_split('/\s+/', $options['class'], -1, PREG_SPLIT_NO_EMPTY);
+        return in_array($cssClass, $classes);
     }
 }

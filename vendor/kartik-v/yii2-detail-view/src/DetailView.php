@@ -4,12 +4,13 @@
  * @package   yii2-detail-view
  * @author    Kartik Visweswaran <kartikv2@gmail.com>
  * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2018
- * @version   1.7.7
+ * @version   1.8.2
  */
 
 namespace kartik\detail;
 
 use Closure;
+use kartik\base\BootstrapInterface;
 use kartik\base\Config;
 use kartik\base\TranslationTrait;
 use kartik\base\WidgetTrait;
@@ -57,7 +58,7 @@ use yii\widgets\DetailView as YiiDetailView;
  * @author Kartik Visweswaran <kartikv2@gmail.com>
  * @since  1.0
  */
-class DetailView extends YiiDetailView
+class DetailView extends YiiDetailView implements BootstrapInterface
 {
     use WidgetTrait;
     use TranslationTrait;
@@ -111,8 +112,8 @@ class DetailView extends YiiDetailView
      * @var string horizontal **right** alignment for grid cells
      */
     const ALIGN_RIGHT = 'right';
- 
-   /**
+
+    /**
      * @var string horizontal **center** alignment for grid cells
      */
     const ALIGN_CENTER = 'center';
@@ -819,10 +820,8 @@ HTML;
     {
         $this->_msgCat = 'kvdetail';
         $this->pluginName = 'kvDetailView';
+        $this->initBsVersion();
         $isBs4 = $this->isBs4();
-        if (!isset($this->panelCssPrefix)) {
-            $this->panelCssPrefix = $isBs4 ? 'card border-' : 'panel panel-';
-        }
         if ($isBs4) {
             Html::addCssClass($this->container, 'kv-container-bs4');
         }
@@ -850,7 +849,7 @@ HTML;
                 Html::addCssClass($this->options, 'table-bordered');
             }
             if ($this->condensed) {
-                Html::addCssClass($this->options, $isBs4 ? 'table-sm' : 'table-condensed');
+                $this->addCssClass($this->options, self::BS_TABLE_CONDENSED);
             }
             $this->_childTableOptions = $this->options;
             if ($this->striped) {
@@ -873,15 +872,16 @@ HTML;
             $this->container['id'] = $this->getId();
         }
         $this->initI18N(__DIR__);
-        Html::addCssClass($this->alertContainerOptions, [$this->isBs4() ? 'card-body' : 'panel-body', 'kv-alert-container']);
+        $this->addCssClass($this->alertContainerOptions, self::BS_PANEL_BODY);
+        Html::addCssClass($this->alertContainerOptions, 'kv-alert-container');
         foreach ($this->alertMessageSettings as $key => $setting) {
-            $this->alertMessageSettings[$key] = (array) $setting;
+            $this->alertMessageSettings[$key] = (array)$setting;
         }
         $this->alertMessageSettings += [
             'kv-detail-error' => ['alert', 'alert-danger'],
             'kv-detail-success' => ['alert', 'alert-success'],
-            'kv-detail-info' =>  ['alert', 'alert-info'],
-            'kv-detail-warning' =>  ['alert', 'alert-warning'],
+            'kv-detail-info' => ['alert', 'alert-info'],
+            'kv-detail-warning' => ['alert', 'alert-warning'],
         ];
 
         $this->registerAssets();
@@ -1222,21 +1222,24 @@ HTML;
         $panelAfter = '';
         $panelFooter = '';
         $isBs4 = $this->isBs4();
-        static::initCss($options, $this->panelCssPrefix . $type);
+        if (isset($this->panelCssPrefix)) {
+            static::initCss($options, $this->panelCssPrefix . $type);
+        } else {
+            $this->addCssClass($options, self::BS_PANEL);
+            Html::addCssClass($options, $isBs4 ? "border-{$type}" : "panel-{$type}");
+        }
         if ($after === false && $footer === false) {
             Html::addCssClass($this->container, 'kv-flat-b');
         }
-        $titleTag = ArrayHelper::remove($titleOptions, 'tag', ($isBs4 ? 'span' : 'h3'));
-        if (!$isBs4) {
-            static::initCss($titleOptions, 'panel-title');
-        }
+        $titleTag = ArrayHelper::remove($titleOptions, 'tag', ($isBs4 ? 'h5' : 'h3'));
+        static::initCss($titleOptions, $isBs4 ? 'm-0' : $this->getCssClass(self::BS_PANEL_TITLE));
         if ($heading !== false) {
-            $color = $type === 'default' ? 'bg-light' : 'text-white bg-' . $type;
-            static::initCss($headingOptions, $isBs4 ? 'card-header ' . $color : 'panel-heading');
+            $color = $isBs4 ? ($type === 'default' ? ' bg-light' : " text-white bg-{$type}") : '';
+            static::initCss($headingOptions, $this->getCssClass(self::BS_PANEL_HEADING) . $color);
             $panelHeading = Html::tag('div', $this->panelHeadingTemplate, $headingOptions);
         }
         if ($footer !== false) {
-            static::initCss($footerOptions, $isBs4 ? 'card-footer border-top-0' : 'panel-footer');
+            static::initCss($footerOptions, $this->getCssClass(self::BS_PANEL_FOOTER));
             $panelFooter = Html::tag('div', $footer, $footerOptions);
         }
         if ($before !== false) {
@@ -1254,7 +1257,7 @@ HTML;
             '{items}' => $items,
             '{panelFooter}' => $panelFooter,
             '{panelBefore}' => $panelBefore,
-            '{panelAfter}' => $panelAfter
+            '{panelAfter}' => $panelAfter,
         ]);
 
         return Html::tag('div', strtr($out, [
@@ -1330,7 +1333,7 @@ HTML;
         $buttonOptions = $type . 'Options';
         $options = $this->$buttonOptions;
         $css = $this->getDefaultIconPrefix() . ($this->isBs4() ? $iconBs4 : $iconBs3);
-        $label = ArrayHelper::remove($options, 'label', '<i class="' . $css  . '"></i>');
+        $label = ArrayHelper::remove($options, 'label', '<i class="' . $css . '"></i>');
         if (empty($options['class'])) {
             $options['class'] = 'kv-action-btn';
         }
@@ -1374,7 +1377,7 @@ HTML;
             $button = Html::tag($tag, $label, $opts);
         }
         $opts = ArrayHelper::getValue($this->alertWidgetOptions, 'options', []);
-        $css = '{class} fade ' . ($this->isBs4() ? 'show' : 'in');
+        $css = '{class} fade ' . $this->getCssClass(self::BS_SHOW);
         if (!empty($opts['class'])) {
             $opts['class'] .= ' ' . $css;
         } else {

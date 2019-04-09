@@ -25,7 +25,7 @@ class PhonesextensionsController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','index','update', 'view',
+                'only' => ['create','index','update', 'view','public',
                     'embedded'],
                 'rules' => [
                     [
@@ -37,6 +37,10 @@ class PhonesextensionsController extends Controller
                     [
                         'actions' => ['view'],
                         'allow' => false,
+                    ],
+                    [
+                        'actions' => ['public'],
+                        'allow' => true,
                     ],
                 ],
             ],
@@ -62,6 +66,24 @@ class PhonesextensionsController extends Controller
         ];
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Lists all PhonesExtensions models.
+     * @return mixed
+     */
+    public function actionPublic()
+    {
+        $searchModel = new PhonesExtensionsSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->sort->defaultOrder = [
+            'extension' => SORT_ASC,
+        ];
+
+        return $this->render('public', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);

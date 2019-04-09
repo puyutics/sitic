@@ -190,3 +190,6 @@ Editar el archivo `config/params.php` con datos reales, por ejemplo:
     'adminEmail' => 'admin@dominio.com', //Cuenta para recibir correo del formulario de contacto.
     'appURL'     => 'http://sitic.dominio.com/',
     'contact'    => 'Unidad de TI. Contáctese al (+593) 3-2555-555 de lunes a viernes, en horario de atención 08h00 - 17h00.',
+
+### Agenda Telefónica (Encabezado)
+Cambiar el nombre del archivo `views/phonesextensions/_header-dist.php` a `_header.php` y modificar con datos reales.

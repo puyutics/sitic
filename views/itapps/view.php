@@ -73,13 +73,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a(Yii::t('app', 'Editar'),
             ['update', 'id' => $model->id],
             ['class' => 'btn btn-success']) ?>
-        <?/*= Html::a(Yii::t('app', 'Eliminar'), ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) */?>
         <?php
         Modal::begin([
             'header' => '<h4 class="modal-title" align="center"> <code>INFORMACIÓN CONFIDENCIAL</code> </h4>',

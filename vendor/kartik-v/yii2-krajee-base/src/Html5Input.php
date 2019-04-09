@@ -4,7 +4,7 @@
  * @package   yii2-krajee-base
  * @author    Kartik Visweswaran <kartikv2@gmail.com>
  * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2018
- * @version   1.9.4
+ * @version   2.0.4
  */
 
 namespace kartik\base;
@@ -18,7 +18,6 @@ use yii\helpers\ArrayHelper;
  * Html5Input widget is a widget encapsulating the HTML 5 inputs.
  *
  * @author Kartik Visweswaran <kartikv2@gmail.com>
- * @since 1.0
  * @see http://twitter.github.com/typeahead.js/examples
  */
 class Html5Input extends InputWidget
