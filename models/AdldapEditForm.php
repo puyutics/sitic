@@ -22,6 +22,8 @@ class AdldapEditForm extends Model
     public $uac;
     public $groups;
     public $dn;
+    public $department;
+    public $title;
 
     /**
      * @return array the validation rules.
@@ -31,6 +33,7 @@ class AdldapEditForm extends Model
         return [
             [['dni','firstname', 'lastname','mail','commonname',
                 'displayname','personalmail','uac'], 'required'],
+            [['department','title'],'string'],
             [['mobile','uac'],'number'],
             [['mail','personalmail'], 'email'],
         ];
@@ -54,6 +57,8 @@ class AdldapEditForm extends Model
             'uac'          => 'Estado',
             'groups'       => 'Grupo(s)',
             'dn'           => 'Unidad Organizativa',
+            'department'   => 'Departamento',
+            'title'        => 'Puesto',
         ];
     }
 }

@@ -80,28 +80,7 @@ AppAsset::register($this);
 
     if (
             (!Yii::$app->user->isGuest)
-            and (Yii::$app->user->identity->username == 'dmartinez')
-    ) {
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav navbar-left'],
-            'items' => [
-                [
-                    'label' => 'Gestión TI',
-                    'items' => [
-                        ['label' => '.. Gestión TI', 'url' => 'index.php?r=site/management'],
-                        '<li class="divider"></li>',
-                        ['label' => 'Usuarios (Ver)', 'url' => 'index.php?r=adldap/viewuser'],
-                    ],
-                ],
-            ],
-        ]);
-    }
-
-
-    if (
-            (!Yii::$app->user->isGuest)
             and (Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId()))
-            and (Yii::$app->user->identity->username != 'dmartinez')
     ) {
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-left'],
@@ -127,7 +106,7 @@ AppAsset::register($this);
                         ['label' => 'Procesos', 'url' => 'index.php?r=itprocesses/index'],
                         ['label' => 'Proyectos', 'url' => 'index.php?r=itprojects/index'],
                         ['label' => 'Servicios', 'url' => 'index.php?r=itservices/index'],
-                        ['label' => 'Usuarios', 'url' => 'index.php?r=adldap/edituser'],
+                        ['label' => 'Usuarios', 'url' => 'index.php?r=adldap/index'],
                     ],
                 ],
                 [

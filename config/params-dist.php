@@ -17,6 +17,12 @@ return [
     // 'login' => 'mail',
     'login' => 'username',
 
+    //Contenedores AD/LDAP para gestión de usuarios
+    'containers' => [
+        'Users'=>'Users',
+        'Computers'=>'Computers',
+    ],
+
     //Parámetros Personalizados de la Companía, Empresa o Institución
     'company'    => 'Nombre de la Empresa',
     'adminEmail' => 'admin@dominio.com', //Cuenta para recibir correo del formulario de contacto.
@@ -44,6 +50,7 @@ return [
     'fromName' => 'Sistema de Gestión de Identidad',
     'cc'       => 'usuario@dominio.com', //Opción para almacenar copias de Emails Enviados
     'subject'  => 'Restablecer Contraseña',
+    'subjectNew'  => 'Nueva cuenta',
 
 
     //Generar un Código de Seguridad (SaltKey) en el siguiente enlace

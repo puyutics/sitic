@@ -26,6 +26,7 @@ if (isset($_GET['search'])) {
 }
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Gestión TI'), 'url' => ['site/management']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Usuarios'), 'url' => ['adldap/index']];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Ver');
 ?>
 

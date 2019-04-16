@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format'=>'raw'
             ],
 
-            ['class' => 'kartik\grid\ActionColumn',
+            /*['class' => 'kartik\grid\ActionColumn',
                 'template'=>'{ipinfo}',
                 'buttons'=>[
                     'ipinfo' => function ($url, $model) {
@@ -74,22 +74,40 @@ $this->params['breadcrumbs'][] = $this->title;
                             ]);
                     },
                 ]
-            ],
+            ],*/
 
             ['class' => 'kartik\grid\ActionColumn',
                 'template'=>'{admin}',
                 'buttons'=>[
                     'admin' => function ($url, $model) {
-                        return Html::a(
+                        if ($model->external_type == 'adldap') {
+                            return Html::a(
                                 '<span class="btn btn-success center-block">
                                         <i class="fa fa-fw fa-folder"></i>
-                                         Origen</span>',
-                            Url::to([strtolower($model->external_type) . '/view', 'id' => $model->external_id]),
-                            [
-                                'title' => Yii::t('yii', 'Abrir Origen'),
-                                'target'=>'_blank',
-                                'data-pjax'=>"0",
-                            ]);
+                                         Usuario</span>',
+
+                                Url::to([strtolower($model->external_type) . '/edituser', 'search' => $model->external_id]),
+
+                                [
+                                    'title' => Yii::t('yii', 'Editar Usuario'),
+                                    'target'=>'_blank',
+                                    'data-pjax'=>"0",
+                                ]);
+                        } else {
+                            return Html::a(
+                                '<span class="btn btn-success center-block">
+                                        <i class="fa fa-fw fa-folder"></i>
+                                         Abrir</span>',
+
+                                Url::to([strtolower($model->external_type) . '/view', 'id' => $model->external_id]),
+
+                                [
+                                    'title' => Yii::t('yii', 'Abrir'),
+                                    'target'=>'_blank',
+                                    'data-pjax'=>"0",
+                                ]);
+                        }
+
                     },
                 ]
             ],

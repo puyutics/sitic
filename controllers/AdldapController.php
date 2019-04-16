@@ -13,6 +13,7 @@ use app\models\AdldapForgetpassForm;
 use app\models\AdldapForgetuserForm;
 use app\models\AdldapPasswordForm;
 use app\models\AdldapResetForm;
+use app\models\AdldapCreateForm;
 use app\models\AdldapEditForm;
 
 class AdldapController extends Controller
@@ -25,13 +26,13 @@ class AdldapController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index','editprofile','edituser','viewuser','forgetpass',
-                    'forgetuser','password','reset','saveLog','sendToken'],
+                'only' => ['create','index','editprofile','edituser','viewuser','forgetpass',
+                    'forgetuser','password','reset','saveLog','sendToken','sendNewUser'],
                 'rules' => [
                     [
-                        'actions' => ['index','editprofile','edituser','viewuser',
+                        'actions' => ['create','index','editprofile','edituser','viewuser',
                             'forgetpass','forgetuser','password','reset','saveLog',
-                            'sendToken'],
+                            'sendToken','sendNewUser'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
@@ -85,6 +86,85 @@ class AdldapController extends Controller
     }
 
 
+    public function actionCreate()
+    {
+
+        $model = new AdldapCreateForm();
+
+        if (Yii::$app->session->get('authtype') == 'adldap') {
+
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+
+                // https://github.com/Adldap2/Adldap2/blob/master/docs/models/model.md#saving
+                // create user
+                $user = \Yii::$app->ad->make()->user([
+                    'cn' => $model->commonname,
+                ]);
+
+                // set attributes with set... function
+                $user->setAccountName($model->samaccountname);
+                $user->setDisplayName($model->displayname);
+                $user->setFirstName($model->firstname);
+                $user->setLastName($model->lastname);
+                $user->setUserPrincipalName($model->mail);
+
+                // create dn
+                $dn = $user->getDnBuilder();
+                $dn->addCn($user->getCommonName());
+                $dn->addOu($model->dn);
+                $user->setDn($dn);
+
+                // save an check return value
+                if ($user->save()) {
+
+                    $security = new Security();
+                    $user->setTitle($model->title);
+                    $user->setPassword($security->generateRandomString(8));
+                    $user->setAttribute(Yii::$app->params['dni'],$model->dni);
+                    $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);
+                    $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
+                    $user->setUserAccountControl($model->uac);
+                    $user->setDepartment($model->department);
+                    $user->setTitle($model->title);
+                    $user->setEmail($model->mail);
+
+                    $user->save();
+
+                    Yii::$app->session->setFlash('success', "Usuario creado correctamente");
+                    $username = Yii::$app->user->identity->username;
+
+                    //Enviar usuario creado por email
+                    $dni = $model->dni;
+                    $fullname = $model->commonname;
+                    $mail = $model->mail;
+                    $personalmail = $model->personalmail;
+
+                    $this->sendNewUser($dni,$fullname,$mail,$personalmail);
+
+                    //Crear Registro de Log en la base de datos
+                    $description =
+                        'Usuario creado: ' . $model->samaccountname
+                        . ". $model->commonname. $model->personalmail"
+                    ;
+                    $this->saveLog('adldapCreateUser', $username, $description, $model->samaccountname,'adldap');
+                    return $this->redirect(['edituser', 'search' => $model->samaccountname]);
+                    //return $this->render('edituser',['model'=>$model]);
+                } else {
+                    Yii::$app->session->setFlash('error', "Problemas al crear el usuario");
+                    return $this->render('create',
+                        ['model'=>$model]);
+                }
+
+            } else {
+                return $this->render('create',
+                    ['model'=>$model]);
+            }
+        }
+        return $this->render('create',
+            ['model'=>$model]);
+    }
+
+
     public function actionEdituser()
     {
 
@@ -122,6 +202,8 @@ class AdldapController extends Controller
             $model->groups = $user->getGroups();
             $model->dn = $user->getDn();
             $model->uac = $user->getUserAccountControl();
+            $model->department = $user->getDepartment();
+            $model->title = $user->getTitle();
 
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
                 if (Yii::$app->request->post('sendToken')==='sendToken') {
@@ -157,6 +239,8 @@ class AdldapController extends Controller
                     $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);
                     $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
                     $user->setUserAccountControl($model->uac);
+                    $user->setDepartment($model->department);
+                    $user->setTitle($model->title);
 
                     if ($user->save()) {
                         Yii::$app->session->setFlash('success', "Actualizado Correctamente");
@@ -607,6 +691,32 @@ class AdldapController extends Controller
                 ->setFrom(Yii::$app->params['from'], Yii::$app->params['fromName'])
                 ->setCc(Yii::$app->params['cc'])
                 ->setSubject(Yii::$app->params['subject'])
+                ->setTextBody($body)
+                ->send();
+            return true;
+    }
+
+
+    public function sendNewUser($dni,$fullname,$mail,$personalmail)
+    {
+            $body =
+                "Estimado usuario," . "\n" .
+                "Se ha creado una cuenta institucional en " . Yii::$app->params['company'] . "\n\n" .
+                "DNI/Céd/Pasaporte:   " . $dni . "\n" .
+                "Nombres/Apellidos:    " . $fullname . "\n" .
+                "Cuenta institucional:   " . $mail . "\n\n" .
+                "--------------------------------------------------------------------------------------" . "\n" .
+                "Haga clic en el siguiente enlace para activar su cuenta:" . "\n\n" .
+                Yii::$app->params['appURL'] . "index.php?r=adldap/forgetpass\n\n" .
+                "--------------------------------------------------------------------------------------" . "\n" .
+                "---> Correo enviado por el sistema automático de Gestión de identidad. NO RESPONDA ESTE CORREO <---"
+            ;
+
+            Yii::$app->mailer->compose()
+                ->setTo($personalmail)
+                ->setFrom(Yii::$app->params['from'], Yii::$app->params['fromName'])
+                ->setCc(Yii::$app->params['cc'])
+                ->setSubject(Yii::$app->params['subjectNew'])
                 ->setTextBody($body)
                 ->send();
             return true;
