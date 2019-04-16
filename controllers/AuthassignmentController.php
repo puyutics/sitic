@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\AuthAssignment;
 use app\models\AuthAssignmentSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -20,6 +21,17 @@ class AuthassignmentController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['create','index','update', 'view'],
+                'rules' => [
+                    [
+                        'actions' => ['create','update','index','view'],
+                        'allow' => true,
+                        'roles' => ['rolAdministrador'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

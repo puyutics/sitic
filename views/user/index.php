@@ -16,6 +16,7 @@ use app\models\User;
 
 $this->title = Yii::t('app', 'Usuarios');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Gestión TI'), 'url' => ['site/management']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Usuarios'), 'url' => ['adldap/index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">
@@ -38,8 +39,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            //'id',
             'username',
+            'id',
             /*[
                 'attribute' => 'username',
                 'value'=>function($model){

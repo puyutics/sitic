@@ -13,6 +13,8 @@ use yii\data\ActiveDataProvider;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app', 'Usuario/Departamento');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Gestión TI'), 'url' => ['site/management']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Usuarios'), 'url' => ['adldap/index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-department-index">
@@ -20,10 +22,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?php //Html::encode($this->title) ?></h1>
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?= Html::a(Yii::t('app', 'Asignar Usuario/Departamento'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -101,10 +99,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'toolbar' =>  [
             [
                 'content'=>
-                    Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], [
-                        'class' => 'btn btn-default',
-                        'title' => ('Reset Grid')
+                    Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'], [
+                        'class' => 'btn btn-success',
+                        'title' => ('Asignar Usuario/Departamento')
                     ]),
+                Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], [
+                    'class' => 'btn btn-default',
+                    'title' => ('Reset Grid')
+                ]),
             ],
             '{export}',
             '{toggleData}'

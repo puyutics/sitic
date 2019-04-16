@@ -34,6 +34,11 @@ class ItreportspowerbiController extends Controller
                             'allow' => true,
                             'roles' => ['rolAdministrador'],
                     ],
+                    [
+                        'actions' => ['index','report'],
+                        'allow' => true,
+                        'roles' => ['rolDirector'],
+                    ],
                 ],
             ],
             'verbs' => [
