@@ -33,6 +33,10 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
             'yii\\' => 4,
             'yii2assets\\pdfjs\\' => 17,
         ),
+        's' => 
+        array (
+            'setasign\\Fpdi\\' => 14,
+        ),
         'r' => 
         array (
             'rmrevin\\yii\\fontawesome\\' => 24,
@@ -161,10 +165,10 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         ),
         'C' => 
         array (
-            'Composer\\Installers\\' => 20,
             'Codeception\\PHPUnit\\' => 20,
             'Codeception\\Extension\\' => 22,
             'Codeception\\' => 12,
+            'Carbon\\' => 7,
         ),
         'A' => 
         array (
@@ -216,6 +220,10 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         'yii2assets\\pdfjs\\' => 
         array (
             0 => __DIR__ . '/..' . '/yii2assets/yii2-pdfjs',
+        ),
+        'setasign\\Fpdi\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/setasign/fpdi/src',
         ),
         'rmrevin\\yii\\fontawesome\\' => 
         array (
@@ -519,10 +527,6 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
-        'Composer\\Installers\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers',
-        ),
         'Codeception\\PHPUnit\\' => 
         array (
             0 => __DIR__ . '/..' . '/codeception/phpunit-wrapper/src',
@@ -536,14 +540,14 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
             0 => __DIR__ . '/..' . '/codeception/base/src/Codeception',
             1 => __DIR__ . '/..' . '/codeception/stub/src',
         ),
+        'Carbon\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon',
+        ),
         'Adldap\\' => 
         array (
             0 => __DIR__ . '/..' . '/adldap2/adldap2/src',
         ),
-    );
-
-    public static $fallbackDirsPsr4 = array (
-        0 => __DIR__ . '/..' . '/nesbot/carbon/src',
     );
 
     public static $prefixesPsr0 = array (
@@ -592,11 +596,6 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
     );
 
     public static $classMap = array (
-        'FPDF_TPL' => __DIR__ . '/..' . '/setasign/fpdi/fpdf_tpl.php',
-        'FPDI' => __DIR__ . '/..' . '/setasign/fpdi/fpdi.php',
-        'FilterASCII85' => __DIR__ . '/..' . '/setasign/fpdi/filters/FilterASCII85.php',
-        'FilterASCIIHexDecode' => __DIR__ . '/..' . '/setasign/fpdi/filters/FilterASCIIHexDecode.php',
-        'FilterLZW' => __DIR__ . '/..' . '/setasign/fpdi/filters/FilterLZW.php',
         'PHPUnit\\Exception' => __DIR__ . '/..' . '/phpunit/phpunit/src/Exception.php',
         'PHPUnit\\Framework\\Assert' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert.php',
         'PHPUnit\\Framework\\AssertionFailedError' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/AssertionFailedError.php',
@@ -1140,8 +1139,6 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         'TheSeer\\Tokenizer\\TokenCollectionException' => __DIR__ . '/..' . '/theseer/tokenizer/src/TokenCollectionException.php',
         'TheSeer\\Tokenizer\\Tokenizer' => __DIR__ . '/..' . '/theseer/tokenizer/src/Tokenizer.php',
         'TheSeer\\Tokenizer\\XMLSerializer' => __DIR__ . '/..' . '/theseer/tokenizer/src/XMLSerializer.php',
-        'fpdi_pdf_parser' => __DIR__ . '/..' . '/setasign/fpdi/fpdi_pdf_parser.php',
-        'pdf_context' => __DIR__ . '/..' . '/setasign/fpdi/pdf_context.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
@@ -1149,7 +1146,6 @@ class ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f::$fallbackDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f::$prefixesPsr0;
             $loader->classMap = ComposerStaticInitc19898360e01dc5a756efd6ea48cfd5f::$classMap;
 
