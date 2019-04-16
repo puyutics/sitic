@@ -34,13 +34,9 @@ class DocumentsController extends Controller
                 'rules' => [
                     [
                         'actions' => ['create','update','index','efilename','efiletype',
-                            'edescription','edate','estatus'],
+                            'edescription','edate','estatus','view'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
-                    ],
-                    [
-                        'actions' => ['view'],
-                        'allow' => false,
                     ],
                 ],
             ],

@@ -14,6 +14,10 @@ use yii\data\ActiveDataProvider;
 
 $this->title = Yii::t('app', 'Documentación TI');
 $this->params['breadcrumbs'][] = $this->title;
+
+$dataProvider->sort->defaultOrder = [
+    'date' => SORT_DESC,
+];
 ?>
 <div class="documents-index">
 
@@ -34,33 +38,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            //'id',
-            //'filename',
-            //'filetype',
-            //'external_id',
-            //'external_type',
-
-
-            /*[
-                'class'=>'kartik\grid\EditableColumn',
-                'label'=>'DOCUMENTO',
-                'attribute'=>'filename',
-                'editableOptions'=>[
-                    'size' => 'md',
-                    'inputType' => Editable::INPUT_TEXT,
-                    'formOptions' => ['action' => Url::to(['documents/efilename'])],
-                ],
-            ],
-            [
-                'class'=>'kartik\grid\EditableColumn',
-                'label'=>'TIPO',
-                'attribute'=>'filetype',
-                'editableOptions'=>[
-                    'size' => 'md',
-                    'inputType' => Editable::INPUT_TEXTAREA,
-                    'formOptions' => ['action' => Url::to(['documents/efiletype'])],
-                ],
-            ],*/
             [
                 'class'=>'kartik\grid\EditableColumn',
                 'attribute'=>'description',
@@ -133,8 +110,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template'=>'{update}',
                 'buttons'=>[
                     'update' => function ($url, $model) {
-                            return Html::a('<span class="btn btn-primary center-block"><i class="fa fa-fw fa-edit"></i>Editar</span>',
-                            Url::to(['documents/update',
+                            return Html::a('<span class="btn btn-primary center-block"><i class="fa fa-fw fa-edit"></i>Detalles</span>',
+                            Url::to(['documents/view',
                                 'id' => $model->id
                             ]),
                             ['title' => Yii::t('yii', 'Editar Documento')]);
