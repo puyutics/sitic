@@ -46,19 +46,20 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
         </div>
     </div>
 
-    <div class="row"> <div class="alert alert-warning col-sm-offset-4 col-sm-4" align="center">
-        <?php if (isset($_GET['search'])) { ?>
-            <?= $form->field($model, 'search')->textInput(
-                    ['readOnly'=> true, 'value' => $_GET['search']]); ?>
-            <?= Html::a(Yii::t('app', 'Reiniciar'),
-                Url::toRoute(['adldap/edituser']), ['class' => 'btn btn-default']) ?>
-        <?php } else { ?>
+    <?php if (isset($_GET['search'])) { ?>
+    <div class="row"> <div class="alert col-sm-offset-4 col-sm-4" align="center">
+            <?= Html::a(Yii::t('app', 'Reiniciar Búsqueda'),
+                Url::toRoute(['adldap/edituser']), ['class' => 'btn btn-warning']) ?>
+        </div> </div>
+    <?php } ?>
+    <?php if (!isset($_GET['search'])) { ?>
+        <div class="row"> <div class="alert alert-warning col-sm-offset-4 col-sm-4" align="center">
             <?= $form->field($model, 'search')->textInput(); ?>
             <?= Html::submitButton('Buscar',['class' => 'btn btn-default',
                 'value'=>'searchButton', 'name'=>'searchButton',
                 'onClick'=>'buttonClicked']) ?>
-        <?php } ?>
-    </div> </div>
+        </div> </div>
+    <?php } ?>
 </div>
 
 <?php
@@ -80,6 +81,14 @@ if (isset($_GET['search'])) { ?>
                     'form' => $form,
                     'diff' => $diff,
                     'user' => $user,
+                ])
+
+            ],
+            [
+                'label'=>'<i class="glyphicon glyphicon-list-alt"></i> Grupos',
+                'content' => $this->render('edit_user_groups', [
+                    'model' => $model,
+                    'form' => $form,
                 ])
 
             ],

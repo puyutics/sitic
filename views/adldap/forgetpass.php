@@ -86,7 +86,9 @@ $this->params['breadcrumbs'][] = $this->title;
                                 Url::toRoute(['adldap/forgetpass']), ['class' => 'btn btn-default']) ?>
                             <?= Html::submitButton('Sí, Enviar TOKEN',['class' => 'btn btn-danger',
                                 'value'=>'sendToken', 'name'=>'sendToken',
-                                'onClick'=>'buttonClicked']) ?>
+                                //'onClick'=>'buttonClicked'])
+                                'onClick'=>'alert("Se enviará un enlace (Reset TOKEN) a su correo personal.")'])
+                            ?>
                         </div></p>
 
                         <?php ActiveForm::end() ?>

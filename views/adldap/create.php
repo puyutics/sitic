@@ -8,6 +8,9 @@
 
 use kartik\form\ActiveForm;
 use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
+use app\models\Department;
+use kartik\select2\Select2;
 
 $this->title = Yii::t('app', 'Crear usuario');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Gestión TI'), 'url' => ['site/management']];
@@ -60,7 +63,17 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     <?= $form->field($model, 'title')->textInput() ?>
 
-                    <?= $form->field($model, 'department')->textInput() ?>
+                    <?php $department = ArrayHelper::map(Department::find(
+                            ['attribute'=>'department'])->orderBy(['department'=>SORT_ASC])->all(),
+                            'department', 'department'); ?>
+
+                    <?php echo $form->field($model, 'department')->widget(Select2::classname(), [
+                        'data' => $department,
+                        'options' => ['placeholder' => 'Seleccionar departamento'],
+                        'pluginOptions' => [
+                            'allowClear' => true
+                        ],
+                    ]); ?>
 
                     <?php //Más códigos UAC cuentas Active Directory
                     //https://jackstromberg.com/2013/01/useraccountcontrol-attributeflag-values/
@@ -68,10 +81,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     <div class="row">
                         <div class="col-md-6">
-                            <?php echo "<p></p>";
-                            echo $form->field($model, 'dn')->dropDownList(
-                                    Yii::$app->params['containers'])
-                            ?>
+                            <?php echo $form->field($model, 'dn')->widget(Select2::classname(), [
+                                'data' => Yii::$app->params['containers'],
+                                'options' => ['placeholder' => 'Seleccionar contenedor'],
+                                'pluginOptions' => [
+                                    'allowClear' => true
+                                ],
+                            ]); ?>
                         </div>
                         <div class="col-md-6">
                             <?php echo "<p></p>";

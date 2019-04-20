@@ -15,6 +15,7 @@ use app\models\AdldapPasswordForm;
 use app\models\AdldapResetForm;
 use app\models\AdldapCreateForm;
 use app\models\AdldapEditForm;
+use app\models\AdldapGroupForm;
 
 class AdldapController extends Controller
 {
@@ -27,12 +28,13 @@ class AdldapController extends Controller
             'access' => [
                 'class' => AccessControl::className(),
                 'only' => ['create','index','editprofile','edituser','viewuser','forgetpass',
-                    'forgetuser','password','reset','saveLog','sendToken','sendNewUser'],
+                    'forgetuser','password','reset','saveLog','sendToken','sendNewUser',
+                    'viewgroups'],
                 'rules' => [
                     [
                         'actions' => ['create','index','editprofile','edituser','viewuser',
                             'forgetpass','forgetuser','password','reset','saveLog',
-                            'sendToken','sendNewUser'],
+                            'sendToken','sendNewUser','viewgroups'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
@@ -262,12 +264,158 @@ class AdldapController extends Controller
                     }
                 }
 
+
+                if (Yii::$app->request->post('addGroup')==='addGroup') {
+
+                    // https://github.com/Adldap2/Adldap2/blob/master/docs/models/traits/has-member-of.md#adding-a-group
+                    // find user
+                    $userObject = \Yii::$app->ad->search()->findBy('sAMAccountname', $sAMAccountname);
+                    // find group
+                    $groupObject = \Yii::$app->ad->search()->findBy('cn', $model->addGroup);
+                    // add group to user
+                    $userObject->addGroup($groupObject);
+
+                    if ($groupObject != null && $groupObject->exists && $userObject->save()) {
+
+                        //Crear Registro de Log en la base de datos
+                        $description =
+                            'Grupo agregado: ' . $model->addGroup
+                        ;
+                        $this->saveLog('addGroup', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
+
+                        //Mensaje de grupo eliminado
+                        Yii::$app->session->setFlash('success', 'Grupo agregado correctamente');
+
+                        $user = \Yii::$app->ad->search()->findBy('sAMAccountname', $sAMAccountname);
+                        $model->groups = $user->getGroups();
+                        $model->addGroup = '';
+                        $model->deleteGroup = '';
+
+                    } else {
+                        //Mensaje de grupo eliminado
+                        Yii::$app->session->setFlash('error', 'Error al agregar grupo');
+                    }
+
+                    return $this->render('edit_user',
+                        ['model'=>$model]);
+                }
+
+
+                if (Yii::$app->request->post('deleteGroup')==='deleteGroup') {
+
+                    // https://github.com/Adldap2/Adldap2/blob/master/docs/models/traits/has-member-of.md#adding-a-group
+                    // find user
+                    $userObject = \Yii::$app->ad->search()->findBy('sAMAccountname', $sAMAccountname);
+                    // find group
+                    $groupObject = \Yii::$app->ad->search()->findBy('cn', $model->deleteGroup);
+                    // delete group to user
+                    $userObject->removeGroup($groupObject);
+
+                    if ($groupObject != null && $groupObject->exists && $userObject->save()) {
+
+                        //Crear Registro de Log en la base de datos
+                        $description =
+                            'Grupo eliminado: ' . $model->deleteGroup
+                        ;
+                        $this->saveLog('deleteGroup', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
+
+                        //Mensaje de grupo eliminado
+                        Yii::$app->session->setFlash('success', 'Grupo eliminado correctamente');
+
+                        $user = \Yii::$app->ad->search()->findBy('sAMAccountname', $sAMAccountname);
+                        $model->groups = $user->getGroups();
+                        $model->addGroup = '';
+                        $model->deleteGroup = '';
+
+                    } else {
+                        //Mensaje de grupo eliminado
+                        Yii::$app->session->setFlash('error', 'Error al eliminar grupo');
+                    }
+
+                    return $this->render('edit_user',
+                        ['model'=>$model]);
+                }
+
             } else {
                 return $this->render('edit_user',
                     ['model'=>$model]);
             }
         }
         return $this->render('edit_user',
+            ['model'=>$model]);
+    }
+
+
+    public function actionViewgroups()
+    {
+
+        $model = new AdldapGroupForm();
+
+        if (Yii::$app->request->post('searchButton')==='searchButton'
+            and (Yii::$app->session->get('authtype') == 'adldap')) {
+            $post_data = $_POST['AdldapGroupForm'];
+            if ($post_data['search'] != '') {
+                return $this->redirect(
+                    'index.php?r=adldap/viewgroups&search='
+                    . $post_data['search']);
+            } else {
+                Yii::$app->session->setFlash('error',
+                    "Buscar no puede estar en blanco");
+                return $this->render('view_groups',
+                    ['model'=>$model]);
+            }
+
+        }
+
+        if (isset($_GET['search'])
+            and (Yii::$app->session->get('authtype') == 'adldap')) {
+            $search = $_GET['search'];
+
+            // find group
+            $groupObject = \Yii::$app->ad->search()->findBy('cn', $search);
+
+            if ($groupObject != null && $groupObject->exists) {
+                $model->name = $groupObject->getName();
+                $model->dn = $groupObject->getDN();
+                $model->groupType = $groupObject->getGroupType();
+                $model->members = $groupObject->getMembers();
+            }
+
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                if (Yii::$app->request->post('deleteMember') === 'deleteMember') {
+
+                    // find group
+                    $groupObject = \Yii::$app->ad->search()->findBy('cn', $model->name);
+
+                    if ($groupObject->removeMember($model->deleteMember)) {
+
+                        //Crear Registro de Log en la base de datos
+                        $description =
+                            'Miembro eliminado: ' . $model->deleteMember;
+                        $this->saveLog('deleteMember', Yii::$app->user->identity->username, $description, $model->name, 'adldapGroup');
+
+                        //Mensaje de grupo eliminado
+                        Yii::$app->session->setFlash('success', 'Miembro eliminado correctamente');
+
+                        $groupObject = \Yii::$app->ad->search()->findBy('cn', $model->name);
+                        $model->members = $groupObject->getMembers();
+                        $model->deleteMember = '';
+
+                    } else {
+                        //Mensaje de grupo eliminado
+                        Yii::$app->session->setFlash('error', 'Error al eliminar miembro');
+                    }
+
+                    return $this->render('view_groups',
+                        ['model' => $model]);
+                }
+            }
+
+            return $this->render('view_groups',
+                ['model'=>$model]);
+
+        }
+        return $this->render('view_groups',
             ['model'=>$model]);
     }
 
@@ -309,8 +457,10 @@ class AdldapController extends Controller
             $model->groups = $user->getGroups();
             $model->dn = $user->getDn();
             $model->uac = $user->getUserAccountControl();
+            $model->title = $user->getTitle();
+            $model->department = $user->getDepartment();
 
-            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if (Yii::$app->request->post() && $model->validate()) {
                 if (Yii::$app->request->post('sendToken')==='sendToken') {
 
                     //Crear un Reset TOKEN

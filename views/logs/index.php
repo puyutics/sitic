@@ -86,10 +86,23 @@ $this->params['breadcrumbs'][] = $this->title;
                                         <i class="fa fa-fw fa-folder"></i>
                                          Usuario</span>',
 
-                                Url::to([strtolower($model->external_type) . '/edituser', 'search' => $model->external_id]),
+                                Url::to(['adldap/edituser', 'search' => $model->external_id]),
 
                                 [
                                     'title' => Yii::t('yii', 'Editar Usuario'),
+                                    'target'=>'_blank',
+                                    'data-pjax'=>"0",
+                                ]);
+                        } else if ($model->external_type == 'adldapGroup') {
+                            return Html::a(
+                                '<span class="btn btn-success center-block">
+                                        <i class="fa fa-fw fa-folder"></i>
+                                         Grupo</span>',
+
+                                Url::to(['adldap/viewgroups', 'search' => $model->external_id]),
+
+                                [
+                                    'title' => Yii::t('yii', 'Editar Grupo'),
                                     'target'=>'_blank',
                                     'data-pjax'=>"0",
                                 ]);

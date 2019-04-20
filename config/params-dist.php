@@ -23,6 +23,12 @@ return [
         'Computers'=>'Computers',
     ],
 
+    //Grupos AD/LDAP para gestión de usuarios
+    'groups' => [
+        'Admins'=>'Admins',
+        'Usuarios del dominio'=>'Usuarios del dominio',
+    ],
+
     //Parámetros Personalizados de la Companía, Empresa o Institución
     'company'    => 'Nombre de la Empresa',
     'adminEmail' => 'admin@dominio.com', //Cuenta para recibir correo del formulario de contacto.
@@ -50,7 +56,7 @@ return [
     'fromName' => 'Sistema de Gestión de Identidad',
     'cc'       => 'usuario@dominio.com', //Opción para almacenar copias de Emails Enviados
     'subject'  => 'Restablecer Contraseña',
-    'subjectNew'  => 'Nueva cuenta',
+    'subjectNew'  => 'Bienvenido a la Universidad Estatal Amazónica',
 
 
     //Generar un Código de Seguridad (SaltKey) en el siguiente enlace

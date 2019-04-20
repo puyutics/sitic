@@ -25,6 +25,9 @@ class AdldapEditForm extends Model
     public $department;
     public $title;
 
+    public $addGroup;
+    public $deleteGroup;
+
     /**
      * @return array the validation rules.
      */
@@ -33,7 +36,7 @@ class AdldapEditForm extends Model
         return [
             [['dni','firstname', 'lastname','mail','commonname',
                 'displayname','personalmail','uac'], 'required'],
-            [['department','title'],'string'],
+            [['department','title','addGroup','deleteGroup'],'string'],
             [['mobile','uac'],'number'],
             [['mail','personalmail'], 'email'],
         ];
@@ -47,18 +50,21 @@ class AdldapEditForm extends Model
         return [
             'search'       => 'Buscar',
             'dni'          => 'DNI/Cédula/Pasaporte',
-            'firstname'    => 'Nombres',
             'lastname'     => 'Apellidos',
-            'mail'         => 'Correo institucional',
+            'firstname'    => 'Nombres',
             'commonname'   => 'Nombre completo',
             'displayname'  => 'Nombre para mostrar',
+            'mail'         => 'Correo institucional',
             'personalmail' => 'Correo personal',
             'mobile'       => 'Celular',
-            'uac'          => 'Estado',
-            'groups'       => 'Grupo(s)',
-            'dn'           => 'Unidad Organizativa',
-            'department'   => 'Departamento',
             'title'        => 'Puesto',
+            'department'   => 'Departamento',
+            'dn'           => 'Unidad Organizativa',
+            'groups'       => 'Grupo(s)',
+            'uac'          => 'Estado',
+
+            'addGroup'     => 'Agregar Grupo',
+            'deleteGroup'  => 'Eliminar Grupo',
         ];
     }
 }

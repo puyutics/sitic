@@ -18,7 +18,7 @@ $this->title = 'SITIC - Sistema Integrado para la Gestión de Tecnologías de la
                     <a href="index.php?r=adldap/index"><?= Html::img('images/users.png');?></a>
                 </div>
 
-                <p align="center"><a class="btn btn-success" href="index.php?r=adldap/edituser"> Usuarios Active Directory / LDAP, BD local &raquo;</a></p>
+                <p align="center"><a class="btn btn-success" href="index.php?r=adldap/index"> Usuarios Active Directory / LDAP, BD local &raquo;</a></p>
             </div>
             <div class="col-lg-4">
                 <h2 align="center">Gestión de Bienes</h2>

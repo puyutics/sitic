@@ -76,7 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     <?= $form->field($model, 'newPassword')->widget(PasswordInput::classname(), [
                         'pluginOptions' => [
-                            'showMeter' => true,
+                            'showMeter' => false,
                             'toggleMask' => true
                         ]])
                     ?>

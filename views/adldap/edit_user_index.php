@@ -5,8 +5,12 @@
  * Date: 26/9/18
  * Time: 08:51
  */
+
+use app\models\Department;
+use kartik\select2\Select2;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 if (isset($_GET['search'])) { ?>
     <div class="edit-form">
@@ -42,20 +46,26 @@ if (isset($_GET['search'])) { ?>
 
                     <div class="row">
                         <div class="col-md-6">
-
                             <?= $form->field($model, 'personalmail')->textInput(['maxlength' => true]) ?>
-
                         </div>
                         <div class="col-md-6">
-
                             <?= $form->field($model, 'mobile')->textInput(['maxlength' => true]) ?>
-
                         </div>
                     </div>
 
                     <?= $form->field($model, 'title')->textInput() ?>
 
-                    <?= $form->field($model, 'department')->textInput() ?>
+                    <?php $department = ArrayHelper::map(Department::find(
+                        ['attribute'=>'department'])->orderBy(['department'=>SORT_ASC])->all(),
+                        'department', 'department'); ?>
+
+                    <?php echo $form->field($model, 'department')->widget(Select2::classname(), [
+                        'data' => $department,
+                        'options' => ['placeholder' => 'Seleccionar departamento'],
+                        'pluginOptions' => [
+                            'allowClear' => true
+                        ],
+                    ]); ?>
 
                     <?php //Más códigos UAC cuentas Active Directory
                     //https://jackstromberg.com/2013/01/useraccountcontrol-attributeflag-values/
@@ -89,18 +99,9 @@ if (isset($_GET['search'])) { ?>
                     </div>
 
                     <?php echo "<p></p>";
-                    echo "<p><b>Grupo(s)</b></p>";
-                        foreach($model->groups as $group)
-                        {
-                            echo $group->getName().", ";
-                        }
-                    ?>
-
-                    <?php echo "<p></p>";
                         echo "<p><b>Unidad Organizativa</b></p>";
                         echo $model->dn;
                     ?>
-
 
                     <div align="center">
                         <p></p>
@@ -112,12 +113,12 @@ if (isset($_GET['search'])) { ?>
                     </div>
 
                     <div class="form-group" align="center">
-                            <?= Html::submitButton('Guardar',['class' => 'btn btn-success',
-                                'value'=>'submit', 'name'=>'submit',
-                                'onClick'=>'buttonClicked']) ?>
-                            <?= Html::submitButton('Enviar TOKEN',['class' => 'btn btn-primary',
-                                'value'=>'sendToken', 'name'=>'sendToken',
-                                'onClick'=>'buttonClicked']) ?>
+                        <?= Html::submitButton('Guardar',['class' => 'btn btn-success',
+                            'value'=>'submit', 'name'=>'submit',
+                            'onClick'=>'buttonClicked']) ?>
+                        <?= Html::submitButton('Enviar TOKEN',['class' => 'btn btn-primary',
+                            'value'=>'sendToken', 'name'=>'sendToken',
+                            'onClick'=>'buttonClicked']) ?>
                     </div>
                 </div>
             </div>

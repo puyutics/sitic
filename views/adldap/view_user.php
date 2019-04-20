@@ -80,6 +80,8 @@ if (isset($_GET['search'])) { ?>
                 'mail',
                 'personalmail',
                 'mobile',
+                'title',
+                'department',
                 'dn',
                 [
                     'attribute' => 'groups',
@@ -98,11 +100,11 @@ if (isset($_GET['search'])) { ?>
                     'attribute' => 'uac',
                     'value' => call_user_func(function($model) {
                         if ($model->uac == 512)
-                            return "CUENTA ACTIVADA";
+                            return "Cuenta activada";
                         if ($model->uac == 514)
-                            return "CUENTA DESACTIVADA";
+                            return "Cuenta desactivada";
                         if ($model->uac == 66048)
-                            return "CUENTA ACTIVADA, CONTRASEÑA NUNCA EXPIRA";
+                            return "Cuenta activada. Contraseña nunca expira.";
                     }, $model),
                 ],
 
@@ -113,10 +115,13 @@ if (isset($_GET['search'])) { ?>
 
     <div class="form-group" align="center">
         <?= Html::a(Yii::t('app', 'Reiniciar Búsqueda'),
-            Url::toRoute(['adldap/viewuser']), ['class' => 'btn btn-default']) ?>
+            Url::toRoute(['adldap/viewuser']), ['class' => 'btn btn-default'])
+        ?>
         <?= Html::submitButton('Enviar TOKEN',['class' => 'btn btn-primary',
             'value'=>'sendToken', 'name'=>'sendToken',
-            'onClick'=>'buttonClicked']) ?>
+            //'onClick'=>'buttonClicked'])
+            'onClick'=>'alert("Se enviará un enlace (Reset TOKEN) a su correo personal.")'])
+        ?>
     </div>
 
 <?php }?>
