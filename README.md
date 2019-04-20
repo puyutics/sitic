@@ -11,7 +11,7 @@ Este proyecto utiliza Yii 2 Framework Basic Project Template (http://www.yiifram
 
 Proyecto creado para la Gestión de Departamentos, Unidades o Áreas de TI, utilizando fundamentos de la ISO/IEC 38500 y el marco de trabajo COBIT 5 (EN DESARROLLO).
 
-Contiene un módulo de Autoservicio y manejo de información de identidad de los usuarios, basados en servidores Active Directory / LDAP. Utilizando la extensión yii2-adldap-module v4 (wrapper for Adldap v8).
+Contiene un módulo de Autoservicio y manejo de información de identidad de los usuarios, basados en servidores Active Directory / LDAP. Utilizando la extensión yii2-adldap-module v6 (wrapper for Adldap2 v10).
 La configuración de este plugin la podemos encontrar en el siguiente enlace:
 https://github.com/edvler/yii2-adldap-module
 
@@ -146,10 +146,34 @@ putenv('LDAPTLS_REQCERT=never');
 Editar el archivo `config/params.php` con datos reales, por ejemplo:
 
 ```php
+//Tipo de inicio de sesión: username, userPrincipalName o mail
+    // 'login' => 'username',
+    // 'login' => 'userPrincipalName',
+    // 'login' => 'mail',
+    'login' => 'mail',
+```
+
+```php
 //Atributos Personalizados de Active Directory o LDAP
     'dni'          => 'dni',
     'personalmail' => 'personalmail',
     'mobile'       => 'mobile',
+```
+
+```php
+//Contenedores AD/LDAP para gestión de usuarios
+    'containers' => [
+        'Users'=>'Users',
+        'Computers'=>'Computers',
+    ],
+```
+
+```php
+//Grupos AD/LDAP para gestión de usuarios
+    'groups' => [
+        'Admins'=>'Admins',
+        'Usuarios del dominio'=>'Usuarios del dominio',
+    ],
 ```
 
 ### Envío de Email
@@ -190,6 +214,7 @@ Editar el archivo `config/params.php` con datos reales, por ejemplo:
     'adminEmail' => 'admin@dominio.com', //Cuenta para recibir correo del formulario de contacto.
     'appURL'     => 'http://sitic.dominio.com/',
     'contact'    => 'Unidad de TI. Contáctese al (+593) 3-2555-555 de lunes a viernes, en horario de atención 08h00 - 17h00.',
+```
 
 ### Agenda Telefónica (Encabezado)
 Cambiar el nombre del archivo `views/phonesextensions/_header-dist.php` a `_header.php` y modificar con datos reales.

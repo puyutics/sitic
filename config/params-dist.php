@@ -25,7 +25,7 @@ return [
 
     //Grupos AD/LDAP para gestión de usuarios
     'groups' => [
-        'Admins'=>'Admins',
+        'Admins. del dominio'=>'Admins. del dominio',
         'Usuarios del dominio'=>'Usuarios del dominio',
     ],
 
