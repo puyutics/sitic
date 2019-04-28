@@ -25,7 +25,7 @@ class ItservicesresultController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['admin','create','index','update', 'view',
+                'only' => ['admin','create','delete','index','update', 'view',
                     'eitservicesid','edate','edescription','epercent',
                     'eyear','eusername'],
                 'rules' => [
@@ -37,7 +37,7 @@ class ItservicesresultController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
-                        'actions' => ['view'],
+                        'actions' => ['delete','view'],
                         'allow' => false,
                     ],
                 ],

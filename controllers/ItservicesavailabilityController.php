@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\ItServicesAvailability;
 use app\models\ItServicesAvailabilitySearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -20,6 +21,21 @@ class ItservicesavailabilityController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['create','delete','index','update', 'view'],
+                'rules' => [
+                    [
+                        'actions' => ['create','update','index','view'],
+                        'allow' => true,
+                        'roles' => ['rolAdministrador'],
+                    ],
+                ],
+                [
+                    'actions' => ['delete'],
+                    'allow' => false,
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

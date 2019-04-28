@@ -25,7 +25,7 @@ class ItappsController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','index','update', 'view','admin',
+                'only' => ['create','delete','index','update', 'view','admin',
                     'eitappscategoryid','etitle','estatus'],
                 'rules' => [
                     [

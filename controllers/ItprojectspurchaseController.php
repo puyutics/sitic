@@ -25,7 +25,7 @@ class ItprojectspurchaseController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','index','update', 'view',
+                'only' => ['create','delete','index','update', 'view',
                     'eitprojectsid','einvpurchaseid','estatus'],
                 'rules' => [
                     [
@@ -35,7 +35,7 @@ class ItprojectspurchaseController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
-                        'actions' => ['view'],
+                        'actions' => ['delete','view'],
                         'allow' => false,
                     ],
                 ],

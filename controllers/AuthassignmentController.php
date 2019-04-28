@@ -23,13 +23,17 @@ class AuthassignmentController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','index','update', 'view'],
+                'only' => ['create','delete','index','update', 'view'],
                 'rules' => [
                     [
                         'actions' => ['create','update','index','view'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
+                ],
+                [
+                    'actions' => ['delete'],
+                    'allow' => false,
                 ],
             ],
             'verbs' => [

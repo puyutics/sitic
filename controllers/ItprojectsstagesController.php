@@ -25,7 +25,7 @@ class ItprojectsstagesController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','index','update',
+                'only' => ['create','delete','index','update',
                     'eprojectstage','edescription','epercent','eitprojectsid',],
                 'rules' => [
                     [
@@ -35,7 +35,7 @@ class ItprojectsstagesController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
-                        'actions' => ['view'],
+                        'actions' => ['delete','view'],
                         'allow' => false,
                     ],
                 ],

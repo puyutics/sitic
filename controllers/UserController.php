@@ -24,7 +24,7 @@ class UserController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','index','update', 'view'],
+                'only' => ['create','delete','index','update', 'view'],
                 'rules' => [
                     [
                         'actions' => ['index'],
@@ -32,7 +32,7 @@ class UserController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
-                        'actions' => ['create','update','view'],
+                        'actions' => ['create','delete','update','view'],
                         'allow' => false,
                     ],
                 ],

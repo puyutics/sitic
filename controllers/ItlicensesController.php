@@ -25,7 +25,7 @@ class ItlicensesController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','index','update', 'view','admin'],
+                'only' => ['create','delete','index','update', 'view','admin'],
                 'rules' => [
                     [
                         'actions' => ['create','index','update','view','admin'],

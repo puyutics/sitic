@@ -25,7 +25,7 @@ class UserprofileController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['admin','create','index','update', 'view'],
+                'only' => ['admin','create','delete','index','update', 'view'],
                 'rules' => [
                     [
                         'actions' => ['admin','create','index','update'],
@@ -33,7 +33,7 @@ class UserprofileController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
-                        'actions' => ['view'],
+                        'actions' => ['delete','view'],
                         'allow' => false,
                     ],
                 ],

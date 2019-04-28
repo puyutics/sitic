@@ -25,7 +25,7 @@ class ItprocessesController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['admin','create','index','update', 'view',
+                'only' => ['admin','create','delete','index','update', 'view',
                     'eprocess','edescription','emetrics','emagnitude',
                     'edatecreation','edateclosed','estatus'],
                 'rules' => [
@@ -37,7 +37,7 @@ class ItprocessesController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
-                        'actions' => ['view'],
+                        'actions' => ['delete','view'],
                         'allow' => false,
                     ],
                 ],

@@ -25,7 +25,7 @@ class PrinterslogsController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','index','update','report','view',],
+                'only' => ['create','delete','index','update','report','view',],
                 'rules' => [
                     [
                         'actions' => ['index','report'],
@@ -33,7 +33,7 @@ class PrinterslogsController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
-                        'actions' => ['create','update','view'],
+                        'actions' => ['create','delete','update','view'],
                         'allow' => false,
                     ],
                 ],

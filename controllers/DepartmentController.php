@@ -25,7 +25,7 @@ class DepartmentController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','index','update', 'view',
+                'only' => ['create','delete','index','update', 'view',
                     'edepartment','eparentid','estatus'],
                 'rules' => [
                     [
@@ -35,7 +35,7 @@ class DepartmentController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
-                        'actions' => ['update','view'],
+                        'actions' => ['delete','update','view'],
                         'allow' => false,
                     ],
                 ],

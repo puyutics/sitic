@@ -29,7 +29,7 @@ class DocumentsController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','index','update', 'view','efilename','efiletype',
+                'only' => ['create','delete','index','update', 'view','efilename','efiletype',
                     'edescription','edate','estatus'],
                 'rules' => [
                     [
@@ -37,6 +37,10 @@ class DocumentsController extends Controller
                             'edescription','edate','estatus','view'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
+                    ],
+                    [
+                        'actions' => ['delete'],
+                        'allow' => false,
                     ],
                 ],
             ],

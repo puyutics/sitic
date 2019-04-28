@@ -25,7 +25,7 @@ class UserdepartmentController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','index','update', 'view',
+                'only' => ['create','delete','index','update', 'view',
                     'eusername','edepartmentid','estatus'],
                 'rules' => [
                     [
@@ -35,7 +35,7 @@ class UserdepartmentController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
-                        'actions' => ['update','view'],
+                        'actions' => ['delete','update','view'],
                         'allow' => false,
                     ],
                 ],

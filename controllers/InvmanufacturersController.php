@@ -26,7 +26,7 @@ class InvmanufacturersController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','index','update', 'view', 'emanufacturer'],
+                'only' => ['create','delete','index','update', 'view', 'emanufacturer'],
                 'rules' => [
                     [
                         'actions' => ['create','index', 'emanufacturer'],
@@ -34,7 +34,7 @@ class InvmanufacturersController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
-                        'actions' => ['update','view'],
+                        'actions' => ['delete','update','view'],
                         'allow' => false,
                     ],
                 ],

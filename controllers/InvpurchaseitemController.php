@@ -32,7 +32,7 @@ class InvpurchaseitemController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['admin','create','index','unassigned','update', 'view',
+                'only' => ['admin','create','delete','index','unassigned','update', 'view',
                     'edescription','einvpurchaseid','einvmodelsid',
                     'eserialnumber','econtrolcode','eamount'],
                 'rules' => [
@@ -44,7 +44,7 @@ class InvpurchaseitemController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
-                        'actions' => ['update'],
+                        'actions' => ['delete','update'],
                         'allow' => false,
                     ],
                 ],

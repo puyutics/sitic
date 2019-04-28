@@ -25,7 +25,7 @@ class ItreportspowerbiController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','index','update', 'view',
+                'only' => ['create','delete','index','update', 'view',
                             'report','edescription','estatus'],
                 'rules' => [
                     [
@@ -38,6 +38,10 @@ class ItreportspowerbiController extends Controller
                         'actions' => ['index','report'],
                         'allow' => true,
                         'roles' => ['rolDirector'],
+                    ],
+                    [
+                        'actions' => ['delete',],
+                        'allow' => false,
                     ],
                 ],
             ],

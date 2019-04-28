@@ -26,7 +26,7 @@ class InvitemuserController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['assigned','create','index','update', 'view',
+                'only' => ['assigned','create','delete','index','update', 'view',
                     'eusername','einvpurchaseitemid','edateasigned',
                     'edatereleased','edescription','estatus'],
                 'rules' => [
@@ -38,7 +38,7 @@ class InvitemuserController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
-                        'actions' => [],
+                        'actions' => ['delete',],
                         'allow' => false,
                     ],
                 ],

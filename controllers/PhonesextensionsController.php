@@ -25,7 +25,7 @@ class PhonesextensionsController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','index','update', 'view','public',
+                'only' => ['create','delete','index','update', 'view','public',
                     'embedded'],
                 'rules' => [
                     [
@@ -35,7 +35,7 @@ class PhonesextensionsController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
-                        'actions' => ['view'],
+                        'actions' => ['delete','view'],
                         'allow' => false,
                     ],
                     [

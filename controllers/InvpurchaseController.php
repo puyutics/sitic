@@ -28,7 +28,7 @@ class InvpurchaseController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['admin','create','index','update', 'view',
+                'only' => ['admin','create','delete','index','update', 'view',
                     'ecode','edescription','edate','eusername',],
                 'rules' => [
                     [
@@ -38,7 +38,7 @@ class InvpurchaseController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
-                        'actions' => ['view'],
+                        'actions' => ['delete','view'],
                         'allow' => false,
                     ],
                 ],

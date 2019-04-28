@@ -25,7 +25,7 @@ class ItprojectsuserController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','index','update', 'view',
+                'only' => ['create','delete','index','update', 'view',
                             'eitprojectsid','edescription','edateasigned',
                             'edatereleased','estatus'],
                 'rules' => [
@@ -37,7 +37,7 @@ class ItprojectsuserController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
-                        'actions' => ['view'],
+                        'actions' => ['delete','view'],
                         'allow' => false,
                     ],
                 ],
