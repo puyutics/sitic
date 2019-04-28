@@ -30,10 +30,10 @@ class ItservicesaffectationsController extends Controller
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
-                ],
-                [
-                    'actions' => ['delete'],
-                    'allow' => false,
+                    [
+                        'actions' => ['delete'],
+                        'allow' => false,
+                    ],
                 ],
             ],
             'verbs' => [
