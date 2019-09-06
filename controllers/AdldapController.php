@@ -552,7 +552,7 @@ class AdldapController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 
             $post_form = Yii::$app->request->post('AdldapForgetpassForm');
-            $post_mail = $post_form['mail'];
+            $post_mail = strtolower($post_form['mail']);
             $post_dni = $post_form['dni'];
             $post_sAMAccountname = explode("@", $post_mail);
             $sAMAccountname = $post_sAMAccountname[0];

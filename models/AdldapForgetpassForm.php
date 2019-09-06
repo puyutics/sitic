@@ -24,6 +24,7 @@ class AdldapForgetpassForm extends Model
         return [
             [['dni', 'mail','verifyCode'], 'required'],
             [['mail'], 'email'],
+            [['mail'], 'filter', 'filter'=>'strtolower'],
             [['verifyCode'],'captcha'],
         ];
     }
