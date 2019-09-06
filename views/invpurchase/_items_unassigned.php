@@ -28,7 +28,7 @@ use yii\data\ActiveDataProvider;
         'dataProvider' => $dataProviderItemsUnassigned,
         'filterModel' => $searchModelItemsUnassigned,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            ['class' => 'kartik\grid\SerialColumn'],
 
             //'inv_purchase_id',
             [
@@ -56,9 +56,15 @@ use yii\data\ActiveDataProvider;
             'serial_number',
             'control_code',
             [
+                'label'=>'CODIGO CONTROL',
+                'attribute'=>'control_code',
+                'pageSummary' => 'TOTAL',
+            ],
+            [
                 'label'=>'PRECIO',
                 'attribute'=>'amount',
                 'format'=>['decimal', 2],
+                'pageSummary' => true,
             ],
 
             //['class' => 'kartik\grid\ActionColumn'],
@@ -96,6 +102,7 @@ use yii\data\ActiveDataProvider;
         'panel' => [
             'type' => GridView::TYPE_PRIMARY
         ],
+        'showPageSummary' => true,
     ]); ?>
     <?php Pjax::end(); ?>
 </div>

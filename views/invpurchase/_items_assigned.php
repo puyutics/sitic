@@ -28,7 +28,7 @@ use yii\data\ActiveDataProvider;
         'dataProvider' => $dataProviderItemsAssigned,
         'filterModel' => $searchModelItemsAssigned,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            ['class' => 'kartik\grid\SerialColumn'],
 
             [
                 'label'=>'DETALLE BIEN',

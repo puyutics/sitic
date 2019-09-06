@@ -27,7 +27,7 @@ use yii\helpers\ArrayHelper;
         'dataProvider' => $dataProviderItems,
         'filterModel' => $searchModelItems,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            ['class' => 'kartik\grid\SerialColumn'],
 
             //'inv_purchase_id',
             //'id',
@@ -80,6 +80,7 @@ use yii\helpers\ArrayHelper;
                     'inputType' => Editable::INPUT_TEXT,
                     'formOptions' => ['action' => Url::to(['invpurchaseitem/econtrolcode'])],
                 ],
+                'pageSummary' => 'TOTAL',
             ],
             [
                 'class'=>'kartik\grid\EditableColumn',
@@ -90,6 +91,7 @@ use yii\helpers\ArrayHelper;
                     'size' => 'sm',
                     'formOptions' => ['action' => Url::to(['invpurchaseitem/eamount'])],
                 ],
+                'pageSummary' => true,
             ],
 
             ['class' => 'kartik\grid\ActionColumn',
@@ -124,7 +126,7 @@ use yii\helpers\ArrayHelper;
         'panel' => [
             'type' => GridView::TYPE_PRIMARY
         ],
-
+        'showPageSummary' => true,
     ]); ?>
 
     <?php Pjax::end(); ?>
