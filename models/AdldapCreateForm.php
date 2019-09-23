@@ -40,7 +40,7 @@ class AdldapCreateForm extends Model
             [['samaccountname'], 'match',
                 'pattern' => '/^[a-z0-9.]+$/u',
                 'message'=>'{attribute} no debe contener caracteres especiales, ni mayùscula'],
-            [['mail','personalmail'], 'match',
+            [['mail'], 'match',
                 'pattern' => '/^[a-z0-9@.]+$/u',
                 'message'=>'{attribute} no debe contener caracteres especiales, ni mayùscula'],
         ];
