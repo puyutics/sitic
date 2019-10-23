@@ -32,26 +32,26 @@ class AdldapController extends Controller
                     'viewgroups'],
                 'rules' => [
                     [
-                        'actions' => ['create','index','editprofile','edituser','viewuser',
+                        'actions' => ['create','index','editprofile','edituser',
                             'forgetpass','forgetuser','password','reset','saveLog',
                             'sendToken','sendNewUser','viewgroups'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
                     [
-                        'actions' => ['viewuser','saveLog','sendToken'],
+                        'actions' => ['saveLog','sendToken'],
                         'allow' => true,
                         'roles' => ['rolDirector'],
                     ],
                     [
-                        'actions' => ['editprofile'],
+                        'actions' => ['editprofile','viewuser','sendToken'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
 
                     [
                         'actions' => ['index','forgetpass','forgetuser','password','reset',
-                                        'saveLog','sendToken'],
+                                        'saveLog'],
                         'allow' => true,
                     ],
                 ],
@@ -206,6 +206,8 @@ class AdldapController extends Controller
             $model->uac = $user->getUserAccountControl();
             $model->department = $user->getDepartment();
             $model->title = $user->getTitle();
+            $model->title = $user->getTitle();
+            $model->samaccountname = $user->getAttribute('samaccountname',0);
 
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
                 if (Yii::$app->request->post('sendToken')==='sendToken') {
@@ -673,24 +675,22 @@ class AdldapController extends Controller
     public function actionReset()
     {
         $model = new AdldapResetForm();
+
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 
-                $post_form = Yii::$app->request->post('AdldapResetForm');
-                $post_mail = $post_form['mail'];
-                $post_newPassword = $post_form['newPassword'];
-                $post_verifyNewPassword = $post_form['verifyNewPassword'];
-                $post_resetToken = $post_form['resetToken'];
-                $post_sAMAccountname = explode("@", $post_mail);
-                $sAMAccountname = $post_sAMAccountname[0];
+            $post_form = Yii::$app->request->post('AdldapResetForm');
+            $post_mail = $post_form['mail'];
+            $post_newPassword = $post_form['newPassword'];
+            $post_verifyNewPassword = $post_form['verifyNewPassword'];
+            $post_resetToken = $post_form['resetToken'];
 
-                $user = Yii::$app->ad->getProvider('default')->search()
-                    ->findBy('sAMAccountname', $sAMAccountname);
+            $user = Yii::$app->ad->getProvider('default')->search()
+                ->findBy('mail', $post_mail);
 
-                if (isset($user)) {
+            $sAMAccountname = $user->getAttribute('samaccountname', 0);
+
+            if (isset($user)) {
                     $mail = $user->getAttribute('mail', 0);
-                    $dni = $user->getAttribute(Yii::$app->params['dni'],0);
-
-                    $saltKey =   Yii::$app->params['saltKey'];
                     $resetToken = hash(Yii::$app->params['algorithm'], Yii::$app->params['saltKey'] .
                         Yii::$app->params['tokenDateFormat'] . $mail);
                     if (($post_mail == $mail) and ($post_resetToken == $resetToken)) {

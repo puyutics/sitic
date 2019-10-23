@@ -24,6 +24,7 @@ class AdldapEditForm extends Model
     public $dn;
     public $department;
     public $title;
+    public $samaccountname;
 
     public $addGroup;
     public $deleteGroup;
@@ -48,23 +49,24 @@ class AdldapEditForm extends Model
     public function attributeLabels()
     {
         return [
-            'search'       => 'Buscar',
-            'dni'          => 'DNI/Cédula/Pasaporte',
-            'lastname'     => 'Apellidos',
-            'firstname'    => 'Nombres',
-            'commonname'   => 'Nombre completo',
-            'displayname'  => 'Nombre para mostrar',
-            'mail'         => 'Correo institucional',
-            'personalmail' => 'Correo personal',
-            'mobile'       => 'Celular',
-            'title'        => 'Puesto',
-            'department'   => 'Departamento',
-            'dn'           => 'Unidad Organizativa',
-            'groups'       => 'Grupo(s)',
-            'uac'          => 'Estado',
+            'search'         => 'Buscar',
+            'dni'            => 'DNI/Cédula/Pasaporte',
+            'lastname'       => 'Apellidos',
+            'firstname'      => 'Nombres',
+            'commonname'     => 'Nombre completo',
+            'displayname'    => 'Nombre para mostrar',
+            'mail'           => 'Correo institucional',
+            'personalmail'   => 'Correo personal',
+            'mobile'         => 'Celular',
+            'title'          => 'Puesto',
+            'department'     => 'Departamento',
+            'dn'             => 'Unidad Organizativa',
+            'groups'         => 'Grupo(s)',
+            'uac'            => 'Estado',
+            'samaccountname' => 'Usuario del dominio',
 
-            'addGroup'     => 'Agregar Grupo',
-            'deleteGroup'  => 'Eliminar Grupo',
+            'addGroup'       => 'Agregar Grupo',
+            'deleteGroup'    => 'Eliminar Grupo',
         ];
     }
 }

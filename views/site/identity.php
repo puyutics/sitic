@@ -31,10 +31,10 @@ $this->title = 'SITIC - Sistema Integrado para la Gestión de Tecnologías de la
                 <h2 align="center">Cambiar contraseña</h2>
 
                 <div align="center">
-                    <a href="index.php?r=adldap/password"><?= Html::img('images/changepass.png');?></a>
+                    <a href="index.php?r=adldap/forgetpass"><?= Html::img('images/changepass.png');?></a>
                 </div>
 
-                <p align="center"><a class="btn btn-success" href="index.php?r=adldap/password"> Cambiar Contraseña &raquo;</a></p>
+                <p align="center"><a class="btn btn-success" href="index.php?r=adldap/forgetpass"> Cambiar Contraseña &raquo;</a></p>
             </div>
             <div class="col-lg-4">
                 <h2 align="center">¿Olvidaste tu usuario?</h2>

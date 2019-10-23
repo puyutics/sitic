@@ -12,7 +12,7 @@ use kartik\password\StrengthValidator;
 class AdldapResetForm extends Model
 {
     public $mail;
-    public $cn;
+    public $commonname;
     public $resetToken;
     public $newPassword;
     public $verifyNewPassword;
@@ -33,8 +33,13 @@ class AdldapResetForm extends Model
                 'digit'=>1,
                 'special'=>0
             ],
+
         ];
     }
+
+    /*[['newPassword'], 'match',
+                'pattern' => '/^[a-z0-9@.]+$/u',
+                'message'=>'{attribute} no puede usar sus NOMBRES y/o APELLIDOS'],*/
 
     /**
      * @return array customized attribute labels
@@ -43,7 +48,7 @@ class AdldapResetForm extends Model
     {
         return [
             'mail' => 'Usuario / Correo institucional',
-            'cn' => 'Apellidos / Nombres',
+            'commonname' => 'Nombres Completos',
             'resetToken' => 'TOKEN (Enviado a su correo personal)',
             'newPassword' => 'Nueva Contraseña',
             'verifyNewPassword' => 'Verificar Contraseña',

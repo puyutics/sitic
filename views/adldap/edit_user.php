@@ -15,6 +15,7 @@ if (isset($_GET['search'])) {
     $search = $_GET['search'];
     $user = Yii::$app->ad->getProvider('default')->search()->users()->find($search);
     $sAMAccountname = $user->getAttribute('samaccountname',0);
+    $mail = $user->getAttribute('mail',0);
 
     $today = strtotime(date('Y-m-d H:i:s'));
     $lastSetPassword = strtotime($user->getPasswordLastSetDate());

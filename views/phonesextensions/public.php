@@ -38,7 +38,11 @@ use yii\data\ActiveDataProvider;
                 'attribute' => 'username',
                 'value'=>function($model){
                     $user = Yii::$app->ad->getProvider('default')->search()->findBy('sAMAccountname', $model->username);
-                    return $user->getAttribute('cn',0);
+                    if (isset($user)) {
+                        return $user->getAttribute('cn',0);
+                    } else {
+                        return "-";
+                    }
                 },
             ],
         ],

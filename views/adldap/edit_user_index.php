@@ -41,6 +41,8 @@ if (isset($_GET['search'])) { ?>
 
                     <?= $form->field($model, 'displayname')->textInput() ?>
 
+                    <?= $form->field($model, 'samaccountname')->textInput(['readOnly'=> true]) ?>
+
                     <?= $form->field($model, 'mail')->textInput(['readOnly'=> true]) ?>
 
 

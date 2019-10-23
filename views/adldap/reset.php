@@ -67,6 +67,14 @@ $this->params['breadcrumbs'][] = $this->title;
                         ?>
                     <?php } ?>
 
+                   <!-- <?php /*if (isset($_GET['mail'])) { */?>
+                        <?/*= $form->field($model, 'commonname')->textInput
+                        (['readOnly'=>true]) */?>
+                    <?php /*} else { */?>
+
+                        ?>
+                    --><?php /*} */?>
+
                     <div class="alert alert-danger">
                         <?= Yii::$app->session->getFlash('recommendation') ?>
                     </div>

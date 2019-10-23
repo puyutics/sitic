@@ -9,7 +9,7 @@ use kartik\grid\GridView;
 
 $searchModel = new app\models\LogsSearch();
 $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-$external_id = explode("@", $model->mail);
+$external_id = explode("@", $model->samaccountname);
 $external_id = $external_id[0];
 $dataProvider->query->Where('username = "' . $external_id .'"');
 $dataProvider->query->orWhere('external_id = "' . $external_id .'"');
