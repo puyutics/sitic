@@ -120,37 +120,48 @@ class AdldapController extends Controller
                 if ($user->save()) {
 
                     $security = new Security();
-                    $user->setTitle($model->title);
-                    $user->setPassword($security->generateRandomString(8));
-                    $user->setAttribute(Yii::$app->params['dni'],$model->dni);
-                    $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);
-                    $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
-                    $user->setUserAccountControl($model->uac);
-                    $user->setDepartment($model->department);
-                    $user->setTitle($model->title);
-                    $user->setEmail($model->mail);
+                    $user = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
 
-                    $user->save();
+                    if (isset($user)) {
+                        $user->setTitle($model->title);
+                        $user->setPassword($security->generateRandomString(8));
+                        $user->setAttribute(Yii::$app->params['dni'],$model->dni);
+                        $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);
+                        $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
+                        $user->setUserAccountControl($model->uac);
+                        $user->setDepartment($model->department);
+                        $user->setTitle($model->title);
+                        $user->setEmail($model->mail);
 
-                    Yii::$app->session->setFlash('success', "Usuario creado correctamente");
-                    $username = Yii::$app->user->identity->username;
+                        $user->save();
 
-                    //Enviar usuario creado por email
-                    $dni = $model->dni;
-                    $fullname = $model->commonname;
-                    $mail = $model->mail;
-                    $personalmail = $model->personalmail;
+                        Yii::$app->session->setFlash('success', "Usuario creado correctamente");
+                        $username = Yii::$app->user->identity->username;
 
-                    $this->sendNewUser($dni,$fullname,$mail,$personalmail);
+                        //Enviar usuario creado por email
+                        $dni = $model->dni;
+                        $fullname = $model->commonname;
+                        $mail = $model->mail;
+                        $personalmail = $model->personalmail;
 
-                    //Crear Registro de Log en la base de datos
-                    $description =
-                        'Usuario creado: ' . $model->samaccountname
-                        . ". $model->commonname. $model->personalmail"
-                    ;
-                    $this->saveLog('adldapCreateUser', $username, $description, $model->samaccountname,'adldap');
-                    return $this->redirect(['edituser', 'search' => $model->samaccountname]);
-                    //return $this->render('edituser',['model'=>$model]);
+                        $this->sendNewUser($dni,$fullname,$mail,$personalmail);
+
+                        //Crear Registro de Log en la base de datos
+                        $description =
+                            'Usuario creado: ' . $model->samaccountname
+                            . ". $model->commonname. $model->personalmail"
+                        ;
+                        $this->saveLog('adldapCreateUser', $username, $description, $model->samaccountname,'adldap');
+                        return $this->redirect(['edituser', 'search' => $model->samaccountname]);
+                        //return $this->render('edituser',['model'=>$model]);
+                    }
+
+                    else {
+                        Yii::$app->session->setFlash('error', "Usuario no encontrado");
+                        return $this->render('create',
+                            ['model'=>$model]);
+                    }
+
                 } else {
                     Yii::$app->session->setFlash('error', "Problemas al crear el usuario");
                     return $this->render('create',
@@ -687,18 +698,27 @@ class AdldapController extends Controller
             $user = Yii::$app->ad->getProvider('default')->search()
                 ->findBy('mail', $post_mail);
 
-            $sAMAccountname = $user->getAttribute('samaccountname', 0);
-
             if (isset($user)) {
-                    $mail = $user->getAttribute('mail', 0);
-                    $resetToken = hash(Yii::$app->params['algorithm'], Yii::$app->params['saltKey'] .
-                        Yii::$app->params['tokenDateFormat'] . $mail);
-                    if (($post_mail == $mail) and ($post_resetToken == $resetToken)) {
-                        if ($post_newPassword == $post_verifyNewPassword) {
+                $sAMAccountname = $user->getAttribute('samaccountname', 0);
+                $commonname =  $user->getAttribute('cn', 0);
+                $mail = $user->getAttribute('mail', 0);
+                $resetToken = hash(Yii::$app->params['algorithm'], Yii::$app->params['saltKey'] .
+                    Yii::$app->params['tokenDateFormat'] . $mail);
+                if (($post_mail == $mail) and ($post_resetToken == $resetToken)) {
+                    if ($post_newPassword == $post_verifyNewPassword) {
 
+                        $explode_commonname = explode(" ", $commonname);
+                        $similar = false;
+                        foreach ($explode_commonname as $name) {
+                            $incluye = stripos($post_newPassword, $name);
+                            if ($incluye !== false) {
+                                $similar = true;
+                            }
+                        }
+
+                        if ($similar == false) {
                             $user->setPassword($post_newPassword);
                             $user->save();
-
 
                             //Crear Registro de Log en la base de datos
                             $description =
@@ -711,28 +731,32 @@ class AdldapController extends Controller
                             return $this->render('reset', ['model' => $model]); //Success
 
                         } else {
-                            Yii::$app->session->setFlash('error',
-                                'La verificación de la nueva contraseña es incorrecta');
+                            Yii::$app->session->setFlash('errorReset',
+                                'NO utilice sus NOMBRES y/o APELLIDOS en la nueva contraseña');
 
                             return $this->render('reset',
                                 ['model' => $model]); //resetToken incorrecto
                         }
+
+                    } else {
+                        Yii::$app->session->setFlash('errorReset',
+                            'La verificación de la nueva contraseña es incorrecta');
+
+                        return $this->render('reset',
+                            ['model' => $model]); //resetToken incorrecto
                     }
-                    Yii::$app->session->setFlash('error',
-                        'Reset Token incorrecto');
-                    return $this->render('reset',
-                        ['model' => $model]); //resetToken incorrecto
-                } else {
-                    Yii::$app->session->setFlash('error',
-                        'Usuario o Correo institucional incorrecto');
-                    return $this->render('reset',
-                        ['model'=>$model]); //Email incorrecto
                 }
+                Yii::$app->session->setFlash('errorReset',
+                    'Reset Token incorrecto o caducado. Genere uno nuevo.');
+                return $this->render('reset',
+                    ['model' => $model]); //resetToken incorrecto
+            } else {
+                Yii::$app->session->setFlash('errorReset',
+                    'Usuario o Correo institucional incorrecto');
+                return $this->render('reset',
+                    ['model'=>$model]); //Email incorrecto
+            }
         } else {
-            Yii::$app->session->setFlash('recommendation',
-                'Su nueva contraseña debe contener al menos 8 dígitos
-                        entre mayúsculas, minúsculas y números. 
-                        NO UTILICE SUS NOMBRES y/o APELLIDOS');
             return $this->render('reset', [
                 'model' => $model,
             ]);
@@ -852,12 +876,12 @@ class AdldapController extends Controller
             $body =
                 "Estimado usuario," . "\n" .
                 "Se ha creado una cuenta institucional en " . Yii::$app->params['company'] . "\n\n" .
-                "DNI/Céd/Pasaporte:   " . $dni . "\n" .
+                "Céd/Pasaporte/Código: " . $dni . "\n" .
                 "Nombres/Apellidos:    " . $fullname . "\n" .
-                "Cuenta institucional:   " . $mail . "\n\n" .
+                "Cuenta institucional:  " . $mail . "\n\n" .
                 "--------------------------------------------------------------------------------------" . "\n" .
                 "Haga clic en el siguiente enlace para activar su cuenta:" . "\n\n" .
-                Yii::$app->params['appURL'] . "index.php?r=adldap/forgetpass\n\n" .
+                "https://password.uea.edu.ec" . "\n\n" .
                 "--------------------------------------------------------------------------------------" . "\n" .
                 "---> Correo enviado por el sistema automático de Gestión de identidad. NO RESPONDA ESTE CORREO <---"
             ;

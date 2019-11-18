@@ -50,7 +50,7 @@ class AdldapEditForm extends Model
     {
         return [
             'search'         => 'Buscar',
-            'dni'            => 'DNI/Cédula/Pasaporte',
+            'dni'            => 'Cédula/Pasaporte/Código',
             'lastname'       => 'Apellidos',
             'firstname'      => 'Nombres',
             'commonname'     => 'Nombre completo',

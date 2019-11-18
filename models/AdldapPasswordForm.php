@@ -41,7 +41,7 @@ class AdldapPasswordForm extends Model
     public function attributeLabels()
     {
         return [
-            'mail' => 'Usuario / Correo institucional',
+            'mail' => 'Correo institucional',
             'olPassword' => 'Contraseña Actual',
             'newPassword' => 'Contraseña Nueva',
             'verifyNewPassword' => 'Verificar Contraseña',

@@ -11,24 +11,38 @@ $this->title = 'SITIC - Sistema Integrado para la Gestión de Tecnologías de la
     <div class="bo d-content">
 
         <div class="row">
+
             <div class="col-lg-4">
             </div>
+
             <div class="col-lg-4">
-                <h2 align="center">Active Directory - LDAP</h2>
+                <h2 align="center">¿Activar cuenta?</h2>
 
                 <div align="center">
-                    <a href="index.php?r=adldap/editprofile"><?= Html::img('images/userprofile.png');?></a>
+                    <a href="index.php?r=adldap/forgetpass"><?= Html::img('images/user_add.png');?></a>
                 </div>
 
-                <p align="center"><a class="btn btn-success" href="index.php?r=adldap/editprofile"> Editar perfil &raquo;</a></p>
+                <p align="center"><a class="btn btn-success" href="index.php?r=adldap/forgetpass"> Activar Cuenta &raquo;</a></p>
             </div>
+
             <div class="col-lg-4">
             </div>
         </div>
 
         <div class="row">
+
             <div class="col-lg-4">
-                <h2 align="center">Cambiar contraseña</h2>
+                <h2 align="center">¿Olvidaste tu usuario?</h2>
+
+                <div align="center">
+                    <a href="index.php?r=adldap/forgetuser"><?= Html::img('images/user_search.png');?></a>
+                </div>
+
+                <p align="center"><a class="btn btn-success" href="index.php?r=adldap/forgetuser"> Recuperar usuario &raquo;</a></p>
+            </div>
+
+            <div class="col-lg-4">
+                <h2 align="center">¿Olvid. tu contraseña?</h2>
 
                 <div align="center">
                     <a href="index.php?r=adldap/forgetpass"><?= Html::img('images/changepass.png');?></a>
@@ -36,24 +50,17 @@ $this->title = 'SITIC - Sistema Integrado para la Gestión de Tecnologías de la
 
                 <p align="center"><a class="btn btn-success" href="index.php?r=adldap/forgetpass"> Cambiar Contraseña &raquo;</a></p>
             </div>
+
             <div class="col-lg-4">
-                <h2 align="center">¿Olvidaste tu usuario?</h2>
+                <h2 align="center">¿Actualizar correo?</h2>
 
                 <div align="center">
-                    <a href="index.php?r=adldap/forgetuser"><?= Html::img('images/forgetuser.png');?></a>
+                    <a href="index.php?r=adldap/editprofile"><?= Html::img('images/userprofile.png');?></a>
                 </div>
 
-                <p align="center"><a class="btn btn-success" href="index.php?r=adldap/forgetuser"> Recuperar tu usuario &raquo;</a></p>
+                <p align="center"><a class="btn btn-success" href="index.php?r=adldap/editprofile"> Editar perfil &raquo;</a></p>
             </div>
-            <div class="col-lg-4">
-                <h2 align="center">¿Olvid. tu contraseña?</h2>
 
-                <div align="center">
-                    <a href="index.php?r=adldap/forgetpass"><?= Html::img('images/forgetpass.png');?></a>
-                </div>
-
-                <p align="center"><a class="btn btn-success" href="index.php?r=adldap/forgetpass"> Recuperar tu contraseña &raquo;</a></p>
-            </div>
         </div>
 
     </div>

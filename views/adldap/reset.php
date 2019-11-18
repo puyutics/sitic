@@ -67,17 +67,17 @@ $this->params['breadcrumbs'][] = $this->title;
                         ?>
                     <?php } ?>
 
-                   <!-- <?php /*if (isset($_GET['mail'])) { */?>
-                        <?/*= $form->field($model, 'commonname')->textInput
-                        (['readOnly'=>true]) */?>
-                    <?php /*} else { */?>
-
-                        ?>
-                    --><?php /*} */?>
-
                     <div class="alert alert-danger">
-                        <?= Yii::$app->session->getFlash('recommendation') ?>
+                        <?= 'Su nueva contraseña debe contener al menos 8 dígitos
+                        entre mayúsculas, minúsculas y números. 
+                        NO UTILICE SUS NOMBRES y/o APELLIDOS' ?>
                     </div>
+
+                    <?php if (Yii::$app->session->hasFlash('errorReset')) { ?>
+                        <div class="alert alert-info">
+                            <?= Yii::$app->session->getFlash('errorReset') ?>
+                        </div>
+                    <?php } ?>
 
                     <?= $form->field($model, 'newPassword')->widget(PasswordInput::classname(), [
                         'pluginOptions' => [

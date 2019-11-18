@@ -52,7 +52,7 @@ class AdldapCreateForm extends Model
     public function attributeLabels()
     {
         return [
-            'dni'               => 'DNI/Cédula/Pasaporte',
+            'dni'               => 'Cédula/Pasaporte/Código',
             'firstname'         => 'Nombres',
             'lastname'          => 'Apellidos',
             'samaccountname'    => 'Usuario',

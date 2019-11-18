@@ -37,17 +37,13 @@ class AdldapResetForm extends Model
         ];
     }
 
-    /*[['newPassword'], 'match',
-                'pattern' => '/^[a-z0-9@.]+$/u',
-                'message'=>'{attribute} no puede usar sus NOMBRES y/o APELLIDOS'],*/
-
     /**
      * @return array customized attribute labels
      */
     public function attributeLabels()
     {
         return [
-            'mail' => 'Usuario / Correo institucional',
+            'mail' => 'Correo institucional',
             'commonname' => 'Nombres Completos',
             'resetToken' => 'TOKEN (Enviado a su correo personal)',
             'newPassword' => 'Nueva Contraseña',
