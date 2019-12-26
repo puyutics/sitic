@@ -60,11 +60,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         ?>
 
                         <p><div align="center">
-                            <b><code><?php
-                                echo 'Es correcto el correo personal: ' .
-                                     Yii::$app->session->getFlash('personalmail');
-                                ?>
-                            </code></b>
+                            <?php echo '¿Es correcto su correo personal?' ?>
+                            <code><?php echo Yii::$app->session->getFlash('personalmail'); ?></code>
                         </div></p>
 
                         <?php $model->verifyCode = ''; ?>
@@ -82,7 +79,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ?>
 
                         <p><div class="form-group" align="center">
-                            <?= Html::a(Yii::t('app', 'No, cambiar correo personal'),
+                            <?= Html::a(Yii::t('app', 'No, regresar'),
                                 Url::toRoute(['adldap/forgetpass']), ['class' => 'btn btn-default']) ?>
                             <?= Html::submitButton('Sí, Enviar TOKEN',['class' => 'btn btn-danger',
                                 'value'=>'sendToken', 'name'=>'sendToken',
@@ -92,6 +89,10 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div></p>
 
                         <?php ActiveForm::end() ?>
+
+                        <div class="alert alert-warning">
+                            Si su correo personal es INCORRECTO o NO TIENE ACCESO, por favor comuníquese con <?php echo Yii::$app->params['contact']?>
+                        </div>
 
                     <?php else: ?>
 

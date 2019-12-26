@@ -67,7 +67,7 @@ AppAsset::register($this);
                     ['label' => '.. Identidad', 'url' => 'index.php?r=site/identity'],
                     '<li class="divider"></li>',
                     ['label' => 'Editar perfil', 'url' => 'index.php?r=adldap/editprofile'],
-                    ['label' => 'Cambiar Contraseña', 'url' => 'index.php?r=adldap/password'],
+                    ['label' => 'Cambiar Contraseña', 'url' => 'index.php?r=adldap/forgetpass'],
                     '<li class="divider"></li>',
                     //'<li class="dropdown-header">Dropdown Header</li>',
                     ['label' => 'Olvidaste tu usuario', 'url' => 'index.php?r=adldap/forgetuser'],

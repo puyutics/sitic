@@ -244,6 +244,25 @@ class AdldapController extends Controller
                         ['model'=>$model]);
                 }
 
+                if (Yii::$app->request->post('sendActivate')==='sendActivate') {
+
+                    //Enviar un mensaje de Bienvenida
+                    $this->sendNewUser($model->dni,$model->commonname,$model->mail,$model->personalmail);
+
+                    //Crear Registro de Log en la base de datos
+                    $description =
+                        'Envío de mensaje de Activación para el usuario: ' . $sAMAccountname
+                        . ', al correo electrónico personal: ' . $model->personalmail
+                    ;
+                    $this->saveLog('sendActivate', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
+
+                    //Mensaje de email enviado
+                    Yii::$app->session->setFlash('successActivateMail', $model->personalmail);
+
+                    return $this->render('edit_user',
+                        ['model'=>$model]);
+                }
+
                 if (Yii::$app->request->post('submit')==='submit') {
                     $user->setAttribute(Yii::$app->params['dni'],$model->dni);
                     $user->setFirstName($model->firstname);

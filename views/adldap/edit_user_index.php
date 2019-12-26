@@ -118,7 +118,10 @@ if (isset($_GET['search'])) { ?>
                         <?= Html::submitButton('Guardar',['class' => 'btn btn-success',
                             'value'=>'submit', 'name'=>'submit',
                             'onClick'=>'buttonClicked']) ?>
-                        <?= Html::submitButton('Enviar TOKEN',['class' => 'btn btn-primary',
+                        <?= Html::submitButton('Cuenta nueva',['class' => 'btn btn-primary',
+                            'value'=>'sendActivate', 'name'=>'sendActivate',
+                            'onClick'=>'buttonClicked']) ?>
+                        <?= Html::submitButton('Enviar TOKEN',['class' => 'btn btn-danger',
                             'value'=>'sendToken', 'name'=>'sendToken',
                             'onClick'=>'buttonClicked']) ?>
                     </div>

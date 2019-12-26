@@ -47,6 +47,17 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
         </div>
     </div>
 
+    <div class="row">
+        <div>
+            <?php if (Yii::$app->session->hasFlash('successActivateMail')) { ?>
+                &nbsp;
+                <div class="alert alert-success">
+                    Se ha enviado un correo a <code><?= Yii::$app->session->getFlash('successActivateMail') ?></code> con las instrucciones para activar la cuenta.
+                </div>
+            <?php } ?>
+        </div>
+    </div>
+
     <?php if (isset($_GET['search'])) { ?>
     <div class="row"> <div class="alert col-sm-offset-4 col-sm-4" align="center">
             <?= Html::a(Yii::t('app', 'Reiniciar Búsqueda'),
