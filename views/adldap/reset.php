@@ -70,7 +70,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="alert alert-danger">
                         <?= 'Su nueva contraseña debe contener al menos 8 dígitos
                         entre mayúsculas, minúsculas y números. 
-                        NO UTILICE SUS NOMBRES y/o APELLIDOS' ?>
+                        NO UTILICE SUS NOMBRES, APELLIDOS y/o NOMBRE DE USUARIO' ?>
                     </div>
 
                     <?php if (Yii::$app->session->hasFlash('errorReset')) { ?>

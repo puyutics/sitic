@@ -15,11 +15,6 @@ $today = strtotime(date('Y-m-d H:i:s'));
 $lastSetPassword = strtotime($user->getPasswordLastSetDate());
 $diff = round(($today - $lastSetPassword)/86400);
 
-$this->title = Yii::t('app', 'Editar: {nameAttribute}', [
-    'nameAttribute' => Yii::$app->user->identity->username,
-]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Identidad'), 'url' => ['site/identity']];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
 ?>
 
 <div class="profile-edit">

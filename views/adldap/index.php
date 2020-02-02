@@ -31,6 +31,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'content' => $this->render('index_local')
 
             ],
+            [
+                'label'=>'<i class="glyphicon glyphicon-list-alt"></i> BD Asistencia',
+                'content' => $this->render('index_biometrico')
+
+            ],
         ],
     ]);
     ?>

@@ -12,7 +12,6 @@ use yii\helpers\ArrayHelper;
 /* @var $model app\models\InvPurchase */
 ?>
 
-
 <div class="inv-purchase-items">
 
     <?php Pjax::begin(); ?>

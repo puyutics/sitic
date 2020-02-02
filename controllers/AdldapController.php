@@ -27,12 +27,12 @@ class AdldapController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','index','editprofile','edituser','viewuser','forgetpass',
+                'only' => ['create','index','profile','edituser','viewuser','forgetpass',
                     'forgetuser','password','reset','saveLog','sendToken','sendNewUser',
                     'viewgroups'],
                 'rules' => [
                     [
-                        'actions' => ['create','index','editprofile','edituser',
+                        'actions' => ['create','index','profile','edituser',
                             'forgetpass','forgetuser','password','reset','saveLog',
                             'sendToken','sendNewUser','viewgroups'],
                         'allow' => true,
@@ -44,7 +44,7 @@ class AdldapController extends Controller
                         'roles' => ['rolDirector'],
                     ],
                     [
-                        'actions' => ['editprofile','viewuser','sendToken'],
+                        'actions' => ['profile','viewuser','sendToken'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -516,6 +516,25 @@ class AdldapController extends Controller
                         ['model'=>$model]);
                 }
 
+                if (Yii::$app->request->post('sendActivate')==='sendActivate') {
+
+                    //Enviar un mensaje de Bienvenida
+                    $this->sendNewUser($model->dni,$model->commonname,$model->mail,$model->personalmail);
+
+                    //Crear Registro de Log en la base de datos
+                    $description =
+                        'Envío de mensaje de Activación para el usuario: ' . $sAMAccountname
+                        . ', al correo electrónico personal: ' . $model->personalmail
+                    ;
+                    $this->saveLog('sendActivate', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
+
+                    //Mensaje de email enviado
+                    Yii::$app->session->setFlash('successActivateMail', $model->personalmail);
+
+                    return $this->render('view_user',
+                        ['model'=>$model]);
+                }
+
             } else {
                 return $this->render('view_user',
                     ['model'=>$model]);
@@ -526,7 +545,7 @@ class AdldapController extends Controller
     }
 
 
-    public function actionEditprofile()
+    public function actionProfile()
     {
         if (isset(Yii::$app->user->identity->username)
             and (Yii::$app->session->get('authtype') == 'adldap')) {
@@ -560,16 +579,16 @@ class AdldapController extends Controller
                         'Información actualizada del perfil: ' . $sAMAccountname;
                     $this->saveLog('adldapEditProfile', $username, $description, $sAMAccountname, 'adldap');
 
-                    return $this->render('edit_profile',
+                    return $this->render('profile',
                         ['model' => $model]);
                 } else {
                     Yii::$app->session->setFlash('error', "Problemas de Actualización");
-                    return $this->render('edit_profile',
+                    return $this->render('profile',
                         ['model'=>$model]);
                 }
 
             } else {
-                return $this->render('edit_profile',
+                return $this->render('profile',
                     ['model'=>$model]);
             }
         } else {
@@ -735,6 +754,11 @@ class AdldapController extends Controller
                             }
                         }
 
+                        $incluye = stripos($post_newPassword, $sAMAccountname);
+                        if ($incluye !== false) {
+                            $similar = true;
+                        }
+
                         if ($similar == false) {
                             $user->setPassword($post_newPassword);
                             $user->save();
@@ -751,7 +775,7 @@ class AdldapController extends Controller
 
                         } else {
                             Yii::$app->session->setFlash('errorReset',
-                                'NO utilice sus NOMBRES y/o APELLIDOS en la nueva contraseña');
+                                'NO utilice sus NOMBRES, APELLIDOS y/o NOMBRE DE USUARIO en la nueva contraseña');
 
                             return $this->render('reset',
                                 ['model' => $model]); //resetToken incorrecto

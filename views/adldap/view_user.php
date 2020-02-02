@@ -46,6 +46,17 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Ver');
         </div>
     </div>
 
+    <div class="row">
+        <div>
+            <?php if (Yii::$app->session->hasFlash('successActivateMail')) { ?>
+                &nbsp;
+                <div class="alert alert-success">
+                    Se ha enviado un correo a <code><?= Yii::$app->session->getFlash('successActivateMail') ?></code> con las instrucciones para activar la cuenta.
+                </div>
+            <?php } ?>
+        </div>
+    </div>
+
         <?php if (!isset($_GET['search'])) { ?>
             <div class="alert alert-warning col-sm-offset-4 col-sm-4" align="center">
             <?= $form->field($model, 'search')->textInput(); ?>
@@ -115,9 +126,12 @@ if (isset($_GET['search'])) { ?>
 
     <div class="form-group" align="center">
         <?= Html::a(Yii::t('app', 'Reiniciar Búsqueda'),
-            Url::toRoute(['adldap/viewuser']), ['class' => 'btn btn-default'])
+            Url::toRoute(['adldap/viewuser']), ['class' => 'btn btn-warning'])
         ?>
-        <?= Html::submitButton('Enviar TOKEN',['class' => 'btn btn-primary',
+        <?= Html::submitButton('Cuenta nueva',['class' => 'btn btn-primary',
+            'value'=>'sendActivate', 'name'=>'sendActivate',
+            'onClick'=>'buttonClicked']) ?>
+        <?= Html::submitButton('Enviar TOKEN',['class' => 'btn btn-danger',
             'value'=>'sendToken', 'name'=>'sendToken',
             //'onClick'=>'buttonClicked'])
             'onClick'=>'alert("Se enviará un enlace (Reset TOKEN) a su correo personal.")'])
