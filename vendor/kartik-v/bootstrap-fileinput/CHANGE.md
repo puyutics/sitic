@@ -1,6 +1,58 @@
 Change Log: `bootstrap-fileinput`
 =================================
 
+## version 5.0.6
+
+**Date:** 11-Sep-2019
+
+- (enh #1464): Correct preview frame float styling issues.
+- (bug #1463): Correct file input unlock after file validation errors (for non-ajax mode).
+- (bug #1460): Correct `filebatchselected` event trigger.
+- (bug #1459): Upload Async does not recognize initialPreview correctly for ajax response immediately sent with uploadUrl.
+- (bug #1457): Correct `removeFromPreviewOnError` validation.
+- (enh #1455): Default preview template to `other` when invalid file type is passed.
+
+## version 5.0.5
+
+**Date:** 23-Aug-2019
+
+- (enh #1450): Update Russian Translations.
+- (enh #1449): Lock file input while files are being read for preview.
+- (enh #1446): New property `showConsoleLogs` to control display of plugin console messages.
+- (enh #1445): Correct invalid thumb frame log errors.
+- (enh #1442): Implement `.npmignore` to clean unwanted files for NPM package.
+- (enh #1438): Activating Open Collective.
+- (enh #1436): Improve Portuguese translations.
+- (enh #1435): Handle special characters in file thumb id attribute.
+- (enh #1429): Enhance thumbnail preview identifiers.
+
+## version 5.0.4
+
+**Date:** 30-Jun-2019
+
+- (enh #1422): Correct drag indicator SCSS.
+- (enh #1420): Correct `preferIconicPreview` parsing.
+- (bug #1413): Correct `getFileStack` and `getFileList` methods.
+- Implement sponsorship.
+- Implement sentiment bot.
+
+## version 5.0.3
+
+**Date:** 12-May-2019
+
+- (enh #1409): Correct the sequence of raise of `filechunksuccess` event.
+- Implement stale bot.
+- (enh #1400): Enhance image auto orientation for zoom images when thumbnail is hidden.
+- (enh #1399): Enhance Krajee Explorer themes for better image preview.
+- (enh #1398): Resumable uploads enhancements (only when `enableResumableUpload` is `true`):
+    - Add new properties to fileActionSettings:
+        - `indicatorPaused`
+        - `indicatorPausedTitle`
+    - Enhance pause and resume behavior by showing appropriate indicators on the file thumbnails
+    - Add `resume` method and enhance `pause` method for resumable uploads
+    - Remove upload button from individual thumbnails and ability to upload selective single file for resumable uploads.
+- (enh #1397): Correct `uploadParamNames` to include all parameters.
+
 ## version 5.0.2
 
 **Date:** 18-Apr-2019
