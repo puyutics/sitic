@@ -111,7 +111,7 @@ $diff = round(($today - $lastSetPassword)/86400);
 
                             <?= Html::submitButton(Yii::t('app','Guardar'),['class' => 'btn btn-success']) ?>
 
-                            <a class="btn btn-sg btn-primary" href="./index.php?r=adldap/password">Cambiar contraseña</a>
+                            <!--<a class="btn btn-sg btn-primary" href="./index.php?r=adldap/password">Cambiar contraseña</a>-->
 
                         </div>
 

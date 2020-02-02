@@ -217,7 +217,6 @@ class AdldapController extends Controller
             $model->uac = $user->getUserAccountControl();
             $model->department = $user->getDepartment();
             $model->title = $user->getTitle();
-            $model->title = $user->getTitle();
             $model->samaccountname = $user->getAttribute('samaccountname',0);
 
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
@@ -264,6 +263,66 @@ class AdldapController extends Controller
                 }
 
                 if (Yii::$app->request->post('submit')==='submit') {
+                    $log = '';
+                    if ($model->dni != $user->getAttribute(Yii::$app->params['dni'],0)) {
+                        $log = $log . 'Cédula: ' . $user->getAttribute(Yii::$app->params['dni'],0)
+                            . ' -> ' . $model->dni . '. ';
+                    }
+                    if ($model->lastname != $user->getLastName()) {
+                        $log = $log . 'Apellidos: ' . $user->getLastName()
+                            . ' -> ' . $model->lastname . '. ';
+                    }
+                    if ($model->firstname != $user->getFirstName()) {
+                        $log = $log . 'Nombres: ' . $user->getFirstName()
+                            . ' -> ' . $model->firstname . '. ';
+                    }
+                    if ($model->commonname != $user->getAttribute('cn',0)) {
+                        $log = $log . 'Nombre Completo: ' . $user->getAttribute('cn',0)
+                            . ' -> ' . $model->commonname . '. ';
+                    }
+                    if ($model->displayname != $user->getDisplayName()) {
+                        $log = $log . 'Nombre para mostrar: ' . $user->getDisplayName()
+                            . ' -> ' . $model->displayname . '. ';
+                    }
+                    if ($model->mail != $user->getEmail()) {
+                        $log = $log . 'Correo institucional: ' . $user->getEmail()
+                            . ' -> ' . $model->mail . '. ';
+                    }
+                    if ($model->personalmail != $user->getAttribute(Yii::$app->params['personalmail'], 0)) {
+                        $log = $log . 'Correo personal: ' . $user->getAttribute(Yii::$app->params['personalmail'], 0)
+                            . ' -> ' . $model->personalmail . '. ';
+                    }
+                    if ($model->mobile != $user->getAttribute(Yii::$app->params['mobile'], 0)) {
+                        $log = $log . 'Celular: ' . $user->getAttribute(Yii::$app->params['mobile'], 0)
+                            . ' -> ' . $model->mobile . '. ';
+                    }
+                    if ($model->title != $user->getTitle()) {
+                        $log = $log . 'Puesto: ' . $user->getTitle()
+                            . ' -> ' . $model->title . '. ';
+                    }
+                    if ($model->department != $user->getDepartment()) {
+                        $log = $log . 'Departamento: ' . $user->getDepartment()
+                            . ' -> ' . $model->department . '. ';
+                    }
+                    if ($model->uac != $user->getUserAccountControl()) {
+                        if ($user->getUserAccountControl() == '512') {
+                            $statusUser = 'Cuenta activada';
+                        } elseif ($user->getUserAccountControl() == '514') {
+                            $statusUser = 'Cuenta desactivada';
+                        } elseif ($user->getUserAccountControl() == '66048') {
+                            $statusUser = 'Cuenta activada. Contraseña nunca expira';
+
+                        }if ($model->uac == '512') {
+                            $statusModel = 'Cuenta activada';
+                        } elseif ($model->uac == '514') {
+                            $statusModel = 'Cuenta desactivada';
+                        } elseif ($model->uac == '66048') {
+                            $statusModel = 'Cuenta activada. Contraseña nunca expira';
+                        }
+                        $log = $log . 'Estado: ' . $statusUser
+                            . ' -> ' . $statusModel . '. ';
+                    }
+
                     $user->setAttribute(Yii::$app->params['dni'],$model->dni);
                     $user->setFirstName($model->firstname);
                     $user->setLastName($model->lastname);
@@ -283,7 +342,7 @@ class AdldapController extends Controller
                         //Crear Registro de Log en la base de datos
                         $description =
                             'Información actualizada del usuario: ' . $sAMAccountname
-                            . " ($model->uac)"
+                            . '. ' . $log
                         ;
                         $this->saveLog('adldapEditUser', $username, $description, $sAMAccountname,'adldap');
 
@@ -567,6 +626,16 @@ class AdldapController extends Controller
             $model->uac = $user->getUserAccountControl();
 
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                $log = '';
+                if ($model->personalmail != $user->getAttribute(Yii::$app->params['personalmail'], 0)) {
+                    $log = $log . 'Correo personal: ' . $user->getAttribute(Yii::$app->params['personalmail'], 0)
+                        . ' -> ' . $model->personalmail . '. ';
+                }
+                if ($model->mobile != $user->getAttribute(Yii::$app->params['mobile'], 0)) {
+                    $log = $log . 'Celular: ' . $user->getAttribute(Yii::$app->params['mobile'], 0)
+                        . ' -> ' . $model->mobile . '. ';
+                }
+
                 $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);
                 $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
                 if ($user->save()){
@@ -576,7 +645,9 @@ class AdldapController extends Controller
 
                     //Crear Registro de Log en la base de datos
                     $description =
-                        'Información actualizada del perfil: ' . $sAMAccountname;
+                        'Información actualizada del usuario: ' . $sAMAccountname
+                        . '. ' . $log
+                    ;
                     $this->saveLog('adldapEditProfile', $username, $description, $sAMAccountname, 'adldap');
 
                     return $this->render('profile',
