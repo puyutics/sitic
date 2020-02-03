@@ -14,15 +14,18 @@ use kartik\detail\DetailView;
 if (isset($_GET['search'])) {
     $search = $_GET['search'];
     $user = Yii::$app->ad->getProvider('default')->search()->users()->find($search);
-    $sAMAccountname = $user->getAttribute('samaccountname',0);
 
-    $today = strtotime(date('Y-m-d H:i:s'));
-    $lastSetPassword = strtotime($user->getPasswordLastSetDate());
-    $diff = round(($today - $lastSetPassword)/86400);
+    if (isset($user)){
+        $sAMAccountname = $user->getAttribute('samaccountname',0);
 
-    $this->title = Yii::t('app', 'Ver: {nameAttribute}', [
-        'nameAttribute' => $sAMAccountname,
-    ]);
+        $today = strtotime(date('Y-m-d H:i:s'));
+        $lastSetPassword = strtotime($user->getPasswordLastSetDate());
+        $diff = round(($today - $lastSetPassword)/86400);
+
+        $this->title = Yii::t('app', 'Ver: {nameAttribute}', [
+            'nameAttribute' => $sAMAccountname,
+        ]);
+    }
 }
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Gestión TI'), 'url' => ['site/management']];
@@ -68,8 +71,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Ver');
 </div>
 
 <?php
-
-if (isset($_GET['search'])) { ?>
+if (isset($_GET['search']) and isset($user)) { ?>
 
     <p>
         <?= DetailView::widget([
@@ -138,6 +140,13 @@ if (isset($_GET['search'])) { ?>
         ?>
     </div>
 
-<?php }?>
-
+    <?php } elseif (isset($_GET['search'])) { ?>
+        <div class="row"> <div class="alert alert-warning col-sm-offset-4 col-sm-4" align="center">
+                <?= $form->field($model, 'search')->textInput(['value' => $_GET['search']]); ?>
+                <?= Html::submitButton('Buscar',['class' => 'btn btn-default',
+                    'value'=>'searchButton', 'name'=>'searchButton',
+                    'onClick'=>'buttonClicked']) ?>
+            </div>
+        </div>
+    <?php }?>
 <?php ActiveForm::end(); ?>

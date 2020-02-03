@@ -97,73 +97,86 @@ class AdldapController extends Controller
 
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 
-                // https://github.com/Adldap2/Adldap2/blob/master/docs/models/model.md#saving
-                // create user
-                $user = \Yii::$app->ad->make()->user([
-                    'cn' => $model->commonname,
-                ]);
+                $checkuser = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
 
-                // set attributes with set... function
-                $user->setAccountName($model->samaccountname);
-                $user->setDisplayName($model->displayname);
-                $user->setFirstName($model->firstname);
-                $user->setLastName($model->lastname);
-                $user->setUserPrincipalName($model->mail);
+                if (!isset($checkuser)) {
+                    // https://github.com/Adldap2/Adldap2/blob/master/docs/models/model.md#saving
+                    // create user
+                    $user = \Yii::$app->ad->make()->user([
+                        'cn' => $model->commonname,
+                    ]);
 
-                // create dn
-                $dn = $user->getDnBuilder();
-                $dn->addCn($user->getCommonName());
-                $dn->addOu($model->dn);
-                $user->setDn($dn);
+                    // set attributes with set... function
+                    $user->setAccountName($model->samaccountname);
+                    $user->setDisplayName($model->displayname);
+                    $user->setFirstName($model->firstname);
+                    $user->setLastName($model->lastname);
+                    $user->setUserPrincipalName($model->mail);
 
-                // save an check return value
-                if ($user->save()) {
+                    // create dn
+                    $dn = $user->getDnBuilder();
+                    $dn->addCn($user->getCommonName());
+                    $dn->addOu($model->dn);
+                    $user->setDn($dn);
 
-                    $security = new Security();
-                    $user = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
+                    // save an check return value
+                    if ($user->save()) {
 
-                    if (isset($user)) {
-                        $user->setTitle($model->title);
-                        $user->setPassword($security->generateRandomString(8));
-                        $user->setAttribute(Yii::$app->params['dni'],$model->dni);
-                        $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);
-                        $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
-                        $user->setUserAccountControl($model->uac);
-                        $user->setDepartment($model->department);
-                        $user->setTitle($model->title);
-                        $user->setEmail($model->mail);
+                        $security = new Security();
 
-                        $user->save();
+                        //Comprobar que el usuario ha sido creado
+                        do {
+                            $checkuser = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
+                        } while (!isset($checkuser));
 
-                        Yii::$app->session->setFlash('success', "Usuario creado correctamente");
-                        $username = Yii::$app->user->identity->username;
+                        if (isset($checkuser)) {
+                            $user = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
+                            $user->setTitle($model->title);
+                            $user->setPassword($security->generateRandomString(8));
+                            $user->setAttribute(Yii::$app->params['dni'],$model->dni);
+                            $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);
+                            $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
+                            $user->setUserAccountControl($model->uac);
+                            $user->setDepartment($model->department);
+                            $user->setTitle($model->title);
+                            $user->setEmail($model->mail);
 
-                        //Enviar usuario creado por email
-                        $dni = $model->dni;
-                        $fullname = $model->commonname;
-                        $mail = $model->mail;
-                        $personalmail = $model->personalmail;
+                            $user->save();
 
-                        $this->sendNewUser($dni,$fullname,$mail,$personalmail);
+                            Yii::$app->session->setFlash('success', "Usuario creado correctamente");
+                            $username = Yii::$app->user->identity->username;
 
-                        //Crear Registro de Log en la base de datos
-                        $description =
-                            'Usuario creado: ' . $model->samaccountname
-                            . ". $model->commonname. $model->personalmail"
-                        ;
-                        $this->saveLog('adldapCreateUser', $username, $description, $model->samaccountname,'adldap');
-                        return $this->redirect(['edituser', 'search' => $model->samaccountname]);
-                        //return $this->render('edituser',['model'=>$model]);
-                    }
+                            //Enviar usuario creado por email
+                            $dni = $model->dni;
+                            $fullname = $model->commonname;
+                            $mail = $model->mail;
+                            $personalmail = $model->personalmail;
 
-                    else {
-                        Yii::$app->session->setFlash('error', "Usuario no encontrado");
+                            $this->sendNewUser($dni,$fullname,$mail,$personalmail);
+
+                            //Crear Registro de Log en la base de datos
+                            $description =
+                                'Usuario creado: ' . $model->samaccountname
+                                . ". $model->commonname. $model->personalmail"
+                            ;
+                            $this->saveLog('adldapCreateUser', $username, $description, $model->samaccountname,'adldap');
+                            return $this->redirect(['edituser', 'search' => $model->samaccountname]);
+                            //return $this->render('edituser',['model'=>$model]);
+                        }
+
+                        else {
+                            Yii::$app->session->setFlash('error', "Usuario no encontrado");
+                            return $this->render('create',
+                                ['model'=>$model]);
+                        }
+
+                    } else {
+                        Yii::$app->session->setFlash('error', "Problemas al crear el usuario");
                         return $this->render('create',
                             ['model'=>$model]);
                     }
-
                 } else {
-                    Yii::$app->session->setFlash('error', "Problemas al crear el usuario");
+                    Yii::$app->session->setFlash('error', "Ya existe el usuario");
                     return $this->render('create',
                         ['model'=>$model]);
                 }
@@ -203,231 +216,239 @@ class AdldapController extends Controller
             and (Yii::$app->session->get('authtype') == 'adldap')) {
             $search = $_GET['search'];
             $user = Yii::$app->ad->getProvider('default')->search()->users()->find($search);
-            $sAMAccountname = $user->getAttribute('samaccountname',0);
-            $model->dni = $user->getAttribute(Yii::$app->params['dni'],0);
-            $model->firstname = $user->getFirstName();
-            $model->lastname = $user->getLastName();
-            $model->mail = $user->getEmail();
-            $model->commonname = $user->getAttribute('cn',0);
-            $model->displayname = $user->getDisplayName();
-            $model->personalmail = $user->getAttribute(Yii::$app->params['personalmail'], 0);
-            $model->mobile = $user->getAttribute(Yii::$app->params['mobile'], 0);
-            $model->groups = $user->getGroups();
-            $model->dn = $user->getDn();
-            $model->uac = $user->getUserAccountControl();
-            $model->department = $user->getDepartment();
-            $model->title = $user->getTitle();
-            $model->samaccountname = $user->getAttribute('samaccountname',0);
 
-            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-                if (Yii::$app->request->post('sendToken')==='sendToken') {
+            if (isset($user)) {
+                $sAMAccountname = $user->getAttribute('samaccountname',0);
+                $model->dni = $user->getAttribute(Yii::$app->params['dni'],0);
+                $model->firstname = $user->getFirstName();
+                $model->lastname = $user->getLastName();
+                $model->mail = $user->getEmail();
+                $model->commonname = $user->getAttribute('cn',0);
+                $model->displayname = $user->getDisplayName();
+                $model->personalmail = $user->getAttribute(Yii::$app->params['personalmail'], 0);
+                $model->mobile = $user->getAttribute(Yii::$app->params['mobile'], 0);
+                $model->groups = $user->getGroups();
+                $model->dn = $user->getDn();
+                $model->uac = $user->getUserAccountControl();
+                $model->department = $user->getDepartment();
+                $model->title = $user->getTitle();
+                $model->samaccountname = $user->getAttribute('samaccountname',0);
 
-                    //Crear un Reset TOKEN
-                    $resetToken = hash(Yii::$app->params['algorithm'],
-                        Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->mail);
+                if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                    if (Yii::$app->request->post('sendToken')==='sendToken') {
 
-                    //Enviar Reset TOKEN por email
-                    $this->sendToken($model->dni,$model->commonname,$model->mail,$model->personalmail,$resetToken);
+                        //Crear un Reset TOKEN
+                        $resetToken = hash(Yii::$app->params['algorithm'],
+                            Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->mail);
 
-                    //Crear Registro de Log en la base de datos
-                    $description =
-                        'Envío de Token para el usuario: ' . $sAMAccountname
-                        . ', al correo electrónico personal: ' . $model->personalmail
-                    ;
-                    $this->saveLog('sendToken', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
+                        //Enviar Reset TOKEN por email
+                        $this->sendToken($model->dni,$model->commonname,$model->mail,$model->personalmail,$resetToken);
 
-                    //Mensaje de email enviado
-                    Yii::$app->session->setFlash('successMail', $model->personalmail);
+                        //Crear Registro de Log en la base de datos
+                        $description =
+                            'Envío de Token para el usuario: ' . $sAMAccountname
+                            . ', al correo electrónico personal: ' . $model->personalmail
+                        ;
+                        $this->saveLog('sendToken', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
 
-                    return $this->render('edit_user',
-                        ['model'=>$model]);
-                }
+                        //Mensaje de email enviado
+                        Yii::$app->session->setFlash('successMail', $model->personalmail);
 
-                if (Yii::$app->request->post('sendActivate')==='sendActivate') {
-
-                    //Enviar un mensaje de Bienvenida
-                    $this->sendNewUser($model->dni,$model->commonname,$model->mail,$model->personalmail);
-
-                    //Crear Registro de Log en la base de datos
-                    $description =
-                        'Envío de mensaje de Activación para el usuario: ' . $sAMAccountname
-                        . ', al correo electrónico personal: ' . $model->personalmail
-                    ;
-                    $this->saveLog('sendActivate', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
-
-                    //Mensaje de email enviado
-                    Yii::$app->session->setFlash('successActivateMail', $model->personalmail);
-
-                    return $this->render('edit_user',
-                        ['model'=>$model]);
-                }
-
-                if (Yii::$app->request->post('submit')==='submit') {
-                    $log = '';
-                    if ($model->dni != $user->getAttribute(Yii::$app->params['dni'],0)) {
-                        $log = $log . 'Cédula: ' . $user->getAttribute(Yii::$app->params['dni'],0)
-                            . ' -> ' . $model->dni . '. ';
+                        return $this->render('edit_user',
+                            ['model'=>$model]);
                     }
-                    if ($model->lastname != $user->getLastName()) {
-                        $log = $log . 'Apellidos: ' . $user->getLastName()
-                            . ' -> ' . $model->lastname . '. ';
-                    }
-                    if ($model->firstname != $user->getFirstName()) {
-                        $log = $log . 'Nombres: ' . $user->getFirstName()
-                            . ' -> ' . $model->firstname . '. ';
-                    }
-                    if ($model->commonname != $user->getAttribute('cn',0)) {
-                        $log = $log . 'Nombre Completo: ' . $user->getAttribute('cn',0)
-                            . ' -> ' . $model->commonname . '. ';
-                    }
-                    if ($model->displayname != $user->getDisplayName()) {
-                        $log = $log . 'Nombre para mostrar: ' . $user->getDisplayName()
-                            . ' -> ' . $model->displayname . '. ';
-                    }
-                    if ($model->mail != $user->getEmail()) {
-                        $log = $log . 'Correo institucional: ' . $user->getEmail()
-                            . ' -> ' . $model->mail . '. ';
-                    }
-                    if ($model->personalmail != $user->getAttribute(Yii::$app->params['personalmail'], 0)) {
-                        $log = $log . 'Correo personal: ' . $user->getAttribute(Yii::$app->params['personalmail'], 0)
-                            . ' -> ' . $model->personalmail . '. ';
-                    }
-                    if ($model->mobile != $user->getAttribute(Yii::$app->params['mobile'], 0)) {
-                        $log = $log . 'Celular: ' . $user->getAttribute(Yii::$app->params['mobile'], 0)
-                            . ' -> ' . $model->mobile . '. ';
-                    }
-                    if ($model->title != $user->getTitle()) {
-                        $log = $log . 'Puesto: ' . $user->getTitle()
-                            . ' -> ' . $model->title . '. ';
-                    }
-                    if ($model->department != $user->getDepartment()) {
-                        $log = $log . 'Departamento: ' . $user->getDepartment()
-                            . ' -> ' . $model->department . '. ';
-                    }
-                    if ($model->uac != $user->getUserAccountControl()) {
-                        if ($user->getUserAccountControl() == '512') {
-                            $statusUser = 'Cuenta activada';
-                        } elseif ($user->getUserAccountControl() == '514') {
-                            $statusUser = 'Cuenta desactivada';
-                        } elseif ($user->getUserAccountControl() == '66048') {
-                            $statusUser = 'Cuenta activada. Contraseña nunca expira';
 
-                        }if ($model->uac == '512') {
-                            $statusModel = 'Cuenta activada';
-                        } elseif ($model->uac == '514') {
-                            $statusModel = 'Cuenta desactivada';
-                        } elseif ($model->uac == '66048') {
-                            $statusModel = 'Cuenta activada. Contraseña nunca expira';
+                    if (Yii::$app->request->post('sendActivate')==='sendActivate') {
+
+                        //Enviar un mensaje de Bienvenida
+                        $this->sendNewUser($model->dni,$model->commonname,$model->mail,$model->personalmail);
+
+                        //Crear Registro de Log en la base de datos
+                        $description =
+                            'Envío de mensaje de Activación para el usuario: ' . $sAMAccountname
+                            . ', al correo electrónico personal: ' . $model->personalmail
+                        ;
+                        $this->saveLog('sendActivate', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
+
+                        //Mensaje de email enviado
+                        Yii::$app->session->setFlash('successActivateMail', $model->personalmail);
+
+                        return $this->render('edit_user',
+                            ['model'=>$model]);
+                    }
+
+                    if (Yii::$app->request->post('submit')==='submit') {
+                        $log = '';
+                        if ($model->dni != $user->getAttribute(Yii::$app->params['dni'],0)) {
+                            $log = $log . 'Cédula: ' . $user->getAttribute(Yii::$app->params['dni'],0)
+                                . ' -> ' . $model->dni . '. ';
                         }
-                        $log = $log . 'Estado: ' . $statusUser
-                            . ' -> ' . $statusModel . '. ';
+                        if ($model->lastname != $user->getLastName()) {
+                            $log = $log . 'Apellidos: ' . $user->getLastName()
+                                . ' -> ' . $model->lastname . '. ';
+                        }
+                        if ($model->firstname != $user->getFirstName()) {
+                            $log = $log . 'Nombres: ' . $user->getFirstName()
+                                . ' -> ' . $model->firstname . '. ';
+                        }
+                        if ($model->commonname != $user->getAttribute('cn',0)) {
+                            $log = $log . 'Nombre Completo: ' . $user->getAttribute('cn',0)
+                                . ' -> ' . $model->commonname . '. ';
+                        }
+                        if ($model->displayname != $user->getDisplayName()) {
+                            $log = $log . 'Nombre para mostrar: ' . $user->getDisplayName()
+                                . ' -> ' . $model->displayname . '. ';
+                        }
+                        if ($model->mail != $user->getEmail()) {
+                            $log = $log . 'Correo institucional: ' . $user->getEmail()
+                                . ' -> ' . $model->mail . '. ';
+                        }
+                        if ($model->personalmail != $user->getAttribute(Yii::$app->params['personalmail'], 0)) {
+                            $log = $log . 'Correo personal: ' . $user->getAttribute(Yii::$app->params['personalmail'], 0)
+                                . ' -> ' . $model->personalmail . '. ';
+                        }
+                        if ($model->mobile != $user->getAttribute(Yii::$app->params['mobile'], 0)) {
+                            $log = $log . 'Celular: ' . $user->getAttribute(Yii::$app->params['mobile'], 0)
+                                . ' -> ' . $model->mobile . '. ';
+                        }
+                        if ($model->title != $user->getTitle()) {
+                            $log = $log . 'Puesto: ' . $user->getTitle()
+                                . ' -> ' . $model->title . '. ';
+                        }
+                        if ($model->department != $user->getDepartment()) {
+                            $log = $log . 'Departamento: ' . $user->getDepartment()
+                                . ' -> ' . $model->department . '. ';
+                        }
+                        if ($model->uac != $user->getUserAccountControl()) {
+                            if ($user->getUserAccountControl() == '512') {
+                                $statusUser = 'Cuenta activada';
+                            } elseif ($user->getUserAccountControl() == '514') {
+                                $statusUser = 'Cuenta desactivada';
+                            } elseif ($user->getUserAccountControl() == '66048') {
+                                $statusUser = 'Cuenta activada. Contraseña nunca expira';
+
+                            }if ($model->uac == '512') {
+                                $statusModel = 'Cuenta activada';
+                            } elseif ($model->uac == '514') {
+                                $statusModel = 'Cuenta desactivada';
+                            } elseif ($model->uac == '66048') {
+                                $statusModel = 'Cuenta activada. Contraseña nunca expira';
+                            }
+                            $log = $log . 'Estado: ' . $statusUser
+                                . ' -> ' . $statusModel . '. ';
+                        }
+
+                        $user->setAttribute(Yii::$app->params['dni'],$model->dni);
+                        $user->setFirstName($model->firstname);
+                        $user->setLastName($model->lastname);
+                        //$user->setEmail($model->mail);
+                        //$user->setCommonName($model->commonname);
+                        $user->setDisplayName($model->displayname);
+                        $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);
+                        $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
+                        $user->setUserAccountControl($model->uac);
+                        $user->setDepartment($model->department);
+                        $user->setTitle($model->title);
+
+                        if ($user->save()) {
+                            Yii::$app->session->setFlash('success', "Actualizado Correctamente");
+                            $username = Yii::$app->user->identity->username;
+
+                            //Crear Registro de Log en la base de datos
+                            $description =
+                                'Información actualizada del usuario: ' . $sAMAccountname
+                                . '. ' . $log
+                            ;
+                            $this->saveLog('adldapEditUser', $username, $description, $sAMAccountname,'adldap');
+
+                            return $this->render('edit_user',
+                                ['model'=>$model]);
+                        } else {
+                            Yii::$app->session->setFlash('error', "Problemas de Actualización");
+                            return $this->render('edit_user',
+                                ['model'=>$model]);
+                        }
                     }
 
-                    $user->setAttribute(Yii::$app->params['dni'],$model->dni);
-                    $user->setFirstName($model->firstname);
-                    $user->setLastName($model->lastname);
-                    //$user->setEmail($model->mail);
-                    //$user->setCommonName($model->commonname);
-                    $user->setDisplayName($model->displayname);
-                    $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);
-                    $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
-                    $user->setUserAccountControl($model->uac);
-                    $user->setDepartment($model->department);
-                    $user->setTitle($model->title);
 
-                    if ($user->save()) {
-                        Yii::$app->session->setFlash('success', "Actualizado Correctamente");
-                        $username = Yii::$app->user->identity->username;
+                    if (Yii::$app->request->post('addGroup')==='addGroup') {
 
-                        //Crear Registro de Log en la base de datos
-                        $description =
-                            'Información actualizada del usuario: ' . $sAMAccountname
-                            . '. ' . $log
-                        ;
-                        $this->saveLog('adldapEditUser', $username, $description, $sAMAccountname,'adldap');
+                        // https://github.com/Adldap2/Adldap2/blob/master/docs/models/traits/has-member-of.md#adding-a-group
+                        // find user
+                        $userObject = \Yii::$app->ad->search()->findBy('sAMAccountname', $sAMAccountname);
+                        // find group
+                        $groupObject = \Yii::$app->ad->search()->findBy('cn', $model->addGroup);
+                        // add group to user
+                        $userObject->addGroup($groupObject);
+
+                        if ($groupObject != null && $groupObject->exists && $userObject->save()) {
+
+                            //Crear Registro de Log en la base de datos
+                            $description =
+                                'Grupo agregado: ' . $model->addGroup
+                            ;
+                            $this->saveLog('addGroup', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
+
+                            //Mensaje de grupo eliminado
+                            Yii::$app->session->setFlash('success', 'Grupo agregado correctamente');
+
+                            $user = \Yii::$app->ad->search()->findBy('sAMAccountname', $sAMAccountname);
+                            $model->groups = $user->getGroups();
+                            $model->addGroup = '';
+                            $model->deleteGroup = '';
+
+                        } else {
+                            //Mensaje de grupo eliminado
+                            Yii::$app->session->setFlash('error', 'Error al agregar grupo');
+                        }
 
                         return $this->render('edit_user',
                             ['model'=>$model]);
-                    } else {
-                        Yii::$app->session->setFlash('error', "Problemas de Actualización");
+                    }
+
+
+                    if (Yii::$app->request->post('deleteGroup')==='deleteGroup') {
+
+                        // https://github.com/Adldap2/Adldap2/blob/master/docs/models/traits/has-member-of.md#adding-a-group
+                        // find user
+                        $userObject = \Yii::$app->ad->search()->findBy('sAMAccountname', $sAMAccountname);
+                        // find group
+                        $groupObject = \Yii::$app->ad->search()->findBy('cn', $model->deleteGroup);
+                        // delete group to user
+                        $userObject->removeGroup($groupObject);
+
+                        if ($groupObject != null && $groupObject->exists && $userObject->save()) {
+
+                            //Crear Registro de Log en la base de datos
+                            $description =
+                                'Grupo eliminado: ' . $model->deleteGroup
+                            ;
+                            $this->saveLog('deleteGroup', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
+
+                            //Mensaje de grupo eliminado
+                            Yii::$app->session->setFlash('success', 'Grupo eliminado correctamente');
+
+                            $user = \Yii::$app->ad->search()->findBy('sAMAccountname', $sAMAccountname);
+                            $model->groups = $user->getGroups();
+                            $model->addGroup = '';
+                            $model->deleteGroup = '';
+
+                        } else {
+                            //Mensaje de grupo eliminado
+                            Yii::$app->session->setFlash('error', 'Error al eliminar grupo');
+                        }
+
                         return $this->render('edit_user',
                             ['model'=>$model]);
                     }
-                }
 
-
-                if (Yii::$app->request->post('addGroup')==='addGroup') {
-
-                    // https://github.com/Adldap2/Adldap2/blob/master/docs/models/traits/has-member-of.md#adding-a-group
-                    // find user
-                    $userObject = \Yii::$app->ad->search()->findBy('sAMAccountname', $sAMAccountname);
-                    // find group
-                    $groupObject = \Yii::$app->ad->search()->findBy('cn', $model->addGroup);
-                    // add group to user
-                    $userObject->addGroup($groupObject);
-
-                    if ($groupObject != null && $groupObject->exists && $userObject->save()) {
-
-                        //Crear Registro de Log en la base de datos
-                        $description =
-                            'Grupo agregado: ' . $model->addGroup
-                        ;
-                        $this->saveLog('addGroup', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
-
-                        //Mensaje de grupo eliminado
-                        Yii::$app->session->setFlash('success', 'Grupo agregado correctamente');
-
-                        $user = \Yii::$app->ad->search()->findBy('sAMAccountname', $sAMAccountname);
-                        $model->groups = $user->getGroups();
-                        $model->addGroup = '';
-                        $model->deleteGroup = '';
-
-                    } else {
-                        //Mensaje de grupo eliminado
-                        Yii::$app->session->setFlash('error', 'Error al agregar grupo');
-                    }
-
+                } else {
                     return $this->render('edit_user',
                         ['model'=>$model]);
                 }
-
-
-                if (Yii::$app->request->post('deleteGroup')==='deleteGroup') {
-
-                    // https://github.com/Adldap2/Adldap2/blob/master/docs/models/traits/has-member-of.md#adding-a-group
-                    // find user
-                    $userObject = \Yii::$app->ad->search()->findBy('sAMAccountname', $sAMAccountname);
-                    // find group
-                    $groupObject = \Yii::$app->ad->search()->findBy('cn', $model->deleteGroup);
-                    // delete group to user
-                    $userObject->removeGroup($groupObject);
-
-                    if ($groupObject != null && $groupObject->exists && $userObject->save()) {
-
-                        //Crear Registro de Log en la base de datos
-                        $description =
-                            'Grupo eliminado: ' . $model->deleteGroup
-                        ;
-                        $this->saveLog('deleteGroup', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
-
-                        //Mensaje de grupo eliminado
-                        Yii::$app->session->setFlash('success', 'Grupo eliminado correctamente');
-
-                        $user = \Yii::$app->ad->search()->findBy('sAMAccountname', $sAMAccountname);
-                        $model->groups = $user->getGroups();
-                        $model->addGroup = '';
-                        $model->deleteGroup = '';
-
-                    } else {
-                        //Mensaje de grupo eliminado
-                        Yii::$app->session->setFlash('error', 'Error al eliminar grupo');
-                    }
-
-                    return $this->render('edit_user',
-                        ['model'=>$model]);
-                }
-
             } else {
+                Yii::$app->session->setFlash('error',
+                    "No se encontraron resultados");
                 return $this->render('edit_user',
                     ['model'=>$model]);
             }
@@ -535,66 +556,75 @@ class AdldapController extends Controller
         if (isset($_GET['search'])
             and (Yii::$app->session->get('authtype') == 'adldap')) {
             $search = $_GET['search'];
+
             $user = Yii::$app->ad->getProvider('default')->search()->users()->find($search);
-            $sAMAccountname = $user->getAttribute('samaccountname',0);
-            $model->dni = $user->getAttribute(Yii::$app->params['dni'],0);
-            $model->firstname = $user->getFirstName();
-            $model->lastname = $user->getLastName();
-            $model->mail = $user->getEmail();
-            $model->commonname = $user->getAttribute('cn',0);
-            $model->displayname = $user->getDisplayName();
-            $model->personalmail = $user->getAttribute(Yii::$app->params['personalmail'], 0);
-            $model->mobile = $user->getAttribute(Yii::$app->params['mobile'], 0);
-            $model->groups = $user->getGroups();
-            $model->dn = $user->getDn();
-            $model->uac = $user->getUserAccountControl();
-            $model->title = $user->getTitle();
-            $model->department = $user->getDepartment();
 
-            if (Yii::$app->request->post() && $model->validate()) {
-                if (Yii::$app->request->post('sendToken')==='sendToken') {
+            if (isset($user)) {
+                $sAMAccountname = $user->getAttribute('samaccountname',0);
+                $model->dni = $user->getAttribute(Yii::$app->params['dni'],0);
+                $model->firstname = $user->getFirstName();
+                $model->lastname = $user->getLastName();
+                $model->mail = $user->getEmail();
+                $model->commonname = $user->getAttribute('cn',0);
+                $model->displayname = $user->getDisplayName();
+                $model->personalmail = $user->getAttribute(Yii::$app->params['personalmail'], 0);
+                $model->mobile = $user->getAttribute(Yii::$app->params['mobile'], 0);
+                $model->groups = $user->getGroups();
+                $model->dn = $user->getDn();
+                $model->uac = $user->getUserAccountControl();
+                $model->title = $user->getTitle();
+                $model->department = $user->getDepartment();
 
-                    //Crear un Reset TOKEN
-                    $resetToken = hash(Yii::$app->params['algorithm'],
-                        Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->mail);
+                if (Yii::$app->request->post() && $model->validate()) {
+                    if (Yii::$app->request->post('sendToken')==='sendToken') {
 
-                    //Enviar Reset TOKEN por email
-                    $this->sendToken($model->dni,$model->commonname,$model->mail,$model->personalmail,$resetToken);
+                        //Crear un Reset TOKEN
+                        $resetToken = hash(Yii::$app->params['algorithm'],
+                            Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->mail);
 
-                    //Crear Registro de Log en la base de datos
-                    $description =
-                        'Envío de Token para el usuario: ' . $sAMAccountname
-                        . ', al correo electrónico personal: ' . $model->personalmail
-                    ;
-                    $this->saveLog('sendToken', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
+                        //Enviar Reset TOKEN por email
+                        $this->sendToken($model->dni,$model->commonname,$model->mail,$model->personalmail,$resetToken);
 
-                    //Mensaje de email enviado
-                    Yii::$app->session->setFlash('successMail', $model->personalmail);
+                        //Crear Registro de Log en la base de datos
+                        $description =
+                            'Envío de Token para el usuario: ' . $sAMAccountname
+                            . ', al correo electrónico personal: ' . $model->personalmail
+                        ;
+                        $this->saveLog('sendToken', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
 
+                        //Mensaje de email enviado
+                        Yii::$app->session->setFlash('successMail', $model->personalmail);
+
+                        return $this->render('view_user',
+                            ['model'=>$model]);
+                    }
+
+                    if (Yii::$app->request->post('sendActivate')==='sendActivate') {
+
+                        //Enviar un mensaje de Bienvenida
+                        $this->sendNewUser($model->dni,$model->commonname,$model->mail,$model->personalmail);
+
+                        //Crear Registro de Log en la base de datos
+                        $description =
+                            'Envío de mensaje de Activación para el usuario: ' . $sAMAccountname
+                            . ', al correo electrónico personal: ' . $model->personalmail
+                        ;
+                        $this->saveLog('sendActivate', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
+
+                        //Mensaje de email enviado
+                        Yii::$app->session->setFlash('successActivateMail', $model->personalmail);
+
+                        return $this->render('view_user',
+                            ['model'=>$model]);
+                    }
+
+                } else {
                     return $this->render('view_user',
                         ['model'=>$model]);
                 }
-
-                if (Yii::$app->request->post('sendActivate')==='sendActivate') {
-
-                    //Enviar un mensaje de Bienvenida
-                    $this->sendNewUser($model->dni,$model->commonname,$model->mail,$model->personalmail);
-
-                    //Crear Registro de Log en la base de datos
-                    $description =
-                        'Envío de mensaje de Activación para el usuario: ' . $sAMAccountname
-                        . ', al correo electrónico personal: ' . $model->personalmail
-                    ;
-                    $this->saveLog('sendActivate', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
-
-                    //Mensaje de email enviado
-                    Yii::$app->session->setFlash('successActivateMail', $model->personalmail);
-
-                    return $this->render('view_user',
-                        ['model'=>$model]);
-                }
-
             } else {
+                Yii::$app->session->setFlash('error',
+                    "No se encontraron resultados");
                 return $this->render('view_user',
                     ['model'=>$model]);
             }
@@ -963,9 +993,9 @@ class AdldapController extends Controller
             $body =
                 "Estimado usuario," . "\n" .
                 "Se ha solicitado reiniciar la contraseña de la cuenta institucional de " . Yii::$app->params['company'] . "\n\n" .
-                "DNI/Céd/Pasaporte:   " . $dni . "\n" .
-                "Nombres/Apellidos:    " . $fullname . "\n" .
-                "Cuenta institucional:   " . $mail . "\n\n" .
+                "Céd/Pasaporte/Código: " . $dni . "\n" .
+                "Nombres/Apellidos:       " . $fullname . "\n" .
+                "Cuenta institucional:     " . $mail . "\n\n" .
                 "--------------------------------------------------------------------------------------" . "\n" .
                 "Haga clic en el siguiente enlace para restaurar su contraseña:" . "\n\n" .
                 Yii::$app->params['appURL'] . "index.php?r=adldap/reset&mail=" . $mail . "&resetToken=" . $resetToken . "\n\n" .
@@ -991,8 +1021,8 @@ class AdldapController extends Controller
                 "Estimado usuario," . "\n" .
                 "Se ha creado una cuenta institucional en " . Yii::$app->params['company'] . "\n\n" .
                 "Céd/Pasaporte/Código: " . $dni . "\n" .
-                "Nombres/Apellidos:    " . $fullname . "\n" .
-                "Cuenta institucional:  " . $mail . "\n\n" .
+                "Nombres/Apellidos:       " . $fullname . "\n" .
+                "Cuenta institucional:     " . $mail . "\n\n" .
                 "--------------------------------------------------------------------------------------" . "\n" .
                 "Haga clic en el siguiente enlace para activar su cuenta:" . "\n\n" .
                 "https://password.uea.edu.ec" . "\n\n" .

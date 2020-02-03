@@ -14,16 +14,19 @@ use kartik\tabs\TabsX;
 if (isset($_GET['search'])) {
     $search = $_GET['search'];
     $user = Yii::$app->ad->getProvider('default')->search()->users()->find($search);
-    $sAMAccountname = $user->getAttribute('samaccountname',0);
-    $mail = $user->getAttribute('mail',0);
 
-    $today = strtotime(date('Y-m-d H:i:s'));
-    $lastSetPassword = strtotime($user->getPasswordLastSetDate());
-    $diff = round(($today - $lastSetPassword)/86400);
+    if (isset($user)) {
+        $sAMAccountname = $user->getAttribute('samaccountname',0);
+        $mail = $user->getAttribute('mail',0);
 
-    $this->title = Yii::t('app', 'Editar: {nameAttribute}', [
-        'nameAttribute' => $sAMAccountname,
-    ]);
+        $today = strtotime(date('Y-m-d H:i:s'));
+        $lastSetPassword = strtotime($user->getPasswordLastSetDate());
+        $diff = round(($today - $lastSetPassword)/86400);
+
+        $this->title = Yii::t('app', 'Editar: {nameAttribute}', [
+            'nameAttribute' => $sAMAccountname,
+        ]);
+    }
 }
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Gestión TI'), 'url' => ['site/management']];
@@ -58,12 +61,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
         </div>
     </div>
 
-    <?php if (isset($_GET['search'])) { ?>
-    <div class="row"> <div class="alert col-sm-offset-4 col-sm-4" align="center">
-            <?= Html::a(Yii::t('app', 'Reiniciar Búsqueda'),
-                Url::toRoute(['adldap/edituser']), ['class' => 'btn btn-warning']) ?>
-        </div> </div>
-    <?php } ?>
+
     <?php if (!isset($_GET['search'])) { ?>
         <div class="row"> <div class="alert alert-warning col-sm-offset-4 col-sm-4" align="center">
             <?= $form->field($model, 'search')->textInput(); ?>
@@ -75,8 +73,14 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
 </div>
 
 <?php
+if (isset($_GET['search']) and isset($user)) { ?>
 
-if (isset($_GET['search'])) { ?>
+    <?php if (isset($_GET['search'])) { ?>
+        <div class="row"> <div class="alert col-sm-offset-4 col-sm-4" align="center">
+                <?= Html::a(Yii::t('app', 'Reiniciar Búsqueda'),
+                    Url::toRoute(['adldap/edituser']), ['class' => 'btn btn-warning']) ?>
+            </div> </div>
+    <?php } ?>
 
     <?php echo TabsX::widget([
         'position' => TabsX::POS_ABOVE,
@@ -115,6 +119,14 @@ if (isset($_GET['search'])) { ?>
     ]);
     ?>
 
-<?php }?>
+    <?php } elseif (isset($_GET['search'])) { ?>
+        <div class="row"> <div class="alert alert-warning col-sm-offset-4 col-sm-4" align="center">
+            <?= $form->field($model, 'search')->textInput(['value' => $_GET['search']]); ?>
+            <?= Html::submitButton('Buscar',['class' => 'btn btn-default',
+                'value'=>'searchButton', 'name'=>'searchButton',
+                'onClick'=>'buttonClicked']) ?>
+            </div>
+        </div>
+    <?php }?>
 
 <?php ActiveForm::end(); ?>
