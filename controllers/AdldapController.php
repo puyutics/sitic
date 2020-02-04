@@ -106,12 +106,23 @@ class AdldapController extends Controller
                         'cn' => $model->commonname,
                     ]);
 
+                    $log = '';
+
                     // set attributes with set... function
                     $user->setAccountName($model->samaccountname);
+                    $log = $log . 'Usuario: ' . $model->samaccountname . '. ';
+
                     $user->setDisplayName($model->displayname);
+                    $log = $log . 'Nombre completo: ' . $model->displayname . '. ';
+
                     $user->setFirstName($model->firstname);
+                    $log = $log . 'Nombres: ' . $model->firstname . '. ';
+
                     $user->setLastName($model->lastname);
+                    $log = $log . 'Apellidos: ' . $model->lastname . '. ';
+                    
                     $user->setUserPrincipalName($model->mail);
+                    $log = $log . 'Correo: ' . $model->mail . '. ';
 
                     // create dn
                     $dn = $user->getDnBuilder();
@@ -134,38 +145,46 @@ class AdldapController extends Controller
                             $user->setTitle($model->title);
                             $user->setPassword($security->generateRandomString(8));
                             $user->setAttribute(Yii::$app->params['dni'],$model->dni);
+                            $log = $log . 'Cédula: ' . $model->dni . '. ';
                             $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);
+                            $log = $log . 'Correo personal: ' . $model->personalmail . '. ';
                             $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
+                            $log = $log . 'Celular: ' . $model->mobile . '. ';
                             $user->setUserAccountControl($model->uac);
                             $user->setDepartment($model->department);
+                            $log = $log . 'Departamento: ' . $model->department . '. ';
                             $user->setTitle($model->title);
+                            $log = $log . 'Titulo: ' . $model->title . '.';
                             $user->setEmail($model->mail);
 
-                            $user->save();
+                            if ($user->save()) {
+                                Yii::$app->session->setFlash('success', "Usuario creado correctamente");
+                                $username = Yii::$app->user->identity->username;
 
-                            Yii::$app->session->setFlash('success', "Usuario creado correctamente");
-                            $username = Yii::$app->user->identity->username;
+                                //Enviar usuario creado por email
+                                $dni = $model->dni;
+                                $fullname = $model->commonname;
+                                $mail = $model->mail;
+                                $personalmail = $model->personalmail;
 
-                            //Enviar usuario creado por email
-                            $dni = $model->dni;
-                            $fullname = $model->commonname;
-                            $mail = $model->mail;
-                            $personalmail = $model->personalmail;
+                                $this->sendNewUser($dni,$fullname,$mail,$personalmail);
 
-                            $this->sendNewUser($dni,$fullname,$mail,$personalmail);
+                                //Crear Registro de Log en la base de datos
+                                $description =
+                                    'Usuario creado. ' . $log
+                                ;
+                                $this->saveLog('adldapCreateUser', $username, $description, $model->samaccountname,'adldap');
+                                return $this->redirect(['edituser', 'search' => $model->samaccountname]);
+                                //return $this->render('edituser',['model'=>$model]);
 
-                            //Crear Registro de Log en la base de datos
-                            $description =
-                                'Usuario creado: ' . $model->samaccountname
-                                . ". $model->commonname. $model->personalmail"
-                            ;
-                            $this->saveLog('adldapCreateUser', $username, $description, $model->samaccountname,'adldap');
-                            return $this->redirect(['edituser', 'search' => $model->samaccountname]);
-                            //return $this->render('edituser',['model'=>$model]);
-                        }
+                            } else {
+                                Yii::$app->session->setFlash('error', "Problemas al actualizar el usuario");
+                                return $this->render('create',
+                                    ['model'=>$model]);
+                            }
 
-                        else {
-                            Yii::$app->session->setFlash('error', "Usuario no encontrado");
+                        } else {
+                            Yii::$app->session->setFlash('error', "Problemas de validación del usuario");
                             return $this->render('create',
                                 ['model'=>$model]);
                         }
