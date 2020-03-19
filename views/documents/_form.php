@@ -26,6 +26,7 @@ use yii\helpers\Url;
         'pluginOptions' => [
             'uploadUrl' => Url::to(['uploads/documents']),
             'browseLabel' =>  'ARCHIVO PDF',
+            'dropZoneEnabled' => false,
             'showUpload' => false,
             'showPreview' => true,
             'showCaption' => true,

@@ -26,9 +26,13 @@ $config = [
         ]
     ],
     'components' => [
+        'session' => [
+            // this is the name of the session cookie
+            'name' => 'sitic',
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            //http://www.sethcardoza.com/tools/random-password-generator/
+            //https://passwordsgenerator.net/
             'cookieValidationKey' => 'ENTER COOKIE KEY HERE',
         ],
         'cache' => [

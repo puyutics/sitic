@@ -60,9 +60,9 @@ return [
 
 
     //Generar un Código de Seguridad (SaltKey) en el siguiente enlace
-    //http://www.sethcardoza.com/tools/random-password-generator/
+    //https://passwordsgenerator.net/
     //Tested -> 40 Characters Long (Good for Cakephp Security Salt)
-    'saltKey'         => 'ENTER SALTKEY HERE',
+    'saltKey'         => 'ENTER SALT KEY HERE',
     'algorithm'       => 'sha256',
     'tokenDateFormat' => date('Y-m-d'), //Duración de token en fecha actual desde 00:00 hasta 23:59
 

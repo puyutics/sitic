@@ -120,7 +120,7 @@ class AdldapController extends Controller
 
                     $user->setLastName($model->lastname);
                     $log = $log . 'Apellidos: ' . $model->lastname . '. ';
-                    
+
                     $user->setUserPrincipalName($model->mail);
                     $log = $log . 'Correo: ' . $model->mail . '. ';
 

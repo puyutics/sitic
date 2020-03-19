@@ -72,7 +72,7 @@ Configurar una nueva llave secreta para la generación de llaves tokens en el ar
 ```
 
 Puedes utilizar el siguiente servicio web para generar una nuevas cadenas alfanuméricas:
-http://www.sethcardoza.com/tools/random-password-generator/
+//https://passwordsgenerator.net/
 
 Probado con la opción -> 40 Characters Long (Good for Cakephp Security Salt)
 
