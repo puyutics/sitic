@@ -338,6 +338,11 @@ class AdldapController extends Controller
                             $log = $log . 'Departamento: ' . $user->getDepartment()
                                 . ' -> ' . $model->department . '. ';
                         }
+
+                        //Más códigos UAC cuentas Active Directory
+                        //https://jackstromberg.com/2013/01/useraccountcontrol-attributeflag-values/
+                        //https://social.technet.microsoft.com/Forums/en-US/69211f96-b17e-43aa-9a6a-4f8e99ae2b3a/useraccountcontrol-and-employeestatus?forum=ilm2
+
                         if ($model->uac != $user->getUserAccountControl()) {
                             if ($user->getUserAccountControl() == '512') {
                                 $statusUser = 'Cuenta activada';
@@ -345,6 +350,10 @@ class AdldapController extends Controller
                                 $statusUser = 'Cuenta desactivada';
                             } elseif ($user->getUserAccountControl() == '66048') {
                                 $statusUser = 'Cuenta activada. Contraseña nunca expira';
+                            } elseif ($user->getUserAccountControl() == '66050') {
+                                $statusUser = 'Cuenta desactivada. Contraseña nunca expira';
+                            } else {
+                                $statusUser = $user->getUserAccountControl();
 
                             }if ($model->uac == '512') {
                                 $statusModel = 'Cuenta activada';
@@ -352,6 +361,10 @@ class AdldapController extends Controller
                                 $statusModel = 'Cuenta desactivada';
                             } elseif ($model->uac == '66048') {
                                 $statusModel = 'Cuenta activada. Contraseña nunca expira';
+                            } elseif ($model->uac == '66050') {
+                                $statusModel = 'Cuenta desactivada. Contraseña nunca expira';
+                            } else {
+                                $statusModel = $model->uac;
                             }
                             $log = $log . 'Estado: ' . $statusUser
                                 . ' -> ' . $statusModel . '. ';

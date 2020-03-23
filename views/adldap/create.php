@@ -77,6 +77,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     <?php //Más códigos UAC cuentas Active Directory
                     //https://jackstromberg.com/2013/01/useraccountcontrol-attributeflag-values/
+                    //https://social.technet.microsoft.com/Forums/en-US/69211f96-b17e-43aa-9a6a-4f8e99ae2b3a/useraccountcontrol-and-employeestatus?forum=ilm2
                     ?>
 
                     <div class="row">
@@ -95,6 +96,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 '512'=>'Cuenta activada',
                                 '66048'=>'Cuenta activada. Contraseña nunca expira',
                                 '514'=>'Cuenta desactivada',
+                                '66050'=>'Cuenta desactivada. Contraseña nunca expira',
                             ])
                             ?>
                         </div>
