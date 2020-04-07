@@ -97,6 +97,8 @@ if (isset($_GET['search'])) { ?>
                             if ($model->uac == 514) { ?><span class="label label-danger">CUENTA DESACTIVADA</span><?php }
                             //Enabled, Password Doesn’t Expire	0x10200	66048
                             if ($model->uac == 66048) { ?><span class="label label-success">CUENTA ACTIVADA, CONTRASEÑA NUNCA EXPIRA</span><?php }
+                            //Disabled, Password Doesn’t Expire	0x10202	66050
+                            if ($model->uac == 66050) { ?><span class="label label-danger">CUENTA DESACTIVADA, CONTRASEÑA NUNCA EXPIRA</span><?php }
                             ?>
 
                         </div>

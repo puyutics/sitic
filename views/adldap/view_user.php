@@ -118,6 +118,8 @@ if (isset($_GET['search']) and isset($user)) { ?>
                             return "Cuenta desactivada";
                         if ($model->uac == 66048)
                             return "Cuenta activada. Contraseña nunca expira.";
+                        if ($model->uac == 66050)
+                            return "Cuenta desactivada. Contraseña nunca expira.";
                     }, $model),
                 ],
 
