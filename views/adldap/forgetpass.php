@@ -26,9 +26,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="alert alert-warning">
                     Si su correo personal es INCORRECTO o NO TIENE ACCESO, por favor comuníquese con <?php echo Yii::$app->params['contact']?>
                 </div>
-            <?php else: ?>
         </div>
     </div>
+
+    <?php else: ?>
 
     <div class="row">
 
@@ -80,7 +81,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                         <p><div class="form-group" align="center">
                             <?= Html::a(Yii::t('app', 'No, regresar'),
-                                Url::toRoute(['adldap/forgetpass']), ['class' => 'btn btn-default']) ?>
+                                Url::toRoute(['site/identity']), ['class' => 'btn btn-default']) ?>
                             <?= Html::submitButton('Sí, Enviar TOKEN',['class' => 'btn btn-danger',
                                 'value'=>'sendToken', 'name'=>'sendToken',
                                 //'onClick'=>'buttonClicked'])

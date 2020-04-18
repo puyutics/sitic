@@ -115,7 +115,7 @@ class InvitemuserController extends Controller
             ;            ;
             $this->saveLog('itemAssigned', $username, $description,  $external_id, 'invitemuser');
 
-            return $this->redirect(['invpurchaseitem/view', 'id' => $model->inv_purchase_item_id]);
+            return $this->redirect('index.php?r=invpurchaseitem/view&id=' . $model->inv_purchase_item_id);
         }
 
         return $this->render('create', [
@@ -137,7 +137,7 @@ class InvitemuserController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             //return $this->redirect(['view', 'id' => $model->id]);
             //return $this->redirect(['invpurchase/admin', 'id' => $model->invPurchaseItem->inv_purchase_id]);
-            return $this->redirect(['invpurchaseitem/view', 'id' => $model->inv_purchase_item_id]);
+            return $this->redirect('index.php?r=invpurchaseitem/view&id=' . $model->inv_purchase_item_id);
         }
 
         return $this->render('update', [

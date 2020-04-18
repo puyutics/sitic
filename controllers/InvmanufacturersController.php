@@ -96,7 +96,7 @@ class InvmanufacturersController extends Controller
             ;            ;
             $this->saveLog('manufacturerCreated', $username, $description, 'invManufacturers');
 
-            return $this->redirect(['invpurchaseitem/index']);
+            return $this->redirect('index.php?r=invpurchaseitem/index');
         }
 
         return $this->render('create', [

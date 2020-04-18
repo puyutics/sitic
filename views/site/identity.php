@@ -8,57 +8,52 @@ $this->title = 'SITIC - Sistema Integrado para la Gestión de Tecnologías de la
 ?>
 <div class="site-index">
 
+    <div align="center">
+        <?= Html::img('images/uea_logo.png');?>
+    </div>
+
+    <br>
+    <br>
+    <br>
+
     <div class="bo d-content">
 
         <div class="row">
 
-            <div class="col-lg-4">
-            </div>
-
-            <div class="col-lg-4">
-                <h2 align="center">¿Activar cuenta?</h2>
+            <div class="col-lg-3">
 
                 <div align="center">
-                    <a href="index.php?r=adldap/forgetpass"><?= Html::img('images/user_add.png');?></a>
+                    <a href="index.php?r=adldap/forgetpass"><?= Html::img('images/user_active.png');?></a>
                 </div>
 
-                <p align="center"><a class="btn btn-success" href="index.php?r=adldap/forgetpass"> Activar Cuenta &raquo;</a></p>
+                <p align="center"><a class="btn btn-lg btn-primary" href="index.php?r=adldap/forgetpass"> Activar Cuenta &raquo;</a></p>
             </div>
 
-            <div class="col-lg-4">
-            </div>
-        </div>
-
-        <div class="row">
-
-            <div class="col-lg-4">
-                <h2 align="center">¿Olvidaste tu usuario?</h2>
+            <div class="col-lg-3">
 
                 <div align="center">
                     <a href="index.php?r=adldap/forgetuser"><?= Html::img('images/user_search.png');?></a>
                 </div>
 
-                <p align="center"><a class="btn btn-success" href="index.php?r=adldap/forgetuser"> Recuperar usuario &raquo;</a></p>
+                <p align="center"><a class="btn btn-lg btn-primary" href="index.php?r=adldap/forgetuser"> Recuperar usuario &raquo;</a></p>
             </div>
 
-            <div class="col-lg-4">
-                <h2 align="center">¿Olvid. tu contraseña?</h2>
+            <div class="col-lg-3">
 
                 <div align="center">
-                    <a href="index.php?r=adldap/forgetpass"><?= Html::img('images/changepass.png');?></a>
+                    <a href="index.php?r=adldap/forgetpass"><?= Html::img('images/user_password.png');?></a>
                 </div>
 
-                <p align="center"><a class="btn btn-success" href="index.php?r=adldap/forgetpass"> Cambiar Contraseña &raquo;</a></p>
+                <p align="center"><a class="btn btn-lg btn-primary" href="index.php?r=adldap/forgetpass"> Cambiar Contraseña &raquo;</a></p>
             </div>
 
-            <div class="col-lg-4">
-                <h2 align="center">¿Actualizar correo?</h2>
+            <div class="col-lg-3">
 
                 <div align="center">
-                    <a href="index.php?r=adldap/editprofile"><?= Html::img('images/userprofile.png');?></a>
+                    <a href="https://www.uea.edu.ec/ayuda" target="_blank"><?= Html::img('images/user_email.png');?></a>
                 </div>
 
-                <p align="center"><a class="btn btn-success" href="index.php?r=adldap/editprofile"> Editar perfil &raquo;</a></p>
+                <p align="center"><a class="btn btn-lg btn-primary" href="https://www.uea.edu.ec/soporte" target="_blank"> Cambiar Correo Personal &raquo;</a></p>
             </div>
 
         </div>

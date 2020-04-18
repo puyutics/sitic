@@ -169,11 +169,11 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy;
-            <a href="https://github.com/puyutics/sitic" target="_blank">
-                Puyutics / Sitic <?= date('Y') ?></a>. GNU GPLv3
+        <p class="pull-left"><a href="https://github.com/puyutics/sitic" target="_blank">
+                Puyutics / Sitic</a> &copy;
+            <?= date('Y') ?>. GNU GPLv3
              -
-            <a href="mailto:sitic@uea.edu.ec?subject=Feedback">Problemas o Sugerencias</a>
+            <a href="https:..www.uea.edu.ec/ayuda">Mesa de Ayuda</a>
         </p>
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>

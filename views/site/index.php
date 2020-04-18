@@ -31,21 +31,21 @@ $this->title = 'SITIC - Sistema Integrado para la Gestión de Tecnologías de la
 
                 <p align="center">Autoservicio y manejo de información de identidad de los usuarios.</p>
 
-                <p align="center"><a class="btn btn-success" href="index.php?r=site/identity">Olvidaste tu usuario o contraseña &raquo;</a></p>
+                <p align="center"><a class="btn btn-lg btn-danger" href="index.php?r=site/identity">Olvidaste tu usuario o contraseña &raquo;</a></p>
             </div>
             <div class="col-lg-4">
                 <h2 align="center">Gestión de TI - ITSM</h2>
 
                 <p align="center">Utilizando fundamentos de la ISO/IEC 38500 y el marco de trabajo COBIT 5 (EN DESARROLLO).</p>
 
-                <p align="center"><a class="btn btn-success" href="index.php?r=site/management">Proyectos, Procesos, Servicios &raquo;</a></p>
+                <p align="center"><a class="btn btn-lg btn-primary" href="index.php?r=site/management">Proyectos, Procesos, Servicios &raquo;</a></p>
             </div>
             <div class="col-lg-4">
                 <h2 align="center">Inventario de TI</h2>
 
                 <p align="center">Basado en FusionInventory, mediante la integración con GLPI Network ITSM (EN DESARROLLO).</p>
 
-                <p align="center"><a class="btn btn-success" href="index.php?r=site/inventory">Aplicaciones, Impresoras, Telefonía &raquo;</a></p>
+                <p align="center"><a class="btn btn-lg btn-primary" href="index.php?r=site/inventory">Aplicaciones, Impresoras, Telefonía &raquo;</a></p>
             </div>
         </div>
 

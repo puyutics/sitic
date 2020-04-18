@@ -90,7 +90,7 @@ class ItservicesresultController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             //return $this->redirect(['view', 'id' => $model->id]);
-            return $this->redirect(['itservices/admin', 'id' => $model->it_services_id]);
+            return $this->redirect('index.php?r=itservices/admin&id' . $model->it_services_id);
         }
 
         return $this->render('create', [
@@ -111,7 +111,7 @@ class ItservicesresultController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             //return $this->redirect(['view', 'id' => $model->id]);
-            return $this->redirect(['itservices/admin', 'id' => $model->it_services_id]);
+            return $this->redirect('index.php?r=itservices/admin&id' . $model->it_services_id);
         }
 
         return $this->render('update', [

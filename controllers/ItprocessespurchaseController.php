@@ -88,7 +88,7 @@ class ItprocessespurchaseController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             //return $this->redirect(['view', 'id' => $model->id]);
-            return $this->redirect(['itprocesses/admin', 'id' => $model->it_processes_id]);
+            return $this->redirect('index.php?r=itprocesses/admin&id=' . $model->it_processes_id);
         }
 
         return $this->render('create', [
@@ -109,7 +109,7 @@ class ItprocessespurchaseController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             //return $this->redirect(['view', 'id' => $model->id]);
-            return $this->redirect(['itprocesses/admin', 'id' => $model->it_processes_id]);
+            return $this->redirect('index.php?r=itprocesses/admin&id=' . $model->it_processes_id);
         }
 
         return $this->render('update', [

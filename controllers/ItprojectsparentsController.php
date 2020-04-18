@@ -88,7 +88,7 @@ class ItprojectsparentsController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             //return $this->redirect(['view', 'id' => $model->id]);
-            return $this->redirect(['itprojects/admin', 'id' => $model->it_projects_id]);
+            return $this->redirect('index.php?r=itprojects/admin&id=' . $model->it_projects_id);
         }
 
         return $this->render('create', [
@@ -109,7 +109,7 @@ class ItprojectsparentsController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             //return $this->redirect(['view', 'id' => $model->id]);
-            return $this->redirect(['itprojects/admin', 'id' => $model->it_projects_id]);
+            return $this->redirect('index.php?r=itprojects/admin&id=' . $model->it_projects_id);
         }
 
         return $this->render('update', [

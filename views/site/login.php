@@ -46,16 +46,16 @@ $this->title = 'Iniciar Sesión';
                                 'local' => 'Base de datos interna de SITIC',
                             ]); ?>
 
+                    <h5><a href="https://www.uea.edu.ec/ayuda">¿ Olvidaste tu usuario y contraseña ?</a></h5>
+
                     <?= $form->field($model, 'rememberMe')->checkbox([
                         'template' => "<div class=\"col-lg-offset-2 col-lg-8\">{input} {label}</div>\n
                                         <div class=\"col-lg-8\">{error}</div>",
                     ]) ?>
 
-                    <div class="form-group">
                         <div class="col-lg-offset-1 col-lg-10">
                             <?= Html::submitButton('Iniciar Sesión', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
                         </div>
-                    </div>
 
                     <?php ActiveForm::end(); ?>
                 </div>

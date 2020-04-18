@@ -122,7 +122,7 @@ class InvpurchaseitemController extends Controller
             ;
             $this->saveLog('itemCreated', $username, $description,  $external_id, 'invpurchaseitem');
 
-            return $this->redirect(['invpurchase/admin', 'id' => $model->inv_purchase_id]);
+            return $this->redirect('index.php?r=invpurchase/admin&id=' . $model->inv_purchase_id);
         }
 
         return $this->render('create', [
@@ -152,7 +152,7 @@ class InvpurchaseitemController extends Controller
             ;
             $this->saveLog('itemUpdated', $username, $description,  $external_id, 'invpurchaseitem');
 
-            return $this->redirect(['invpurchase/admin', 'id' => $model->inv_purchase_id]);
+            return $this->redirect('index.php?r=invpurchase/admin&id=' . $model->inv_purchase_id);
         }
 
         return $this->render('update', [

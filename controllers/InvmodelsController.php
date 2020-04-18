@@ -103,7 +103,7 @@ class InvmodelsController extends Controller
             ;            ;
             $this->saveLog('modelCreated', $username, $description, 'invModels');
 
-            return $this->redirect(['invpurchaseitem/index']);
+            return $this->redirect('index.php?r=invpurchaseitem/index');
         }
 
         return $this->render('create', [
@@ -125,7 +125,7 @@ class InvmodelsController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             //return $this->redirect(['view', 'id' => $model->id]);
             //return $this->redirect(['index']);
-            return $this->redirect(['invpurchaseitem/index']);
+            return $this->redirect('index.php?r=invpurchaseitem/index');
         }
 
         return $this->render('update', [
