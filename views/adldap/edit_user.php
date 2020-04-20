@@ -115,6 +115,13 @@ if (isset($_GET['search']) and isset($user)) { ?>
                 ])
 
             ],
+            [
+                'label'=>'<i class="glyphicon glyphicon-list-alt"></i> SIAD (Estudiantes)',
+                'content' => $this->render('edit_user_siad', [
+                    'model' => $model,
+                ])
+
+            ],
         ],
     ]);
     ?>
