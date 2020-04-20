@@ -173,7 +173,9 @@ AppAsset::register($this);
                 Puyutics / Sitic</a> &copy;
             <?= date('Y') ?>. GNU GPLv3
              -
-            <a href="https:..www.uea.edu.ec/ayuda">Mesa de Ayuda</a>
+            <a href="mailto:sitic@uea.edu.ec?subject=Feedback"> Problemas y Sugerencias </a>
+             -
+            IP: <?= Yii::$app->request->userIP; ?>
         </p>
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>
