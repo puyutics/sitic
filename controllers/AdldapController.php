@@ -32,9 +32,14 @@ class AdldapController extends Controller
                     'viewgroups'],
                 'rules' => [
                     [
-                        'actions' => ['create','index','profile','edituser',
+                        'actions' => ['index','profile','edituser',
                             'forgetpass','forgetuser','password','reset','saveLog',
                             'sendToken','sendNewUser','viewgroups'],
+                        'allow' => true,
+                        'roles' => ['rolAdministrador'],
+                    ],
+                    [
+                        'actions' => ['create'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
@@ -48,11 +53,14 @@ class AdldapController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                     ],
-
                     [
                         'actions' => ['index','forgetpass','forgetuser','password','reset',
                                         'saveLog'],
                         'allow' => true,
+                    ],
+                    [
+                        'actions' => ['create'],
+                        'allow' => false,
                     ],
                 ],
             ],

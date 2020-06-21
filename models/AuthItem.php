@@ -9,11 +9,11 @@ use Yii;
  *
  * @property string $name ROL
  * @property int $type TIPO
- * @property string $description DETALLE
- * @property string $rule_name REGLE
- * @property resource $data DATOS
- * @property int $created_at CREADO
- * @property int $updated_at ACTUALIZADO
+ * @property string|null $description DETALLE
+ * @property string|null $rule_name REGLE
+ * @property resource|null $data DATOS
+ * @property int|null $created_at CREADO
+ * @property int|null $updated_at ACTUALIZADO
  *
  * @property AuthAssignment[] $authAssignments
  * @property AuthRule $ruleName
@@ -53,17 +53,19 @@ class AuthItem extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'name' => Yii::t('app', 'ROL'),
-            'type' => Yii::t('app', 'TIPO'),
-            'description' => Yii::t('app', 'DETALLE'),
-            'rule_name' => Yii::t('app', 'REGLE'),
-            'data' => Yii::t('app', 'DATOS'),
-            'created_at' => Yii::t('app', 'CREADO'),
-            'updated_at' => Yii::t('app', 'ACTUALIZADO'),
+            'name' => 'ROL',
+            'type' => 'TIPO',
+            'description' => 'DETALLE',
+            'rule_name' => 'REGLE',
+            'data' => 'DATOS',
+            'created_at' => 'CREADO',
+            'updated_at' => 'ACTUALIZADO',
         ];
     }
 
     /**
+     * Gets query for [[AuthAssignments]].
+     *
      * @return \yii\db\ActiveQuery
      */
     public function getAuthAssignments()
@@ -72,6 +74,8 @@ class AuthItem extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[RuleName]].
+     *
      * @return \yii\db\ActiveQuery
      */
     public function getRuleName()
@@ -80,6 +84,8 @@ class AuthItem extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[AuthItemChildren]].
+     *
      * @return \yii\db\ActiveQuery
      */
     public function getAuthItemChildren()
@@ -88,6 +94,8 @@ class AuthItem extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[AuthItemChildren0]].
+     *
      * @return \yii\db\ActiveQuery
      */
     public function getAuthItemChildren0()
@@ -96,6 +104,8 @@ class AuthItem extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[Children]].
+     *
      * @return \yii\db\ActiveQuery
      */
     public function getChildren()
@@ -104,19 +114,12 @@ class AuthItem extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[Parents]].
+     *
      * @return \yii\db\ActiveQuery
      */
     public function getParents()
     {
         return $this->hasMany(AuthItem::className(), ['name' => 'parent'])->viaTable('auth_item_child', ['child' => 'name']);
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return AuthItemQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new AuthItemQuery(get_called_class());
     }
 }

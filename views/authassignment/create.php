@@ -2,17 +2,18 @@
 
 use yii\helpers\Html;
 
-
 /* @var $this yii\web\View */
 /* @var $model app\models\AuthAssignment */
 
-$this->title = Yii::t('app', 'Create Auth Assignment');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Auth Assignments'), 'url' => ['index']];
+$this->title = Yii::t('app', 'Agregar Rol de Usuario');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Roles de Usuarios'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="auth-assignment-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="alert alert-info" align="center">
+        <h3 align="center"><?= Html::encode($this->title) ?></h3>
+    </div>
 
     <?= $this->render('_form', [
         'model' => $model,

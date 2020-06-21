@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Logs;
 use Yii;
 use app\models\AuthAssignment;
 use app\models\AuthAssignmentSearch;
@@ -83,8 +84,44 @@ class AuthassignmentController extends Controller
     {
         $model = new AuthAssignment();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'item_name' => $model->item_name, 'user_id' => $model->user_id]);
+        if ($model->load(Yii::$app->request->post())) {
+
+            //Comprobar si existe un Rol de Usuario
+            $auth_assignment = \app\models\AuthAssignment::find()
+                ->where(["item_name" => $model->item_name])
+                ->andWhere(["user_id" => $model->user_id])
+                ->all();
+            if (count($auth_assignment)==0) {
+                $model->created_at = idate("U");
+                if ($model->save()) {
+
+                    $auth_item_child = \app\models\AuthItemChild::find()
+                        ->where(["parent" => $model->item_name])
+                        ->one();
+
+                    $user = \app\models\User::find()
+                        ->where(["id" => $model->user_id])
+                        ->one();
+
+                    //Crear Registro de Log en la base de datos
+                    $description =
+                        'Nuevo Rol de Usuario Creado: '
+                        . $auth_item_child->child
+                        . '. Usuario: '
+                        . $user->username;
+                    $username = Yii::$app->user->identity->username;
+                    $this->saveLog('authAssignmentCreate', $username, $description, $model->item_name.'@'.$model->user_id,'authassignment');
+
+                    return $this->redirect(['index']);
+                }
+            } else {
+                Yii::$app->session->setFlash('error',
+                    'No puede duplicar el Rol de Usuario');
+                return $this->redirect(['index']);
+            }
+
+            //return $this->redirect(['view', 'item_name' => $model->item_name, 'user_id' => $model->user_id]);
+            return $this->redirect(['index']);
         }
 
         return $this->render('create', [
@@ -105,7 +142,25 @@ class AuthassignmentController extends Controller
         $model = $this->findModel($item_name, $user_id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'item_name' => $model->item_name, 'user_id' => $model->user_id]);
+
+            $auth_item_child = \app\models\AuthItemChild::find()
+                ->where(["parent" => $model->item_name])
+                ->one();
+
+            $user = \app\models\User::find()
+                ->where(["id" => $model->user_id])
+                ->one();
+
+            //Crear Registro de Log en la base de datos
+            $description =
+                'Rol de Usuario modificado: '
+                . $auth_item_child->child
+                . '. Usuario: '
+                . $user->username;
+            $username = Yii::$app->user->identity->username;
+            $this->saveLog('authAssignmentUpdate', $username, $description, $model->item_name.'@'.$model->user_id,'authassignment');
+
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [
@@ -143,5 +198,20 @@ class AuthassignmentController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+    public function saveLog($type, $username, $description, $external_id, $external_type)
+    {
+        //Registro (Log) Evento
+        $modelLogs              = new Logs();
+        $modelLogs->type        = $type;
+        $modelLogs->username    = $username;
+        $modelLogs->datetime    = date('Y-m-d H:i:s');
+        $modelLogs->description = $description;
+        ;
+        $modelLogs->ipaddress       = Yii::$app->request->userIP;
+        $modelLogs->external_id     = $external_id;
+        $modelLogs->external_type   = $external_type;
+        $modelLogs->save(false);
     }
 }

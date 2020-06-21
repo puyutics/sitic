@@ -9,7 +9,7 @@ use Yii;
  *
  * @property string $item_name ROL
  * @property string $user_id USUARIO
- * @property int $created_at CREADO
+ * @property int|null $created_at CREADO
  *
  * @property AuthItem $itemName
  */
@@ -43,13 +43,15 @@ class AuthAssignment extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'item_name' => Yii::t('app', 'ROL'),
-            'user_id' => Yii::t('app', 'USUARIO'),
-            'created_at' => Yii::t('app', 'CREADO'),
+            'item_name' => 'ROL',
+            'user_id' => 'USUARIO',
+            'created_at' => 'CREADO',
         ];
     }
 
     /**
+     * Gets query for [[ItemName]].
+     *
      * @return \yii\db\ActiveQuery
      */
     public function getItemName()
@@ -58,11 +60,22 @@ class AuthAssignment extends \yii\db\ActiveRecord
     }
 
     /**
-     * {@inheritdoc}
-     * @return AuthAssignmentQuery the active query used by this AR class.
+     * Gets query for [[User]].
+     *
+     * @return \yii\db\ActiveQuery
      */
-    public static function find()
+    public function getUser()
     {
-        return new AuthAssignmentQuery(get_called_class());
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    /**
+     * Gets query for [[AuthItemChild]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAuthItemChild()
+    {
+        return $this->hasOne(AuthItemChild::className(), ['parent' => 'item_name']);
     }
 }

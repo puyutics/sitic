@@ -114,10 +114,13 @@ AppAsset::register($this);
                     'items' => [
                         ['label' => '.. Documentación (Global)', 'url' => 'index.php?r=documents/index'],
                         '<li class="divider"></li>',
-                        ['label' => 'Manuales TI', 'url' => 'index.php?r=documents/index'],
-                        ['label' => 'Normativa TI', 'url' => 'index.php?r=documents/index'],
-                        ['label' => 'Políticas TI', 'url' => 'index.php?r=documents/index'],
-                        ['label' => 'Reglamentos TI', 'url' => 'index.php?r=documents/index'],
+                        //['label' => 'Manuales TI', 'url' => 'index.php?r=documents/index'],
+                        //['label' => 'Normativa TI', 'url' => 'index.php?r=documents/index'],
+                        //['label' => 'Políticas TI', 'url' => 'index.php?r=documents/index'],
+                        //['label' => 'Reglamentos TI', 'url' => 'index.php?r=documents/index'],
+                        ['label' => 'Encuestas UEA', 'url' => 'index.php?r=tabintencuestas/index'],
+                        ['label' => 'Encuestas SENESCYT', 'url' => 'index.php?r=tabintsenescyt/index'],
+                        ['label' => 'Tablets e Internet', 'url' => 'index.php?r=tabintformulario/index'],
                     ],
                 ],
                 [

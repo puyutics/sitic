@@ -8,9 +8,9 @@ use Yii;
  * This is the model class for table "auth_rule".
  *
  * @property string $name REGLE
- * @property resource $data DATOS
- * @property int $created_at CREADO
- * @property int $updated_at ACTUALIZADO
+ * @property resource|null $data DATOS
+ * @property int|null $created_at CREADO
+ * @property int|null $updated_at ACTUALIZADO
  *
  * @property AuthItem[] $authItems
  */
@@ -44,27 +44,20 @@ class AuthRule extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'name' => Yii::t('app', 'REGLE'),
-            'data' => Yii::t('app', 'DATOS'),
-            'created_at' => Yii::t('app', 'CREADO'),
-            'updated_at' => Yii::t('app', 'ACTUALIZADO'),
+            'name' => 'REGLE',
+            'data' => 'DATOS',
+            'created_at' => 'CREADO',
+            'updated_at' => 'ACTUALIZADO',
         ];
     }
 
     /**
+     * Gets query for [[AuthItems]].
+     *
      * @return \yii\db\ActiveQuery
      */
     public function getAuthItems()
     {
         return $this->hasMany(AuthItem::className(), ['rule_name' => 'name']);
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return AuthRuleQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new AuthRuleQuery(get_called_class());
     }
 }

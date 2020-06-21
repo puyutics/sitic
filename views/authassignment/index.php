@@ -3,53 +3,73 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\AuthAssignmentSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Asignación Roles');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Gestión TI'), 'url' => ['site/management']];
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Usuarios'), 'url' => ['adldap/index']];
+$this->title = Yii::t('app', 'Roles de Usuarios');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Administración'), 'url' => ['site/admin']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="auth-assignment-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="alert alert-info" align="center">
+        <h3 align="center"><?= Html::encode($this->title) ?></h3>
+    </div>
+
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        //'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
             [
-                'label'=>'GRUPO',
-                'attribute'=>'item_name',
+                'attribute' => 'item_name',
+                'value' => 'authItemChild.child',
             ],
             [
-                'label'=>'ROL',
-                'attribute'=>'item_name',
-                'value'=>function($model){
-                    return \app\models\AuthItemChild::findOne($model->item_name)->child;
-                }
+                'attribute' => 'user_id',
+                'value' => 'user.username',
             ],
             [
-                'label'=>'USUARIO',
-                'attribute'=>'user_id',
-                'value'=>function($model){
-                    return \app\models\User::findOne($model->user_id)->username;
-                }
+                'label' => 'NOMBRES',
+                'attribute' => 'user_id',
+                'value' => 'user.userProfile.commonname',
+            ],
+            [
+                'label' => 'EMAIL',
+                'attribute' => 'user_id',
+                'value' => 'user.userProfile.mail',
             ],
             [
                 'attribute' => 'created_at',
                 'value'=>function ($model) {
-                    return date("M j, Y h:i A", $model->created_at);
+                    return date("Y-m-d h:i:s", $model->created_at);
                 },
             ],
-            ['class' => 'yii\grid\ActionColumn'],
+
+
+
+            ['class' => 'kartik\grid\ActionColumn',
+                'template'=>'{update}',
+                'buttons'=>[
+                    'update' => function ($url, $model) {
+                        if ($model->user_id != 1){
+                            return Html::a('<span class="btn btn-primary center-block"><i class="fa fa-fw fa-edit"></i>Editar</span>',
+                                Url::to(['update',
+                                    'item_name' => $model->item_name,
+                                    'user_id' => $model->user_id
+                                ]),
+                                ['title' => Yii::t('yii', 'Editar Rol')]);
+                        }
+                    },
+                ]
+            ],
         ],
         'containerOptions' => ['style'=>'overflow: auto'],
         'toolbar' =>  [
@@ -57,12 +77,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'content'=>
                     Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'], [
                         'class' => 'btn btn-success',
-                        'title' => ('Asignar Rol')
+                        'title' => ('Agregar Rol')
                     ]),
-                Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], [
-                    'class' => 'btn btn-default',
-                    'title' => ('Reset Grid')
-                ]),
             ],
             '{export}',
             '{toggleData}'
@@ -77,5 +93,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'type' => GridView::TYPE_PRIMARY
         ],
     ]); ?>
+
     <?php Pjax::end(); ?>
+
 </div>

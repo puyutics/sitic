@@ -43,12 +43,14 @@ class AuthItemChild extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'parent' => Yii::t('app', 'ROL PADRE'),
-            'child' => Yii::t('app', 'ROL HIJO'),
+            'parent' => 'ROL PADRE',
+            'child' => 'ROL HIJO',
         ];
     }
 
     /**
+     * Gets query for [[Parent0]].
+     *
      * @return \yii\db\ActiveQuery
      */
     public function getParent0()
@@ -57,19 +59,12 @@ class AuthItemChild extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[Child0]].
+     *
      * @return \yii\db\ActiveQuery
      */
     public function getChild0()
     {
         return $this->hasOne(AuthItem::className(), ['name' => 'child']);
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return AuthItemChildQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new AuthItemChildQuery(get_called_class());
     }
 }

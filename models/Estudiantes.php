@@ -50,7 +50,6 @@ use yii\web\IdentityInterface;
  */
 class Estudiantes extends \yii\db\ActiveRecord implements IdentityInterface
 {
-
     /**
      * @inheritdoc
      */

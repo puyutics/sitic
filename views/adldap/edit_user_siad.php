@@ -8,15 +8,30 @@ use yii\helpers\Url;
 /* @var $searchModel app\models\EstudiantesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
+$dni = $model->dni;
+
 $searchModel = new app\models\EstudiantesSearch();
 $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-$dni = $model->dni;
 $dataProvider->query->Where('cedula_pasaporte = "' . $dni .'"');
+
+$searchModelMatricula = new \app\models\MatriculaSearch();
+$searchModelMatricula->CIInfPer = $dni;
+//$searchModelMatricula->idPer = '34';
+$dataProviderMatricula = $searchModelMatricula->search(Yii::$app->request->queryParams);
+$dataProviderMatricula->sort->defaultOrder = [
+    'idPer' => SORT_DESC,
+    'idsemestre' => SORT_DESC,
+    ];
+
 
 ?>
 <div class="estudiantes-index">
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+
+    <div class="alert alert-info" align="center">
+        <h3 align="center"> Información Estudiante </h3>
+    </div>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -84,6 +99,58 @@ $dataProvider->query->Where('cedula_pasaporte = "' . $dni .'"');
             ],
             '{toggleData}'
         ],
+        'pjax' => true,
+        'bordered' => true,
+        'striped' => false,
+        'condensed' => false,
+        'responsive' => true,
+        'hover' => true,
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY
+        ],
+    ]); ?>
+
+    <div class="alert alert-info" align="center">
+        <h3 align="center"> Matrículas </h3>
+    </div>
+
+    <?= GridView::widget([
+        'dataProvider' => $dataProviderMatricula,
+        //'filterModel' => $searchModelMatricula,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+
+            //'idMatricula',
+            //'idMatricula_anual',
+            'CIInfPer',
+            'idPer',
+            'idCarr',
+            //'idanio',
+            'idsemestre',
+            'FechaMatricula',
+            //'idParalelo',
+            //'idMatricula_ant',
+            //'tipoMatricula',
+            'statusMatricula',
+            //'anulada',
+            //'observMatricula',
+            //'promocion',
+            //'Usu_registra',
+            //'Usu_legaliza',
+            //'Fecha_crea',
+            //'Usu_modifica',
+            //'Fecha_ultima_modif',
+            //'archivo_aprobado',
+            //'archivo_retirado',
+            //'archivo_anulado',
+            //'leg_observacion',
+            //'num_asig_repite',
+            //'aprobacion_automatica',
+            //'mail_enviado',
+
+            //['class' => 'yii\grid\ActionColumn'],
+        ],
+        'containerOptions' => ['style'=>'overflow: auto'],
         'pjax' => true,
         'bordered' => true,
         'striped' => false,

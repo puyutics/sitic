@@ -19,11 +19,11 @@ class AdldapEditForm extends Model
     public $commonname;
     public $displayname;
     public $mobile;
+    public $title;
+    public $department;
     public $uac;
     public $groups;
     public $dn;
-    public $department;
-    public $title;
     public $samaccountname;
 
     public $addGroup;

@@ -27,7 +27,7 @@ class EstudiantesController extends Controller
                 'only' => ['create','delete','index','update','view'],
                 'rules' => [
                     [
-                        'actions' => ['update','view'],
+                        'actions' => ['index','update','view'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],

@@ -9,6 +9,7 @@ use yii\widgets\DetailView;
 $this->title = $model->parent;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Auth Item Children'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+\yii\web\YiiAsset::register($this);
 ?>
 <div class="auth-item-child-view">
 

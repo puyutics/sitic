@@ -9,7 +9,7 @@ $this->title = 'SITIC - Sistema Integrado para la Gestión de Tecnologías de la
 <div class="site-index">
 
     <div align="center">
-        <?= Html::img('images/uea_logo.png');?>
+        <?= Html::img('images/uea_banner.png');?>
     </div>
 
     <br>
@@ -44,7 +44,7 @@ $this->title = 'SITIC - Sistema Integrado para la Gestión de Tecnologías de la
                     <a href="index.php?r=adldap/forgetpass"><?= Html::img('images/user_password.png');?></a>
                 </div>
 
-                <p align="center"><a class="btn btn-lg btn-primary" href="index.php?r=adldap/forgetpass"> Cambiar Contraseña &raquo;</a></p>
+                <p align="center"><a class="btn btn-lg btn-danger" href="index.php?r=adldap/forgetpass"> Cambiar Contraseña &raquo;</a></p>
             </div>
 
             <div class="col-lg-3">
@@ -54,6 +54,7 @@ $this->title = 'SITIC - Sistema Integrado para la Gestión de Tecnologías de la
                 </div>
 
                 <p align="center"><a class="btn btn-lg btn-primary" href="https://www.uea.edu.ec/soporte" target="_blank"> Cambiar Correo Personal &raquo;</a></p>
+                <!-- <p align="center"><a class="btn btn-info" href="https://telegram.me/ueaeduec" target="_blank"> Usar TELEGRAM </a></p> -->
             </div>
 
         </div>
