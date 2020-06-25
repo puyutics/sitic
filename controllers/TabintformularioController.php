@@ -386,86 +386,9 @@ class TabintformularioController extends Controller
         return $pdf->render();
     }
 
-    public function actionReportegrafico($dni,$provincia,$beneficio,$status,$fecha_inicio,$fecha_fin)
+    public function actionReportegrafico()
     {
-        if ($dni == '') $dni = '%';
-        if ($provincia == '') $provincia = '%';
-        if ($beneficio == '') $beneficio = '%';
-        if ($status == '') $status = '%';
-        if ($fecha_inicio == '') $fecha_inicio = '%';
-        if ($fecha_fin == '') $fecha_fin = '%';
-
-        if (($fecha_inicio != '%') and ($fecha_fin != '%')) {
-            $tabintformulario = \app\models\TabIntFormulario::find()
-                ->where("cedula LIKE '" . $dni . "'")
-                ->andWhere("provincia LIKE '" . $provincia . "'")
-                ->andWhere("encuesta_beneficiario LIKE '" . $beneficio . "'")
-                ->andWhere("status LIKE '" . $status . "'")
-                ->andWhere("fec_registro >= '" . $fecha_inicio . "'")
-                ->andWhere("fec_registro <= '" . $fecha_fin . "'")
-                ->orderBy('provincia ASC, canton ASC, parroquia ASC, apellidos ASC')
-                ->all();
-        } elseif ($fecha_inicio != '%') {
-            $tabintformulario = \app\models\TabIntFormulario::find()
-                ->where("cedula LIKE '" . $dni . "'")
-                ->andWhere("provincia LIKE '" . $provincia . "'")
-                ->andWhere("encuesta_beneficiario LIKE '" . $beneficio . "'")
-                ->andWhere("status LIKE '" . $status . "'")
-                ->andWhere("fec_registro >= '" . $fecha_inicio . "'")
-                ->orderBy('provincia ASC, canton ASC, parroquia ASC, apellidos ASC')
-                ->all();
-        } elseif ($fecha_fin != '%') {
-            $tabintformulario = \app\models\TabIntFormulario::find()
-                ->where("cedula LIKE '" . $dni . "'")
-                ->andWhere("provincia LIKE '" . $provincia . "'")
-                ->andWhere("encuesta_beneficiario LIKE '" . $beneficio . "'")
-                ->andWhere("status LIKE '" . $status . "'")
-                ->andWhere("fec_registro <= '" . $fecha_fin . "'")
-                ->orderBy('provincia ASC, canton ASC, parroquia ASC, apellidos ASC')
-                ->all();
-        } else {
-            $tabintformulario = \app\models\TabIntFormulario::find()
-                ->where("cedula LIKE '" . $dni . "'")
-                ->andWhere("provincia LIKE '" . $provincia . "'")
-                ->andWhere("encuesta_beneficiario LIKE '" . $beneficio . "'")
-                ->andWhere("status LIKE '" . $status . "'")
-                ->orderBy('provincia ASC, canton ASC, parroquia ASC, apellidos ASC')
-                ->all();
-        }
-
-        /*$pdf = new Pdf([
-            'format' => Pdf::FORMAT_A4,
-            'orientation' => Pdf::ORIENT_PORTRAIT,
-            'destination' => Pdf::DEST_BROWSER,
-        ]);
-        $pdf->marginTop = 40;
-        $pdf->marginBottom = 20;
-        $pdf->content = $this->renderPartial('_reportegrafico', [
-            'dni' => $dni,
-            'provincia' => $provincia,
-            'beneficio' => $beneficio,
-            'status' => $status,
-            'fecha_inicio' => $fecha_inicio,
-            'fecha_fin' => $fecha_fin,
-            'tabintformulario' => $tabintformulario
-        ]);
-        $pdf->tempPath = Yii::getAlias('@web/runtime/mpdf/');
-        $pdf->options = [
-            'title' => 'Reporte de Contratos',
-            'subject' => 'Contratos de Recursos Académicos',
-        ];
-
-        return $pdf->render();*/
-
-        return $this->render('_reportegrafico', [
-            'dni' => $dni,
-            'provincia' => $provincia,
-            'beneficio' => $beneficio,
-            'status' => $status,
-            'fecha_inicio' => $fecha_inicio,
-            'fecha_fin' => $fecha_fin,
-            'tabintformulario' => $tabintformulario
-        ]);
+        return $this->render('_reportegrafico');
     }
 
     /**
