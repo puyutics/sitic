@@ -103,6 +103,7 @@ AppAsset::register($this);
                         '<li class="divider"></li>',
                         ['label' => 'Bienes', 'url' => 'index.php?r=invpurchaseitem/index'],
                         ['label' => 'Compras', 'url' => 'index.php?r=invpurchase/index'],
+                        ['label' => 'Proveedores', 'url' => 'index.php?r=ccppproveedor/index'],
                         ['label' => 'Procesos', 'url' => 'index.php?r=itprocesses/index'],
                         ['label' => 'Proyectos', 'url' => 'index.php?r=itprojects/index'],
                         ['label' => 'Servicios', 'url' => 'index.php?r=itservices/index'],

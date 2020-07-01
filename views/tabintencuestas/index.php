@@ -134,7 +134,7 @@ $dataProvider->sort->defaultOrder = ['Apellidos' => SORT_ASC];
                     }
                 }
             ],*/
-            [
+            /*[
                 'label' => 'Mat.',
                 'format' => ['image',['width'=>'20']],
                 'value' => function ($model) {
@@ -152,7 +152,7 @@ $dataProvider->sort->defaultOrder = ['Apellidos' => SORT_ASC];
                         return ('@web/images/deny.png');
                     }
                 }
-            ],
+            ],*/
             [
                 'label' => 'Mat.',
                 'value' => function ($model) {
@@ -171,7 +171,7 @@ $dataProvider->sort->defaultOrder = ['Apellidos' => SORT_ASC];
                     }
                 }
             ],
-            [
+            /*[
                 'label' => 'Sem.',
                 'format' => ['image',['width'=>'20']],
                 'value' => function ($model) {
@@ -197,7 +197,7 @@ $dataProvider->sort->defaultOrder = ['Apellidos' => SORT_ASC];
                         return ('@web/images/deny.png');
                     }
                 }
-            ],
+            ],*/
             [
                 'label' => 'Sem.',
                 'value' => function ($model) {
@@ -224,7 +224,7 @@ $dataProvider->sort->defaultOrder = ['Apellidos' => SORT_ASC];
                     }
                 }
             ],
-            [
+            /*[
                 'label' => 'Est.',
                 'format' => ['image',['width'=>'20']],
                 'value' => function ($model) {
@@ -246,7 +246,7 @@ $dataProvider->sort->defaultOrder = ['Apellidos' => SORT_ASC];
                         return ('@web/images/deny.png');
                     }
                 }
-            ],
+            ],*/
             [
                 'label' => 'Estratificacion',
                 'value' => function ($model) {
@@ -263,7 +263,7 @@ $dataProvider->sort->defaultOrder = ['Apellidos' => SORT_ASC];
                     }
                 }
             ],
-            [
+            /*[
                 'label' => 'Contrato',
                 'format' => ['image',['width'=>'20']],
                 'value' => function ($model) {
@@ -278,7 +278,7 @@ $dataProvider->sort->defaultOrder = ['Apellidos' => SORT_ASC];
                         return ('@web/images/deny.png');
                     }
                 }
-            ],
+            ],*/
             [
                 'label' => 'Con.',
                 'value' => function ($model) {

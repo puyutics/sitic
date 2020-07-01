@@ -209,6 +209,11 @@ if ($beneficio != '-'
 
 ?>
 
+<div class="alert alert-danger" align="center">
+    <h4 align="center"><?= Html::encode('RECUERDA: los beneficios entregados como Tablets e Internet Educativo, no tienen ningún costo para el estudiante.') ?></h4>
+    <h4 align="center"><?= Html::encode('Son 100% GRATUITOS') ?></h4>
+</div>
+
 <div align="center" style="font-size: 11pt">
     <b>Datos Personales</b>
 </div>
@@ -283,10 +288,11 @@ if ($beneficio != '-'
 
     <?php if ((($beneficio == 'TABLET e Internet Educativo Ilimitado') and (count($contratosTablets) < 480)) or (($beneficio == 'Internet Educativo Ilimitado') and (count($contratosInternet) < 480))) { ?>
         <div class="alert alert-info" align="center">
-            <h3 align="center"><?= Html::encode('Para acceder al beneficio, debe firmar un contrato de PRÉSTAMO de Recursos Académicos. Por favor lea muy detenidamente y complete toda la información solicitada.') ?></h3>
+            <h3 align="center"><?= Html::encode('Para acceder al beneficio, debe firmar un contrato de asignación de los Recursos Académicos.') ?></h3>
+            <h3 align="center"><?= Html::encode('Por favor complete toda la información solicitada.') ?></h3>
         </div>
         <p align="center">
-            <?= Html::a(Yii::t('app', 'Acceder al Beneficio / Firmar Contrato Digital'), ['create'], ['class' => 'btn btn-lg btn-success']) ?>
+            <?= Html::a(Yii::t('app', 'Firmar Contrato Digital'), ['create'], ['class' => 'btn btn-lg btn-success']) ?>
         </p>
     <?php } else { ?>
         <div class="alert alert-danger" align="center">

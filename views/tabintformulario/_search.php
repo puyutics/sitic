@@ -155,6 +155,8 @@ use kartik\datetime\DateTimePicker;
                     return 'CONTRATO CREADO';
                 } elseif ($model->status == 2) {
                     return 'BENEFICIO ENTREGADO';
+                } elseif ($model->status == 3) {
+                    return 'ENVIADO POR SERVIENTREGA';
                 }
             }
         ),

@@ -204,17 +204,24 @@ $this->params['breadcrumbs'][] = $this->title;
                         'inputType' => Editable::INPUT_DROPDOWN_LIST,
                         'size' => 'sm',
                         'formOptions' => ['action' => Url::to(['tabintformulario/estatus'])],
-                        'data' =>['1'=>'CONTRATO CREADO','2'=>'BENEFICIO ENTREGADO'],
+                        'data' =>['1'=>'CONTRATO CREADO',
+                            '2'=>'BENEFICIO ENTREGADO',
+                            '3'=>'ENVIADO POR SERVIENTREGA',
+                            ],
                         'displayValueConfig'=> [
                             '1' => '<i class="glyphicon glyphicon-ok text-success"></i> CONTRATO CREADO',
                             '2' => '<i class="glyphicon glyphicon-ok text-success"></i><i class="glyphicon glyphicon-ok text-success"></i> BENEFICIO ENTREGADO',
+                            '3' => '<i class="glyphicon glyphicon-ok text-success"></i><i class="glyphicon glyphicon-ok text-success"></i> ENVIADO POR SERVIENTREGA',
                         ],
                         'options' => [
                             'class'=>'form-control', 'prompt'=>'Seleccionar estado',
                         ]
                     ];
                 },
-                'filter'=>['1'=>'CONTRATO CREADO','2'=>'BENEFICIO ENTREGADO'],
+                'filter'=>['1'=>'CONTRATO CREADO',
+                    '2'=>'BENEFICIO ENTREGADO',
+                    '3'=>'ENVIADO POR SERVIENTREGA',
+                    ],
             ],
 
             ['class' => 'kartik\grid\ActionColumn',

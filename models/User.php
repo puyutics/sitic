@@ -9,7 +9,7 @@ use Yii;
  *
  * @property int $id ID
  * @property string $username USUARIO
- * @property string $password
+ * @property string $password CONTRASEÑA
  * @property string $auth_key LLAVE
  * @property int $status ESTADO
  * @property int $created_at CREADO
@@ -56,7 +56,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return [
             'id' => Yii::t('app', 'ID'),
             'username' => Yii::t('app', 'USUARIO'),
-            'password' => Yii::t('app', 'Password'),
+            'password' => Yii::t('app', 'CONTRASEÑA'),
             'auth_key' => Yii::t('app', 'LLAVE'),
             'status' => Yii::t('app', 'ESTADO'),
             'created_at' => Yii::t('app', 'CREADO'),
@@ -225,5 +225,15 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         $this->password = hash(Yii::$app->params['algorithm'],
                 $password); //Algoritmo de encriptación para fijar Password
+    }
+
+    /**
+     * Gets query for [[UserProfile]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserProfile()
+    {
+        return $this->hasOne(UserProfile::className(), ['username' => 'username']);
     }
 }
