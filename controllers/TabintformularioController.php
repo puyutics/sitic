@@ -40,6 +40,11 @@ class TabintformularioController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
+                        'actions' => ['index','estatus'],
+                        'allow' => true,
+                        'roles' => ['rolTecnicos'],
+                    ],
+                    [
                         'actions' => ['create'],
                         'allow' => true,
                         'roles' => ['@'],

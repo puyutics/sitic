@@ -26,6 +26,12 @@ class AdldapForgetpassForm extends Model
             [['mail'], 'email'],
             [['mail'], 'filter', 'filter'=>'strtolower'],
             [['verifyCode'],'captcha'],
+            [['dni'], 'match',
+                'pattern' => '/^[0-9A-Z]+$/u',
+                'message'=>'Ingrese solo números y/o letras mayúsculas. {attribute} no puede contener caracteres especiales, ni espacios en blanco'],
+            [['mail'], 'match',
+                'pattern' => '/^[a-z0-9@._-]+$/u',
+                'message'=>'{attribute} no debe contener espacios en blancos, caracteres especiales, ni mayúsculas'],
         ];
     }
 

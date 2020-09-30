@@ -157,6 +157,14 @@ use kartik\datetime\DateTimePicker;
                     return 'BENEFICIO ENTREGADO';
                 } elseif ($model->status == 3) {
                     return 'ENVIADO POR SERVIENTREGA';
+                } elseif ($model->status == 4) {
+                    return 'ENVIADO SEDE EL PANGUI';
+                } elseif ($model->status == 5) {
+                    return 'ENVIADO SEDE LAGO AGRIO';
+                } elseif ($model->status == 6) {
+                    return 'ENTREGADO SEDE EL PANGUI';
+                } elseif ($model->status == 7) {
+                    return 'ENTREGADO SEDE LAGO AGRIO';
                 }
             }
         ),

@@ -58,19 +58,32 @@ $data_fecregistro = \app\models\TabIntFormulario::find()
     ->asArray()
     ->all();
 
+$data_fecregistrototal = \app\models\TabIntFormulario::findBySql(
+    "SELECT tif.fecha, tif.data, @running_total:=@running_total + tif.data AS total
+         FROM (SELECT
+                 date(fec_registro) as fecha,
+                    count(fec_registro) as data
+                    FROM tab_int_formulario
+                    GROUP BY fecha ) tif
+                JOIN (SELECT @running_total:=0) r
+                ORDER BY tif.fecha")
+    ->asArray()
+    ->all();
+
 $data_carrera = \app\models\TabIntFormulario::find()
     ->select(['siad_carrera','count(*) as data'])
     ->groupBy('siad_carrera')
     ->asArray()
     ->all();
 
-$dataProviderTotal = new \yii\data\ArrayDataProvider(['allModels' => $data_provincias_total]);
-$dataProviderTablets = new \yii\data\ArrayDataProvider(['allModels' => $data_provincias_tablets]);
-$dataProviderInternet = new \yii\data\ArrayDataProvider(['allModels' => $data_provincias_internet]);
-$dataProviderBeneficio = new \yii\data\ArrayDataProvider(['allModels' => $data_beneficio]);
-$dataProviderEstratificacion = new \yii\data\ArrayDataProvider(['allModels' => $data_estratificacion]);
-$dataProviderFecRegitro = new \yii\data\ArrayDataProvider(['allModels' => $data_fecregistro]);
-$dataProviderCarrera = new \yii\data\ArrayDataProvider(['allModels' => $data_carrera]);
+$dataProviderTotal = new \yii\data\ArrayDataProvider(['allModels' => $data_provincias_total,'pagination' => false]);
+$dataProviderTablets = new \yii\data\ArrayDataProvider(['allModels' => $data_provincias_tablets,'pagination' => false]);
+$dataProviderInternet = new \yii\data\ArrayDataProvider(['allModels' => $data_provincias_internet,'pagination' => false]);
+$dataProviderBeneficio = new \yii\data\ArrayDataProvider(['allModels' => $data_beneficio,'pagination' => false]);
+$dataProviderEstratificacion = new \yii\data\ArrayDataProvider(['allModels' => $data_estratificacion,'pagination' => false]);
+$dataProviderFecRegitro = new \yii\data\ArrayDataProvider(['allModels' => $data_fecregistro,'pagination' => false]);
+$dataProviderFecRegitroTotal = new \yii\data\ArrayDataProvider(['allModels' => $data_fecregistrototal,'pagination' => false]);
+$dataProviderCarrera = new \yii\data\ArrayDataProvider(['allModels' => $data_carrera,'pagination' => false]);
 
 ?>
 
@@ -180,10 +193,38 @@ echo Highcharts::widget([
         ],
         'series' => [
             [
-                'type' => 'spline',
+                //'type' => 'spline',
+                'type' => 'areaspline',
                 'name' => 'Total',
                 'data' => new SeriesDataHelper($dataProviderFecRegitro, ['data:int']),
                 'color' => new JsExpression('Highcharts.getOptions().colors[8]'),
+            ],
+        ],
+        'credits' => array('enabled' => true),
+    ]
+]);
+
+echo Highcharts::widget([
+    'scripts' => [
+        'modules/exporting',
+        'themes/grid-light',
+    ],
+    'options' => [
+        'title' => [
+            'text' => 'CONTRATOS ACUMULADOS POR FECHA',
+        ],
+        'xAxis' => [
+            'categories' => new SeriesDataHelper($dataProviderFecRegitroTotal, ['fecha']),
+        ],
+        'yAxis' => [
+            'title' => ['text' => 'Beneficiarios']
+        ],
+        'series' => [
+            [
+                'type' => 'areaspline',
+                'name' => 'Total',
+                'data' => new SeriesDataHelper($dataProviderFecRegitroTotal, ['total:int']),
+                'color' => new JsExpression('Highcharts.getOptions().colors[2]'),
             ],
         ],
         'credits' => array('enabled' => true),

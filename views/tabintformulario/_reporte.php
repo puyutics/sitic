@@ -63,6 +63,11 @@ $user_profile = \app\models\UserProfile::find()
     <b>- Estado: </b><?php if ($status == '%') { ?>Todos<?php } ?>
     <?php if ($status == '1') { echo 'Contrato creado'; } ?>
     <?php if ($status == '2') { echo 'Beneficio Entregado'; } ?>
+    <?php if ($status == '3') { echo 'Enviado por Servientrega'; } ?>
+    <?php if ($status == '4') { echo 'Enviado Sede El Pangui'; } ?>
+    <?php if ($status == '5') { echo 'Enviado Sede Lago Agrio'; } ?>
+    <?php if ($status == '6') { echo 'Entregado Sede El Pangui'; } ?>
+    <?php if ($status == '7') { echo 'Entregado Sede Lago Agrio'; } ?>
     <br>
 </p>
 <table width=100% border="1" style="border-collapse:collapse">

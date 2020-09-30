@@ -12,7 +12,7 @@ $dni = $model->dni;
 
 $searchModel = new app\models\EstudiantesSearch();
 $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-$dataProvider->query->Where('cedula_pasaporte = "' . $dni .'"');
+$dataProvider->query->Where('CIInfPer = "' . $dni .'"');
 
 $searchModelMatricula = new \app\models\MatriculaSearch();
 $searchModelMatricula->CIInfPer = $dni;
@@ -39,9 +39,9 @@ $dataProviderMatricula->sort->defaultOrder = [
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            //'CIInfPer',
+            'CIInfPer',
             //'num_expediente',
-            'cedula_pasaporte',
+            //'cedula_pasaporte',
             //'TipoDocInfPer',
             'ApellInfPer',
             'ApellMatInfPer',

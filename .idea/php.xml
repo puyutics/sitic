@@ -160,6 +160,8 @@
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php80" />
       <path value="$PROJECT_DIR$/vendor/miloschuman/yii2-highcharts-widget" />
       <path value="$PROJECT_DIR$/vendor/bower-asset/highcharts" />
+      <path value="$PROJECT_DIR$/vendor/2amigos/yii2-tinymce-widget" />
+      <path value="$PROJECT_DIR$/vendor/tinymce/tinymce" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="5.4.0" />

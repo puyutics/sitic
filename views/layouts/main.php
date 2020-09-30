@@ -121,6 +121,7 @@ AppAsset::register($this);
                         //['label' => 'Reglamentos TI', 'url' => 'index.php?r=documents/index'],
                         ['label' => 'Encuestas UEA', 'url' => 'index.php?r=tabintencuestas/index'],
                         ['label' => 'Encuestas SENESCYT', 'url' => 'index.php?r=tabintsenescyt/index'],
+                        ['label' => 'Buscar Beneficiario', 'url' => 'index.php?r=tabintformulario/beneficiarioadmin'],
                         ['label' => 'Tablets e Internet', 'url' => 'index.php?r=tabintformulario/index'],
                     ],
                 ],

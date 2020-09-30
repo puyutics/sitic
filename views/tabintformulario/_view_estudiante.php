@@ -18,7 +18,7 @@ if (isset($_GET['search'])) {
     $dni = $user->getAttribute(Yii::$app->params['dni'],0);
 }
 
-$model = \app\models\Estudiantes::findOne(['cedula_pasaporte' => $dni]);
+$model = \app\models\Estudiantes::findOne(['CIInfPer' => $dni]);
 
 ?>
 

@@ -7,6 +7,7 @@ use yii\helpers\Html;
 
 $this->title = 'Agregar Categoría';
 $this->params['breadcrumbs'][] = ['label' => 'Proveedores', 'url' => ['ccppproveedor/index']];
+$this->params['breadcrumbs'][] = ['label' => 'Categorías', 'url' => ['ccppproveedor/categorias']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="ccpp-categoria-create">

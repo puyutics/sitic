@@ -18,6 +18,14 @@ $estudiante = \app\models\Estudiantes::find()
     ->where(["cedula_pasaporte" => $dni])
     ->all();
 
+$contratosTablets = \app\models\TabIntFormulario::find()
+    ->where(["encuesta_beneficiario" => 'TABLET e Internet Educativo Ilimitado'])
+    ->all();
+
+$contratosInternet = \app\models\TabIntFormulario::find()
+    ->where(["encuesta_beneficiario" => 'Internet Educativo Ilimitado'])
+    ->all();
+
 $encuesta = \app\models\TabIntEncuestas::find()
     ->where(["CedulaPasaporte" => $dni])
     ->orderBy(["ID" => SORT_ASC])
@@ -51,7 +59,6 @@ if (count($estudiante)>0) {
     $nombres = $user->getFirstName();
     $apellidos = $user->getLastName();
 }
-
 
 if (count($matricula)>0) {
     if ($matricula[0]->statusMatricula == 'APROBADA') {
@@ -110,14 +117,62 @@ if (count($festrat)>0) {
 
 if (count($encuesta)>0) {
     if ($encuesta[0]->Beneficio == 'TABLET') {
-        $beneficio = 'TABLET e Internet Educativo Ilimitado';
+        if (count($contratosTablets) < 500) {
+            $beneficio = 'TABLET e Internet Educativo Ilimitado';
+        } else {
+            if (count($contratosInternet) < 500) {
+                $beneficio = 'Internet Educativo Ilimitado';
+            } else {
+                $beneficio = '-';
+            }
+        }
     } elseif ($encuesta[0]->Beneficio == 'INTERNET') {
-        $beneficio = 'Internet Educativo Ilimitado';
+        if (count($contratosInternet) < 500) {
+            $beneficio = 'Internet Educativo Ilimitado';
+        } else {
+            $beneficio = '-';
+        }
     } else {
         $beneficio = '-';
     }
 } else {
     $beneficio = '-';
+}
+
+if ($beneficio == '-') {
+    if (count($senescyt)>0) {
+        if ($senescyt[0]->equipos == 'NO') {
+            if (count($contratosTablets) < 500) {
+                $beneficio = 'TABLET e Internet Educativo Ilimitado';
+            } else {
+                if (count($contratosInternet) < 500) {
+                    $beneficio = 'Internet Educativo Ilimitado';
+                } else {
+                    $beneficio = '-';
+                }
+            }
+        } else {
+            if ($senescyt[0]->internet == 'No') {
+                if (count($contratosInternet) < 500) {
+                    $beneficio = 'Internet Educativo Ilimitado';
+                } else {
+                    $beneficio = '-';
+                }
+            } else {
+                if (count($contratosInternet) < 500) {
+                    $beneficio = 'Internet Educativo Ilimitado';
+                } else {
+                    $beneficio = '-';
+                }
+            }
+        }
+    } else {
+        if (count($contratosInternet) < 500) {
+            $beneficio = 'Internet Educativo Ilimitado';
+        } else {
+            $beneficio = '-';
+        }
+    }
 }
 
 ///////////////// CUMPLIMIENTO REQUISITOS ///////////////////
@@ -154,6 +209,7 @@ if ($carrera != '-') {
 if ($estratificacion == 'C+ (medio típico)'
     or $estratificacion == 'C- (medio bajo)'
     or $estratificacion == 'D (bajo)'
+    or $estratificacion == '-'
 ) {
     $cumple_estratificacion = 'SI';
 } else {
