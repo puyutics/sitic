@@ -21,9 +21,10 @@ if (isset($_GET['search'])) {
 
 $searchModelMatricula = new \app\models\MatriculaSearch();
 $searchModelMatricula->CIInfPer = $dni;
-$searchModelMatricula->idPer = '34';
+//$searchModelMatricula->idPer = '34';
 $dataProviderMatricula = $searchModelMatricula->search(Yii::$app->request->queryParams);
 $dataProviderMatricula->sort->defaultOrder = [
+    'idPer' => SORT_DESC,
     'idsemestre' => SORT_DESC,
 ];
 

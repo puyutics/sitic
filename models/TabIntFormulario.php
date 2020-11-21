@@ -69,7 +69,7 @@ class TabIntFormulario extends \yii\db\ActiveRecord
             [['cedula', 'username', 'email', 'nombres', 'apellidos', 'codigo_postal', 'provincia', 'canton', 'parroquia', 'calle_principal', 'calle_secundaria', 'referencia_texto', 'cel_contacto', 'tel_contacto', 'siad_matriculado', 'siad_semestre', 'siad_carrera', 'ficha_escasos_recursos', 'encuesta_beneficiario', 'doc_responsabilidad_uso', 'doc_contrato', 'qrcode'], 'required'],
             [['cedula'], 'unique'],
             [['codigo_postal','cel_contacto','tel_contacto'], 'match',
-                'pattern' => '/^[0-9.]+$/u',
+                'pattern' => '/^[0-9]+$/u',
                 'message'=>'INGRESE SOLO NÚMEROS. {attribute} no puede contener caracteres especiales, ni letras'],
             [['upload_referencia_foto'], 'file', 'extensions' => 'png, jpg, jpeg'],
             [['upload_cedula_pasaporte','upload_servicio_basico'], 'file', 'extensions' => 'png, jpg, jpeg,pdf'],

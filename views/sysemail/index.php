@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //'id',
             'from:ntext',
             'replyto:ntext',
-            'to:ntext',
+            //'to:ntext',
             //'cc:ntext',
             //'cco:ntext',
             'subject',

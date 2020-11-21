@@ -21,6 +21,7 @@ use Yii;
  */
 class SysEmail extends \yii\db\ActiveRecord
 {
+
     /**
      * {@inheritdoc}
      */
@@ -36,7 +37,7 @@ class SysEmail extends \yii\db\ActiveRecord
     {
         return [
             [['from', 'replyto', 'to', 'subject', 'body'], 'required'],
-            [['from', 'replyto', 'to', 'cc', 'cco', 'body', 'attach'], 'string'],
+            [['from', 'replyto', 'cc', 'cco', 'body', 'attach'], 'string'],
             [['datetime'], 'safe'],
             [['status'], 'integer'],
             [['subject'], 'string', 'max' => 255],

@@ -23,9 +23,9 @@ $this->params['breadcrumbs'][] = $this->title;
             //'id',
             'from:ntext',
             'replyto:ntext',
-            'to:ntext',
-            'cc:ntext',
-            'cco:ntext',
+            //'to:ntext',
+            //'cc:ntext',
+            //'cco:ntext',
             'subject',
             'body:html',
             'attach:ntext',
@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p align="center">
         <?= Html::a('Editar', ['update', 'id' => base64_encode($model->id)], ['class' => 'btn btn-lg btn-primary']) ?>
-        <?= Html::a('Enviar', ['send', 'id' => base64_encode($model->id), 'type' => base64_encode('adldapgroup')], ['class' => 'btn btn-lg btn-danger']) ?>
+        <?= Html::a('Enviar', ['send', 'id' => base64_encode($model->id), 'type' => base64_encode('o365list')], ['class' => 'btn btn-lg btn-danger']) ?>
     </p>
 
 </div>

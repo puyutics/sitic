@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 if (isset($_GET['search'])) {
     $search = $_GET['search'];
@@ -419,3 +420,9 @@ if ($beneficio != '-'
         </tr>
     <?php } ?>
 </table>
+<br>
+<p align="center">
+    <?= Html::a(Yii::t('app', 'Firmar Contrato Digital'), ['create','search'=> $user->getAttribute(Yii::$app->params['dni'],0)], ['class' => 'btn btn-lg btn-success']) ?>
+    <?= Html::a(Yii::t('app', 'Reiniciar Búsqueda'),
+        Url::toRoute(['tabintformulario/beneficiarioadmin']), ['class' => 'btn btn-warning']) ?>
+</p>

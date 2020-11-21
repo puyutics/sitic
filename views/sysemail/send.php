@@ -59,11 +59,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
     } else if ($type == 'emailuser') {
 
-        Yii::$app->mailerListas->compose()
-            ->setTo($model->to)
+        Yii::$app->mailerComunicados->compose()
+            //->setTo($model->to)
             ->setFrom($model->from)
             ->setReplyTo($model->replyto)
-            ->setBcc($model->from)
+            ->setBcc([$model->to])
             ->setSubject($model->subject)
             ->setHtmlBody($head . $model->body . $footer)
             //->attach('uploads/tabintformulario/contrato/' . $filename)
@@ -74,6 +74,31 @@ $this->params['breadcrumbs'][] = $this->title;
             //return $this->redirect(['view', 'id' => base64_encode($model->id)]);
         }
 
-    }?>
+    } else if ($type == 'o365list') {
+
+        $destinatarios = json_decode($model->to);
+
+        //enviarEmail
+        foreach($destinatarios as $destinatario) {
+            Yii::$app->mailerComunicados->compose()
+                //->setTo($model->to)
+                ->setFrom($model->from)
+                ->setReplyTo($model->replyto)
+                ->setBcc($destinatario)
+                ->setSubject($model->subject)
+                ->setHtmlBody($head . $model->body . $footer)
+                //->attach('uploads/tabintformulario/contrato/' . $filename)
+                ->send();
+
+            echo('Correo enviado a: ' . $destinatario);
+
+        }
+
+        $model->status = 2;
+        if ($model->save()) {
+            //return $this->redirect(['view', 'id' => base64_encode($model->id)]);
+        }
+
+    } ?>
 
 </div>

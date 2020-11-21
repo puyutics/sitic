@@ -24,6 +24,7 @@
         "2amigos/qrcode-library": "^1.1.2",
         "2amigos/yii2-tinymce-widget" : "~1.1",
         "bupy7/yii2-embed": "@dev",
+        "buttflattery/yii2-formwizard":"@dev",
         "dmstr/yii2-adminlte-asset": "^2.1",
         "edvlerblog/yii2-adldap-module": "^4.0.0",
         "et-soft/yii2-widget-select-year": "*",

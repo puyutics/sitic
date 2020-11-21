@@ -32,9 +32,9 @@ class SysemailController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
-                        'actions' => ['create','update','index','send',
-                            'view'],
-                        'allow' => false,
+                        'actions' => ['view','create','index','update','send'],
+                        'allow' => true,
+                        'roles' => ['@'],
                     ],
                     [
                         'actions' => ['delete'],
@@ -91,6 +91,8 @@ class SysemailController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             $model->datetime = date('Y-m-d H:i:s');
+            $model->to = json_encode($model->to);
+
             if ($model->save()) {
                 return $this->redirect(['view', 'id' => base64_encode($model->id)]);
             }
@@ -112,9 +114,12 @@ class SysemailController extends Controller
     {
         $id = base64_decode($id);
         $model = $this->findModel($id);
+        $model->to = json_decode($model->to);
 
         if ($model->load(Yii::$app->request->post())) {
             $model->datetime = date('Y-m-d H:i:s');
+            $model->to = json_encode($model->to);
+
             if ($model->save()) {
                 return $this->redirect(['view', 'id' => base64_encode($model->id)]);
             }

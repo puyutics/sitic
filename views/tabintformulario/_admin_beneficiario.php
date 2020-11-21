@@ -49,10 +49,12 @@ if (isset($_GET['search'])) {
 <?php if (isset($_GET['search']) and isset($user)) { ?>
 
     <?php if (isset($_GET['search'])) { ?>
-        <div class="row"> <div class="alert col-sm-offset-4 col-sm-4" align="center">
+        <div class="row">
+            <div class="alert col-sm-offset-4 col-sm-4" align="center">
                 <?= Html::a(Yii::t('app', 'Reiniciar Búsqueda'),
                     Url::toRoute(['tabintformulario/beneficiarioadmin']), ['class' => 'btn btn-warning']) ?>
-            </div> </div>
+            </div>
+        </div>
     <?php } ?>
 
     <?php echo TabsX::widget([

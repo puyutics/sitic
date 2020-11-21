@@ -82,8 +82,8 @@ class UserProfile extends \yii\db\ActiveRecord
             ->where([
                 "username" => $username
             ])
-            ->all();
-        if (!count($user)) {
+            ->one();
+        if (!isset($user)) {
             return null;
         }
         return new static($user);

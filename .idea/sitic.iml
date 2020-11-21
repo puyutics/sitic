@@ -23,6 +23,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/bower-asset/typeahead.js" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/bower-asset/yii2-pjax" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/bupy7/yii2-embed" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/buttflattery/yii2-formwizard" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/cebe/markdown" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/cebe/yii2-gravatar" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/codeception/base" />
@@ -40,8 +41,8 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/embed/embed" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/et-soft/yii2-widget-select-year" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ezyang/htmlpurifier" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/fakerphp/faker" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/fortawesome/font-awesome" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/fzaninotto/faker" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/guzzlehttp/guzzle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/guzzlehttp/promises" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/guzzlehttp/psr7" />
@@ -142,6 +143,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/finder" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-ctype" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-intl-idn" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-intl-normalizer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-mbstring" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php72" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php73" />
@@ -164,6 +166,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/yiisoft/yii2-jui" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/yiisoft/yii2-swiftmailer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/yiister/yii2-advanced-grid" />
+      <excludeFolder url="file://$MODULE_DIR$/web/uploads/becasconectividad" />
       <excludeFolder url="file://$MODULE_DIR$/web/uploads/documents" />
       <excludeFolder url="file://$MODULE_DIR$/web/uploads/tabintformulario" />
     </content>

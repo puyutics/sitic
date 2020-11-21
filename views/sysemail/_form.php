@@ -9,6 +9,13 @@ use dosamigos\tinymce\TinyMce;
 /* @var $this yii\web\View */
 /* @var $model app\models\SysEmail */
 /* @var $form yii\widgets\ActiveForm */
+
+$sAMAccountname = Yii::$app->user->identity->username;
+$user = Yii::$app->ad->getProvider('default')->search()
+    ->findBy('sAMAccountname', $sAMAccountname);
+$email = $user->getEmail();
+
+
 ?>
 
 <div class="sys-email-form">
@@ -18,15 +25,18 @@ use dosamigos\tinymce\TinyMce;
     <?php echo $form->field($model, 'from')->dropDownList([
         ''=>'Seleccionar remitente',
         'comunicados@uea.edu.ec'=>'comunicados@uea.edu.ec',
-        'identidad@uea.edu.ec'=>'identidad@uea.edu.ec',
-        'listas@uea.edu.ec'=>'listas@uea.edu.ec',
-        'sitic@uea.edu.ec'=>'sitic@uea.edu.ec',
-    ])
+        //'identidad@uea.edu.ec'=>'identidad@uea.edu.ec',
+        //'listas@uea.edu.ec'=>'listas@uea.edu.ec',
+        //'sitic@uea.edu.ec'=>'sitic@uea.edu.ec',
+    ], ['value' => 'comunicados@uea.edu.ec'])
     ?>
 
     <?= $form->field($model, 'replyto')->widget(Select2::classname(), [
         'data' =>ArrayHelper::map(\app\models\UserProfile::find()->all(), 'mail', 'mail'),
-        'options' => ['placeholder' => 'Seleccionar usuario'],
+        'options' => [
+            'placeholder' => 'Seleccionar usuario',
+            'value' => $email,
+        ],
         'pluginOptions' => [
             'allowClear' => true
         ],
@@ -34,22 +44,24 @@ use dosamigos\tinymce\TinyMce;
 
     <?php //= $form->field($model, 'to')->textarea(['rows' => 6]) ?>
 
-   <?php echo "<p></p>";
-    echo $form->field($model, 'to')->widget(Select2::classname(), [
-        'data' => Yii::$app->params['groups'],
-        'options' => ['placeholder' => 'Seleccionar grupo'],
+   <?php echo $form->field($model, 'to')->widget(Select2::classname(), [
+        'data' => Yii::$app->params['listas-correo'],
+        'options' => [
+            'placeholder' => 'Seleccionar lista',
+            'multiple' => true
+        ],
         'pluginOptions' => [
             'allowClear' => true
         ],
     ]); ?>
 
-    <?php /*= $form->field($model, 'to')->widget(Select2::classname(), [
+    <?php /*echo $form->field($model, 'to')->widget(Select2::classname(), [
         'data' =>ArrayHelper::map(\app\models\UserProfile::find()->all(), 'mail', 'mail'),
         'options' => ['placeholder' => 'Seleccionar usuario'],
         'pluginOptions' => [
             'allowClear' => true
         ],
-    ]);*/ ?>
+    ]); */?>
 
     <?php //= $form->field($model, 'cc')->textarea(['rows' => 6]) ?>
 
