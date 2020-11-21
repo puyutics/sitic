@@ -12,6 +12,8 @@ use yii\helpers\ArrayHelper;
 use app\models\Department;
 use kartik\select2\Select2;
 
+/* @var $model */
+
 $this->title = Yii::t('app', 'Crear usuario');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Gestión TI'), 'url' => ['site/management']];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Usuarios'), 'url' => ['adldap/index']];

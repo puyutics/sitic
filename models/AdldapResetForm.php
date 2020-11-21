@@ -25,7 +25,7 @@ class AdldapResetForm extends Model
         return [
             [['mail','resetToken', 'newPassword','verifyNewPassword'], 'required'],
             [['mail'], 'email'],
-            [['newPassword'], StrengthValidator::className(),
+            [['newPassword','verifyNewPassword'], StrengthValidator::className(),
                 'userAttribute'=>'mail',
                 'min'=>8,
                 'upper' => 1,

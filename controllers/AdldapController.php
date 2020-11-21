@@ -14,6 +14,7 @@ use app\models\AdldapForgetuserForm;
 use app\models\AdldapPasswordForm;
 use app\models\AdldapResetForm;
 use app\models\AdldapCreateForm;
+use app\models\AdldapCreateStudentForm;
 use app\models\AdldapEditForm;
 use app\models\AdldapGroupForm;
 
@@ -29,17 +30,12 @@ class AdldapController extends Controller
                 'class' => AccessControl::className(),
                 'only' => ['create','index','profile','edituser','viewuser','forgetpass',
                     'forgetuser','password','reset','saveLog','sendToken','sendNewUser',
-                    'viewgroups'],
+                    'viewgroups','createstudent'],
                 'rules' => [
                     [
                         'actions' => ['index','profile','edituser',
                             'forgetpass','forgetuser','password','reset','saveLog',
-                            'sendToken','sendNewUser','viewgroups'],
-                        'allow' => true,
-                        'roles' => ['rolAdministrador'],
-                    ],
-                    [
-                        'actions' => ['create'],
+                            'sendToken','sendNewUser','viewgroups','create','createstudent'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
@@ -55,7 +51,7 @@ class AdldapController extends Controller
                     ],
                     [
                         'actions' => ['index','forgetpass','forgetuser','password','reset',
-                                        'saveLog'],
+                                        'saveLog','createstudent'],
                         'allow' => true,
                     ],
                     [
@@ -148,7 +144,7 @@ class AdldapController extends Controller
                             $checkuser = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
                         } while (!isset($checkuser));
 
-                        if (isset($checkuser)) {
+                        if (isset($checkuser) == 1) {
                             $user = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
                             $user->setTitle($model->title);
                             $user->setPassword($security->generateRandomString(8));
@@ -218,6 +214,925 @@ class AdldapController extends Controller
     }
 
 
+    public function actionCreatestudent()
+    {
+
+        $model = new AdldapCreateStudentForm();
+
+        if ($model->load(Yii::$app->request->post())) {
+            //PASO 1: VALIDAR CEDULA Y FECHA DE NACIMIENTO
+            if ($model->step == 1) {
+                $adldapnewuser = \app\models\AdldapNewUsers::find()
+                    ->where(['dni' => $model->dni])
+                    ->andWhere(['fec_nacimiento' => $model->fec_nacimiento])
+                    ->one();
+
+                $user = \Yii::$app->ad->search()->findBy(Yii::$app->params['dni'], $model->dni);
+                if (isset($user)) {
+                    $model->samaccountname = $user->getAttribute('samaccountname',0);
+                    $model->firstname = $user->getFirstName();
+                    $model->lastname = $user->getLastName();
+                    $model->mail = $user->getEmail();
+                    $model->commonname = $user->getAttribute('cn',0);
+                    $model->displayname = $user->getDisplayName();
+                    $model->personalmail = $user->getAttribute(Yii::$app->params['personalmail'],0);
+                    $model->mobile = $user->getAttribute(Yii::$app->params['mobile'],0);
+                    $model->groups = $user->getGroups();
+                    $model->dn = $user->getDn();
+                    $model->uac = $user->getUserAccountControl();
+                    $model->department = $user->getDepartment();
+                    $model->title = $user->getTitle();
+
+                    $model->token = hash(Yii::$app->params['algorithm'],
+                        Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
+                    $model->step = 6;
+                    return $this->render('create_student',
+                        ['model' => $model]);
+                }
+
+
+                if (isset($adldapnewuser)) {
+                    $model->firstname = $adldapnewuser->nombres;
+                    $model->lastname = $adldapnewuser->apellidos;
+                    $model->personalmail = $adldapnewuser->email_personal;
+                    $model->mobile = $adldapnewuser->celular;
+
+                    if ($adldapnewuser->status == 1) {
+                        $model->step = 2;
+                        return $this->render('create_student',
+                            ['model' => $model]);
+                    } elseif ($adldapnewuser->status == 2) {
+                        $model->firstname = $adldapnewuser->nombres;
+                        $model->lastname = $adldapnewuser->apellidos;
+                        $model->personalmail = $adldapnewuser->email_personal;
+                        $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->mobile = $adldapnewuser->celular;
+                        $model->title = 'Estudiante';
+                        $model->department = $adldapnewuser->carrera;
+                        $model->token = hash(Yii::$app->params['algorithm'],
+                            Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
+                        $model->step = 4;
+                        return $this->render('create_student',
+                            ['model' => $model]);
+                    } elseif ($adldapnewuser->status == 3) {
+
+                        //OBTENER PRIMERA INICIAL DE CADA NOMBRE
+                        $fn = explode(' ', $model->firstname);
+                        $result_fn = '';
+                        foreach($fn as $t) {
+                            $result_fn .= $t[0];
+                        }
+                        if (strlen($result_fn)>2) {
+                            $result_fn = substr($result_fn,0,2);
+                        }
+
+                        //OBTENER EL PRIMER APELLIDO
+                        $ln = explode(' ', $model->lastname);
+                        $result_ln = $ln[0];
+
+                        //OBTENER PRIMERA INICIAL DEL SEGUNDO APELLIDO
+                        $ln2 = explode(' ', $model->lastname);
+                        $result_ln2= '';
+                        foreach($ln2 as $t) {
+                            $result_ln2 .= $t[0];
+                        }
+                        if (strlen($result_ln2)>1) {
+                            $result_ln2 = substr($result_ln2,1,1);
+                        }
+
+                        //VERIFICAR SI EXISTE USUARIO
+                        $model->samaccountname = strtolower($result_fn . '.' . $result_ln . $result_ln2);
+                        $checkuser = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
+                        if (!isset($checkuser)) {
+
+                            //OBTENER DOS INICIALES DEL SEGUNDO APELLIDO
+                            $ln2 = explode(' ', $model->lastname);
+                            $result_ln2= '';
+                            foreach($ln2 as $t) {
+                                $result_ln2 .= $t[0] . $t[1];
+                            }
+                            if (strlen($result_ln2)>2) {
+                                $result_ln2 = substr($result_ln2,2,2);
+                            }
+
+                            //VERIFICAR SI EXISTE USUARIO
+                            $model->samaccountname = strtolower($result_fn . '.' . $result_ln . $result_ln2);
+                            $checkuser = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
+                            if (!isset($checkuser)) {
+
+                                //OBTENER DOS INICIALES DE CADA NOMBRE
+                                $fn = explode(' ', $model->firstname);
+                                $result_fn = '';
+                                foreach($fn as $t) {
+                                    $result_fn .= $t[0] . $t[1];
+                                }
+                                if (strlen($result_fn)>4) {
+                                    $result_fn = substr($result_fn,0,4);
+                                }
+
+                                //OBTENER PRIMERA INICIAL DEL SEGUNDO APELLIDO
+                                $ln2 = explode(' ', $model->lastname);
+                                $result_ln2= '';
+                                foreach($ln2 as $t) {
+                                    $result_ln2 .= $t[0];
+                                }
+                                if (strlen($result_ln2)>1) {
+                                    $result_ln2 = substr($result_ln2,1,1);
+                                }
+
+                                //VERIFICAR SI EXISTE USUARIO
+                                $model->samaccountname = strtolower($result_fn . '.' . $result_ln . $result_ln2);
+                                $checkuser = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
+                                if (!isset($checkuser)) {
+                                    Yii::$app->session->setFlash('error',
+                                        "Error al identificar su usuario. Por favor notifique su inconveniente en la Mesa de Ayuda");
+                                }
+                            }
+                        }
+
+                        $model->samaccountname = $checkuser->getAttribute('samaccountname',0);
+                        $model->mail = $checkuser->getEmail();
+
+                        $model->firstname = $adldapnewuser->nombres;
+                        $model->lastname = $adldapnewuser->apellidos;
+                        $model->personalmail = $adldapnewuser->email_personal;
+                        $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->mobile = $adldapnewuser->celular;
+                        $model->title = 'Estudiante';
+                        $model->department = $adldapnewuser->carrera;
+                        $model->token = hash(Yii::$app->params['algorithm'],
+                            Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
+                        $model->step = 5;
+                        return $this->render('create_student',
+                            ['model' => $model]);
+
+                    } elseif ($adldapnewuser->status == 4) {
+                        $user = \Yii::$app->ad->search()->findBy(Yii::$app->params['dni'], $model->dni);
+                        $model->samaccountname = $user->getAttribute('samaccountname',0);
+                        $model->mail = $user->getEmail();
+
+                        $model->firstname = $adldapnewuser->nombres;
+                        $model->lastname = $adldapnewuser->apellidos;
+                        $model->personalmail = $adldapnewuser->email_personal;
+                        $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->mobile = $adldapnewuser->celular;
+                        $model->title = 'Estudiante';
+                        $model->department = $adldapnewuser->carrera;
+                        $model->token = hash(Yii::$app->params['algorithm'],
+                            Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
+                        $model->step = 6;
+                        return $this->render('create_student',
+                            ['model' => $model]);
+                    }
+                }
+            } elseif ($model->step == 2) {
+                $adldapnewuser = \app\models\AdldapNewUsers::find()
+                    ->where(['dni' => $model->dni])
+                    ->andWhere(['fec_nacimiento' => $model->fec_nacimiento])
+                    ->one();
+
+                if (isset($adldapnewuser)) {
+                    $model->firstname = $adldapnewuser->nombres;
+                    $model->lastname = $adldapnewuser->apellidos;
+                    //$model->personalmail = $adldapnewuser->email_personal;
+                    $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                    $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                    $model->mobile = $adldapnewuser->celular;
+                    $model->title = 'Estudiante';
+                    $model->department = $adldapnewuser->carrera;
+
+                    if ($adldapnewuser->status == 1) {
+
+                        //Enviar email de verificación del correo personal
+                        $dni = $model->dni;
+                        $fullname = $model->commonname;
+                        $personalmail = $model->personalmail;
+                        //Crear un Reset TOKEN
+                        $resetToken = hash(Yii::$app->params['algorithm'],
+                            Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
+                        $this->sendNewStudentToken($dni,$fullname,$personalmail,$resetToken);
+
+                        $model->step = 3;
+                        Yii::$app->session->setFlash('personalmail', $model->personalmail);
+
+                        return $this->render('create_student',
+                            ['model' => $model]);
+                    } elseif ($adldapnewuser->status == 2) {
+                        $model->firstname = $adldapnewuser->nombres;
+                        $model->lastname = $adldapnewuser->apellidos;
+                        $model->personalmail = $adldapnewuser->email_personal;
+                        $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->mobile = $adldapnewuser->celular;
+                        $model->title = 'Estudiante';
+                        $model->department = $adldapnewuser->carrera;
+                        $model->token = hash(Yii::$app->params['algorithm'],
+                            Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
+                        $model->step = 4;
+                        return $this->render('create_student',
+                            ['model' => $model]);
+                    } elseif ($adldapnewuser->status == 3) {
+
+                        //OBTENER PRIMERA INICIAL DE CADA NOMBRE
+                        $fn = explode(' ', $model->firstname);
+                        $result_fn = '';
+                        foreach($fn as $t) {
+                            $result_fn .= $t[0];
+                        }
+                        if (strlen($result_fn)>2) {
+                            $result_fn = substr($result_fn,0,2);
+                        }
+
+                        //OBTENER EL PRIMER APELLIDO
+                        $ln = explode(' ', $model->lastname);
+                        $result_ln = $ln[0];
+
+                        //OBTENER PRIMERA INICIAL DEL SEGUNDO APELLIDO
+                        $ln2 = explode(' ', $model->lastname);
+                        $result_ln2= '';
+                        foreach($ln2 as $t) {
+                            $result_ln2 .= $t[0];
+                        }
+                        if (strlen($result_ln2)>1) {
+                            $result_ln2 = substr($result_ln2,1,1);
+                        }
+
+                        //VERIFICAR SI EXISTE USUARIO
+                        $model->samaccountname = strtolower($result_fn . '.' . $result_ln . $result_ln2);
+                        $checkuser = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
+                        if (!isset($checkuser)) {
+
+                            //OBTENER DOS INICIALES DEL SEGUNDO APELLIDO
+                            $ln2 = explode(' ', $model->lastname);
+                            $result_ln2= '';
+                            foreach($ln2 as $t) {
+                                $result_ln2 .= $t[0] . $t[1];
+                            }
+                            if (strlen($result_ln2)>2) {
+                                $result_ln2 = substr($result_ln2,2,2);
+                            }
+
+                            //VERIFICAR SI EXISTE USUARIO
+                            $model->samaccountname = strtolower($result_fn . '.' . $result_ln . $result_ln2);
+                            $checkuser = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
+                            if (!isset($checkuser)) {
+
+                                //OBTENER DOS INICIALES DE CADA NOMBRE
+                                $fn = explode(' ', $model->firstname);
+                                $result_fn = '';
+                                foreach($fn as $t) {
+                                    $result_fn .= $t[0] . $t[1];
+                                }
+                                if (strlen($result_fn)>4) {
+                                    $result_fn = substr($result_fn,0,4);
+                                }
+
+                                //OBTENER PRIMERA INICIAL DEL SEGUNDO APELLIDO
+                                $ln2 = explode(' ', $model->lastname);
+                                $result_ln2= '';
+                                foreach($ln2 as $t) {
+                                    $result_ln2 .= $t[0];
+                                }
+                                if (strlen($result_ln2)>1) {
+                                    $result_ln2 = substr($result_ln2,1,1);
+                                }
+
+                                //VERIFICAR SI EXISTE USUARIO
+                                $model->samaccountname = strtolower($result_fn . '.' . $result_ln . $result_ln2);
+                                $checkuser = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
+                                if (!isset($checkuser)) {
+                                    Yii::$app->session->setFlash('error',
+                                        "Error al identificar su usuario. Por favor notifique su inconveniente en la Mesa de Ayuda");
+                                }
+                            }
+                        }
+
+                        $model->samaccountname = $checkuser->getAttribute('samaccountname',0);
+                        $model->mail = $checkuser->getEmail();
+
+                        $model->firstname = $adldapnewuser->nombres;
+                        $model->lastname = $adldapnewuser->apellidos;
+                        $model->personalmail = $adldapnewuser->email_personal;
+                        $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->mobile = $adldapnewuser->celular;
+                        $model->title = 'Estudiante';
+                        $model->department = $adldapnewuser->carrera;
+                        $model->token = hash(Yii::$app->params['algorithm'],
+                            Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
+                        $model->step = 5;
+                        return $this->render('create_student',
+                            ['model' => $model]);
+                    } elseif ($adldapnewuser->status == 4) {
+                        $user = \Yii::$app->ad->search()->findBy(Yii::$app->params['dni'], $model->dni);
+                        $model->samaccountname = $user->getAttribute('samaccountname',0);
+                        $model->mail = $user->getEmail();
+
+                        $model->firstname = $adldapnewuser->nombres;
+                        $model->lastname = $adldapnewuser->apellidos;
+                        $model->personalmail = $adldapnewuser->email_personal;
+                        $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->mobile = $adldapnewuser->celular;
+                        $model->title = 'Estudiante';
+                        $model->department = $adldapnewuser->carrera;
+                        $model->token = hash(Yii::$app->params['algorithm'],
+                            Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
+                        $model->step = 6;
+                        return $this->render('create_student',
+                            ['model' => $model]);
+                    }
+                }
+            } elseif ($model->step == 3) {
+                $adldapnewuser = \app\models\AdldapNewUsers::find()
+                    ->where(['dni' => $model->dni])
+                    ->andWhere(['fec_nacimiento' => $model->fec_nacimiento])
+                    ->one();
+
+                if (isset($adldapnewuser)) {
+                    $model->firstname = $adldapnewuser->nombres;
+                    $model->lastname = $adldapnewuser->apellidos;
+                    //$model->personalmail = $adldapnewuser->email_personal;
+                    $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                    $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                    $model->mobile = $adldapnewuser->celular;
+                    $model->title = 'Estudiante';
+                    $model->department = $adldapnewuser->carrera;
+
+                    if ($adldapnewuser->status == 1) {
+                        $resetToken = hash(Yii::$app->params['algorithm'],
+                            Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
+                        if ($model->token == $resetToken) {
+
+                            $model->step = 4;
+                            $adldapnewuser->email_personal = $model->personalmail;
+                            $adldapnewuser->status = 2;
+                            $adldapnewuser->save();
+
+                            return $this->render('create_student',['model' => $model]);
+
+                        } elseif ($model->token != $resetToken) {
+                            Yii::$app->session->setFlash('error',
+                                "El token no es válido. Por favor repita el proceso");
+                            $model->step = 3;
+                            return $this->render('create_student',
+                                ['model' => $model]);
+                        }
+                    } elseif ($adldapnewuser->status == 2) {
+                        $model->firstname = $adldapnewuser->nombres;
+                        $model->lastname = $adldapnewuser->apellidos;
+                        $model->personalmail = $adldapnewuser->email_personal;
+                        $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->mobile = $adldapnewuser->celular;
+                        $model->title = 'Estudiante';
+                        $model->department = $adldapnewuser->carrera;
+                        $model->token = hash(Yii::$app->params['algorithm'],
+                            Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
+                        $model->step = 4;
+                        return $this->render('create_student',
+                            ['model' => $model]);
+                    } elseif ($adldapnewuser->status == 3) {
+
+                        //OBTENER PRIMERA INICIAL DE CADA NOMBRE
+                        $fn = explode(' ', $model->firstname);
+                        $result_fn = '';
+                        foreach($fn as $t) {
+                            $result_fn .= $t[0];
+                        }
+                        if (strlen($result_fn)>2) {
+                            $result_fn = substr($result_fn,0,2);
+                        }
+
+                        //OBTENER EL PRIMER APELLIDO
+                        $ln = explode(' ', $model->lastname);
+                        $result_ln = $ln[0];
+
+                        //OBTENER PRIMERA INICIAL DEL SEGUNDO APELLIDO
+                        $ln2 = explode(' ', $model->lastname);
+                        $result_ln2= '';
+                        foreach($ln2 as $t) {
+                            $result_ln2 .= $t[0];
+                        }
+                        if (strlen($result_ln2)>1) {
+                            $result_ln2 = substr($result_ln2,1,1);
+                        }
+
+                        //VERIFICAR SI EXISTE USUARIO
+                        $model->samaccountname = strtolower($result_fn . '.' . $result_ln . $result_ln2);
+                        $checkuser = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
+                        if (!isset($checkuser)) {
+
+                            //OBTENER DOS INICIALES DEL SEGUNDO APELLIDO
+                            $ln2 = explode(' ', $model->lastname);
+                            $result_ln2= '';
+                            foreach($ln2 as $t) {
+                                $result_ln2 .= $t[0] . $t[1];
+                            }
+                            if (strlen($result_ln2)>2) {
+                                $result_ln2 = substr($result_ln2,2,2);
+                            }
+
+                            //VERIFICAR SI EXISTE USUARIO
+                            $model->samaccountname = strtolower($result_fn . '.' . $result_ln . $result_ln2);
+                            $checkuser = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
+                            if (!isset($checkuser)) {
+
+                                //OBTENER DOS INICIALES DE CADA NOMBRE
+                                $fn = explode(' ', $model->firstname);
+                                $result_fn = '';
+                                foreach($fn as $t) {
+                                    $result_fn .= $t[0] . $t[1];
+                                }
+                                if (strlen($result_fn)>4) {
+                                    $result_fn = substr($result_fn,0,4);
+                                }
+
+                                //OBTENER PRIMERA INICIAL DEL SEGUNDO APELLIDO
+                                $ln2 = explode(' ', $model->lastname);
+                                $result_ln2= '';
+                                foreach($ln2 as $t) {
+                                    $result_ln2 .= $t[0];
+                                }
+                                if (strlen($result_ln2)>1) {
+                                    $result_ln2 = substr($result_ln2,1,1);
+                                }
+
+                                //VERIFICAR SI EXISTE USUARIO
+                                $model->samaccountname = strtolower($result_fn . '.' . $result_ln . $result_ln2);
+                                $checkuser = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
+                                if (!isset($checkuser)) {
+                                    Yii::$app->session->setFlash('error',
+                                        "Error al identificar su usuario. Por favor notifique su inconveniente en la Mesa de Ayuda");
+                                }
+                            }
+                        }
+
+                        $model->samaccountname = $checkuser->getAttribute('samaccountname',0);
+                        $model->mail = $checkuser->getEmail();
+
+                        $model->firstname = $adldapnewuser->nombres;
+                        $model->lastname = $adldapnewuser->apellidos;
+                        $model->personalmail = $adldapnewuser->email_personal;
+                        $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->mobile = $adldapnewuser->celular;
+                        $model->title = 'Estudiante';
+                        $model->department = $adldapnewuser->carrera;
+                        $model->token = hash(Yii::$app->params['algorithm'],
+                            Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
+                        $model->step = 5;
+                        return $this->render('create_student',
+                            ['model' => $model]);
+                    } elseif ($adldapnewuser->status == 4) {
+                        $user = \Yii::$app->ad->search()->findBy(Yii::$app->params['dni'], $model->dni);
+                        $model->samaccountname = $user->getAttribute('samaccountname',0);
+                        $model->mail = $user->getEmail();
+
+                        $model->firstname = $adldapnewuser->nombres;
+                        $model->lastname = $adldapnewuser->apellidos;
+                        $model->personalmail = $adldapnewuser->email_personal;
+                        $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->mobile = $adldapnewuser->celular;
+                        $model->title = 'Estudiante';
+                        $model->department = $adldapnewuser->carrera;
+                        $model->token = hash(Yii::$app->params['algorithm'],
+                            Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
+                        $model->step = 6;
+                        return $this->render('create_student',
+                            ['model' => $model]);
+                    }
+                }
+            } elseif ($model->step == 4) {
+                $adldapnewuser = \app\models\AdldapNewUsers::find()
+                    ->where(['dni' => $model->dni])
+                    ->andWhere(['fec_nacimiento' => $model->fec_nacimiento])
+                    ->one();
+
+                if (isset($adldapnewuser)) {
+                    $model->firstname = $adldapnewuser->nombres;
+                    $model->lastname = $adldapnewuser->apellidos;
+                    $model->personalmail = $adldapnewuser->email_personal;
+                    $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                    $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                    $model->mobile = $adldapnewuser->celular;
+                    $model->title = 'Estudiante';
+                    $model->department = $adldapnewuser->carrera;
+                    $model->dn = $adldapnewuser->campus;
+
+                    if ($adldapnewuser->status == 2) {
+
+                        //OBTENER PRIMERA INICIAL DE CADA NOMBRE
+                        $fn = explode(' ', $model->firstname);
+                        $result_fn = '';
+                        foreach($fn as $t) {
+                            $result_fn .= $t[0];
+                        }
+                        if (strlen($result_fn)>2) {
+                            $result_fn = substr($result_fn,0,2);
+                        }
+
+                        //OBTENER EL PRIMER APELLIDO
+                        $ln = explode(' ', $model->lastname);
+                        $result_ln = $ln[0];
+
+                        //OBTENER PRIMERA INICIAL DEL SEGUNDO APELLIDO
+                        $ln2 = explode(' ', $model->lastname);
+                        $result_ln2= '';
+                        foreach($ln2 as $t) {
+                            $result_ln2 .= $t[0];
+                        }
+                        if (strlen($result_ln2)>1) {
+                            $result_ln2 = substr($result_ln2,1,1);
+                        }
+
+                        //VERIFICAR SI EXISTE USUARIO
+                        $model->samaccountname = strtolower($result_fn . '.' . $result_ln . $result_ln2);
+                        $checkuser = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
+                        if (isset($checkuser) == 1) {
+
+                            //OBTENER DOS INICIALES DEL SEGUNDO APELLIDO
+                            $ln2 = explode(' ', $model->lastname);
+                            $result_ln2= '';
+                            foreach($ln2 as $t) {
+                                $result_ln2 .= $t[0] . $t[1];
+                            }
+                            if (strlen($result_ln2)>2) {
+                                $result_ln2 = substr($result_ln2,2,2);
+                            }
+
+                            //VERIFICAR SI EXISTE USUARIO
+                            $model->samaccountname = strtolower($result_fn . '.' . $result_ln . $result_ln2);
+                            $checkuser = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
+                            if (isset($checkuser) == 1) {
+
+                                //OBTENER DOS INICIALES DE CADA NOMBRE
+                                $fn = explode(' ', $model->firstname);
+                                $result_fn = '';
+                                foreach($fn as $t) {
+                                    $result_fn .= $t[0] . $t[1];
+                                }
+                                if (strlen($result_fn)>4) {
+                                    $result_fn = substr($result_fn,0,4);
+                                }
+
+                                //OBTENER PRIMERA INICIAL DEL SEGUNDO APELLIDO
+                                $ln2 = explode(' ', $model->lastname);
+                                $result_ln2= '';
+                                foreach($ln2 as $t) {
+                                    $result_ln2 .= $t[0];
+                                }
+                                if (strlen($result_ln2)>1) {
+                                    $result_ln2 = substr($result_ln2,1,1);
+                                }
+
+                                //VERIFICAR SI EXISTE USUARIO
+                                $model->samaccountname = strtolower($result_fn . '.' . $result_ln . $result_ln2);
+                                $checkuser = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
+                                if (isset($checkuser) == 1) {
+                                    Yii::$app->session->setFlash('error',
+                                        "Error al crear el usuario. Por favor notifique su inconveniente en la Mesa de Ayuda");
+                                }
+                            }
+                        }
+
+                        if (!isset($checkuser)) {
+                            $model->mail = $model->samaccountname . '@uea.edu.ec';
+
+                            // https://github.com/Adldap2/Adldap2/blob/master/docs/models/model.md#saving
+                            // create user
+                            $user = \Yii::$app->ad->make()->user([
+                                'cn' => $model->commonname,
+                            ]);
+
+                            $log = '';
+
+                            // set attributes with set... function
+                            $user->setAccountName($model->samaccountname);
+                            $log = $log . 'Usuario: ' . $model->samaccountname . '. ';
+
+                            $user->setDisplayName($model->displayname);
+                            $log = $log . 'Nombre completo: ' . $model->displayname . '. ';
+
+                            $user->setFirstName($model->firstname);
+                            $log = $log . 'Nombres: ' . $model->firstname . '. ';
+
+                            $user->setLastName($model->lastname);
+                            $log = $log . 'Apellidos: ' . $model->lastname . '. ';
+
+                            $user->setUserPrincipalName($model->mail);
+                            $user->setEmail($model->mail);
+                            $log = $log . 'Correo: ' . $model->mail . '. ';
+
+                            $log = $log . 'Cédula: ' . $model->dni . '. ';
+                            $log = $log . 'Correo personal: ' . $model->personalmail . '. ';
+                            $log = $log . 'Celular: ' . $model->mobile . '. ';
+                            $log = $log . 'Departamento: ' . $model->department . '. ';
+                            $log = $log . 'Titulo: ' . $model->title . '.';
+
+                            // create dn
+                            $dn = $user->getDnBuilder();
+                            $dn->addCn($user->getCommonName());
+                            $dn->addOU($model->dn);
+                            $dn->addOU('ESTUDIANTES');
+                            $user->setDn($dn);
+
+                            // CREAR USUARIO
+                            if ($user->save()) {
+                                //VERIFICAR QUE LA CUENTA HA SIDO CREADA
+                                $checkuser = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
+                                if (isset($checkuser) == 1) {
+
+                                    //Crear Registro de Log en la base de datos
+                                    $description =
+                                        'Usuario creado. ' . $log
+                                    ;
+                                    $this->saveLog('adldapCreateUser', $model->samaccountname, $description, $model->samaccountname,'adldap');
+
+                                    $adldapnewuser->status = 3;
+                                    $adldapnewuser->save();
+                                    $model->step = 5;
+                                    return $this->render('create_student',
+                                        ['model' => $model]);
+                                } else {
+                                    $model->step = 4;
+                                    return $this->render('create_student',
+                                        ['model' => $model]);
+                                }
+                            }
+                        }
+                    } elseif ($adldapnewuser->status == 3) {
+
+                        //OBTENER PRIMERA INICIAL DE CADA NOMBRE
+                        $fn = explode(' ', $model->firstname);
+                        $result_fn = '';
+                        foreach($fn as $t) {
+                            $result_fn .= $t[0];
+                        }
+                        if (strlen($result_fn)>2) {
+                            $result_fn = substr($result_fn,0,2);
+                        }
+
+                        //OBTENER EL PRIMER APELLIDO
+                        $ln = explode(' ', $model->lastname);
+                        $result_ln = $ln[0];
+
+                        //OBTENER PRIMERA INICIAL DEL SEGUNDO APELLIDO
+                        $ln2 = explode(' ', $model->lastname);
+                        $result_ln2= '';
+                        foreach($ln2 as $t) {
+                            $result_ln2 .= $t[0];
+                        }
+                        if (strlen($result_ln2)>1) {
+                            $result_ln2 = substr($result_ln2,1,1);
+                        }
+
+                        //VERIFICAR SI EXISTE USUARIO
+                        $model->samaccountname = strtolower($result_fn . '.' . $result_ln . $result_ln2);
+                        $checkuser = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
+                        if (!isset($checkuser)) {
+
+                            //OBTENER DOS INICIALES DEL SEGUNDO APELLIDO
+                            $ln2 = explode(' ', $model->lastname);
+                            $result_ln2= '';
+                            foreach($ln2 as $t) {
+                                $result_ln2 .= $t[0] . $t[1];
+                            }
+                            if (strlen($result_ln2)>2) {
+                                $result_ln2 = substr($result_ln2,2,2);
+                            }
+
+                            //VERIFICAR SI EXISTE USUARIO
+                            $model->samaccountname = strtolower($result_fn . '.' . $result_ln . $result_ln2);
+                            $checkuser = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
+                            if (!isset($checkuser)) {
+
+                                //OBTENER DOS INICIALES DE CADA NOMBRE
+                                $fn = explode(' ', $model->firstname);
+                                $result_fn = '';
+                                foreach($fn as $t) {
+                                    $result_fn .= $t[0] . $t[1];
+                                }
+                                if (strlen($result_fn)>4) {
+                                    $result_fn = substr($result_fn,0,4);
+                                }
+
+                                //OBTENER PRIMERA INICIAL DEL SEGUNDO APELLIDO
+                                $ln2 = explode(' ', $model->lastname);
+                                $result_ln2= '';
+                                foreach($ln2 as $t) {
+                                    $result_ln2 .= $t[0];
+                                }
+                                if (strlen($result_ln2)>1) {
+                                    $result_ln2 = substr($result_ln2,1,1);
+                                }
+
+                                //VERIFICAR SI EXISTE USUARIO
+                                $model->samaccountname = strtolower($result_fn . '.' . $result_ln . $result_ln2);
+                                $checkuser = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
+                                if (!isset($checkuser)) {
+                                    Yii::$app->session->setFlash('error',
+                                        "Error al identificar su usuario. Por favor notifique su inconveniente en la Mesa de Ayuda");
+                                }
+                            }
+                        }
+
+                        $model->samaccountname = $checkuser->getAttribute('samaccountname',0);
+                        $model->mail = $checkuser->getEmail();
+
+                        $model->firstname = $adldapnewuser->nombres;
+                        $model->lastname = $adldapnewuser->apellidos;
+                        $model->personalmail = $adldapnewuser->email_personal;
+                        $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->mobile = $adldapnewuser->celular;
+                        $model->title = 'Estudiante';
+                        $model->department = $adldapnewuser->carrera;
+                        $model->token = hash(Yii::$app->params['algorithm'],
+                            Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
+                        $model->step = 5;
+                        return $this->render('create_student',
+                            ['model' => $model]);
+                    } elseif ($adldapnewuser->status == 4) {
+                        $user = \Yii::$app->ad->search()->findBy(Yii::$app->params['dni'], $model->dni);
+                        $model->samaccountname = $user->getAttribute('samaccountname',0);
+                        $model->mail = $user->getEmail();
+
+                        $model->firstname = $adldapnewuser->nombres;
+                        $model->lastname = $adldapnewuser->apellidos;
+                        $model->personalmail = $adldapnewuser->email_personal;
+                        $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->mobile = $adldapnewuser->celular;
+                        $model->title = 'Estudiante';
+                        $model->department = $adldapnewuser->carrera;
+                        $model->token = hash(Yii::$app->params['algorithm'],
+                            Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
+                        $model->step = 6;
+                        return $this->render('create_student',
+                            ['model' => $model]);
+                    }
+                }
+            } elseif ($model->step == 5) {
+                $adldapnewuser = \app\models\AdldapNewUsers::find()
+                    ->where(['dni' => $model->dni])
+                    ->andWhere(['fec_nacimiento' => $model->fec_nacimiento])
+                    ->one();
+
+                if (isset($adldapnewuser)) {
+                    $model->firstname = $adldapnewuser->nombres;
+                    $model->lastname = $adldapnewuser->apellidos;
+                    $model->personalmail = $adldapnewuser->email_personal;
+                    $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                    $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                    $model->mobile = $adldapnewuser->celular;
+                    $model->title = 'Estudiante';
+                    $model->department = $adldapnewuser->carrera;
+                    $model->dn = $adldapnewuser->campus;
+                    $model->uac = 512;
+
+                    if ($adldapnewuser->status == 3) {
+
+                        if ($model->newPassword == $model->verifyNewPassword) {
+
+                            $explode_commonname = explode(" ", $model->commonname);
+                            $similar = false;
+                            foreach ($explode_commonname as $name) {
+                                $incluye = stripos($model->newPassword, $name);
+                                if ($incluye !== false) {
+                                    $similar = true;
+                                }
+                            }
+
+                            $incluye = stripos($model->newPassword, $model->samaccountname);
+                            if ($incluye !== false) {
+                                $similar = true;
+                            }
+
+                            if ($similar == false) {
+                                //Actualizar contraseña
+                                $user = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
+                                $user->setPassword($model->newPassword);
+
+                                //Actualizar datos personales de la cuenta institucional
+                                $user->setTitle($model->title);
+                                $user->setAttribute(Yii::$app->params['dni'],$model->dni);
+                                $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);
+                                $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
+                                $user->setUserAccountControl($model->uac);
+                                $user->setDepartment($model->department);
+                                $user->setTitle($model->title);
+                                $user->setEmail($model->mail);
+
+                                //Guardar cambios
+                                $user->save();
+
+                                // Agregar licencias para estudiantes
+                                $groupObject = \Yii::$app->ad->search()->findBy('cn', 'Microsoft 365 Apps para Estudiantes');
+                                $user->addGroup($groupObject);
+                                $groupObject = \Yii::$app->ad->search()->findBy('cn', 'Power BI (free)');
+                                $user->addGroup($groupObject);
+                                $groupObject = \Yii::$app->ad->search()->findBy('cn', 'Office 365 A1 para Estudiantes');
+                                $user->addGroup($groupObject);
+                                $groupObject = \Yii::$app->ad->search()->findBy('cn', 'estudiantes');
+                                $user->addGroup($groupObject);
+                                $groupObject = \Yii::$app->ad->search()->findBy('cn', '3gm4v0hkup5dx55');
+                                $user->addGroup($groupObject);
+                                if ($adldapnewuser->campus == 'PUYO') {
+                                    $groupObject = \Yii::$app->ad->search()->findBy('cn', 'ob1suke36w6hpyl');
+                                    $user->addGroup($groupObject);
+                                }
+                                if ($adldapnewuser->campus == 'LAGO AGRIO') {
+                                    $groupObject = \Yii::$app->ad->search()->findBy('cn', 'djga0oexs3jesqu');
+                                    $user->addGroup($groupObject);
+                                }
+                                if ($adldapnewuser->campus == 'PANGUI') {
+                                    $groupObject = \Yii::$app->ad->search()->findBy('cn', 'ohgs7tioixj8dr4');
+                                    $user->addGroup($groupObject);
+                                }
+
+                                //Crear Registro de Log en la base de datos
+                                $description =
+                                    'Cambio correcto de contraseña del usuario: ' . $model->samaccountname
+                                ;
+                                $this->saveLog('resetPasswordToken', $model->samaccountname, $description, $model->samaccountname,'adldap');
+
+                                //Actualizar el correo institucional en SIAD Nivelacion
+                                $estudianteNivelacion = \app\models\EstudiantesNivelacion::find()
+                                    ->where(['cedula_pasaporte' => $model->dni])
+                                    ->one();
+                                if (isset($estudianteNivelacion)) {
+                                    $estudianteNivelacion->mailInst = $model->mail;
+                                    $estudianteNivelacion->save();
+                                }
+
+                                //Enviar usuario creado por email
+                                $dni = $model->dni;
+                                $fullname = $model->commonname;
+                                $mail = $model->mail;
+                                $personalmail = $model->personalmail;
+
+                                $this->sendNewStudent($dni,$fullname,$mail,$personalmail);
+
+                                Yii::$app->session->setFlash('successReset');
+
+                                $adldapnewuser->status = 4;
+                                $adldapnewuser->save();
+                                $model->step = 6;
+                                return $this->render('create_student',
+                                    ['model'=>$model]);
+
+                            } else {
+                                Yii::$app->session->setFlash('errorReset',
+                                    'NO utilice sus NOMBRES, APELLIDOS y/o NOMBRE DE USUARIO en la nueva contraseña');
+
+                                $model->step = 5;
+                                return $this->render('create_student',
+                                    ['model'=>$model]);
+                            }
+
+                        } else {
+                            Yii::$app->session->setFlash('errorReset',
+                                'Las contraseñas no coinciden. Vuelva a escribir su contraseña');
+
+                            $model->step = 5;
+                            return $this->render('create_student',
+                                ['model'=>$model]);
+                        }
+
+                    } elseif ($adldapnewuser->status == 4) {
+                        $user = \Yii::$app->ad->search()->findBy(Yii::$app->params['dni'], $model->dni);
+                        $model->samaccountname = $user->getAttribute('samaccountname',0);
+                        $model->mail = $user->getEmail();
+
+                        $model->firstname = $adldapnewuser->nombres;
+                        $model->lastname = $adldapnewuser->apellidos;
+                        $model->personalmail = $adldapnewuser->email_personal;
+                        $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                        $model->mobile = $adldapnewuser->celular;
+                        $model->title = 'Estudiante';
+                        $model->department = $adldapnewuser->carrera;
+                        $model->token = hash(Yii::$app->params['algorithm'],
+                            Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
+                        $model->step = 6;
+                        return $this->render('create_student',
+                            ['model' => $model]);
+                    }
+                }
+            }
+        }
+
+        $model->step = 1;
+        return $this->render('create_student',
+            ['model'=>$model]);
+    }
+
+
     public function actionEdituser()
     {
 
@@ -242,7 +1157,21 @@ class AdldapController extends Controller
         if (isset($_GET['search'])
             and (Yii::$app->session->get('authtype') == 'adldap')) {
             $search = $_GET['search'];
-            $user = Yii::$app->ad->getProvider('default')->search()->users()->find($search);
+            if (isset($_GET['samaccountname'])) {
+                $samaccountname = $_GET['samaccountname'];
+                $user = Yii::$app->ad->getProvider('default')->search()
+                    ->whereEquals('samaccountname', $samaccountname)
+                    ->first();
+            } else {
+                $user = Yii::$app->ad->getProvider('default')->search()->users()
+                    ->find($search);
+                $users = Yii::$app->ad->getProvider('default')->search()->users()
+                    ->orWhereContains('samaccountname', $search)
+                    ->orWhereContains('cn', $search)
+                    ->orWhereEquals(Yii::$app->params['dni'], $search)
+                    ->sortBy('samaccountname', 'asc')
+                    ->get();
+            }
 
             if (isset($user)) {
                 $sAMAccountname = $user->getAttribute('samaccountname',0);
@@ -252,8 +1181,8 @@ class AdldapController extends Controller
                 $model->mail = $user->getEmail();
                 $model->commonname = $user->getAttribute('cn',0);
                 $model->displayname = $user->getDisplayName();
-                $model->personalmail = $user->getAttribute(Yii::$app->params['personalmail'], 0);
-                $model->mobile = $user->getAttribute(Yii::$app->params['mobile'], 0);
+                $model->personalmail = $user->getAttribute(Yii::$app->params['personalmail'],0);
+                $model->mobile = $user->getAttribute(Yii::$app->params['mobile'],0);
                 $model->groups = $user->getGroups();
                 $model->dn = $user->getDn();
                 $model->uac = $user->getUserAccountControl();
@@ -483,8 +1412,17 @@ class AdldapController extends Controller
                     }
 
                 } else {
-                    return $this->render('edit_user',
-                        ['model'=>$model]);
+
+                    if ((isset($users)) and (count($users)>1)) {
+                        return $this->render('edit_user',
+                            [
+                                'model'=>$model,
+                                'users'=>$users
+                            ]);
+                    } else {
+                        return $this->render('edit_user',
+                            ['model'=>$model]);
+                    }
                 }
             } else {
                 Yii::$app->session->setFlash('error',
@@ -1075,6 +2013,58 @@ class AdldapController extends Controller
                 ->setFrom(Yii::$app->params['from'], Yii::$app->params['fromName'])
                 ->setCc(Yii::$app->params['cc'])
                 ->setSubject(Yii::$app->params['subjectNew'])
+                ->setTextBody($body)
+                ->send();
+            return true;
+    }
+
+
+    public function sendNewStudent($dni,$fullname,$mail,$personalmail)
+    {
+            $body =
+                "Estimado usuario," . "\n" .
+                "Se ha creado una cuenta institucional en la " . Yii::$app->params['company'] . "\n\n" .
+                "Céd/Pasaporte/Código: " . $dni . "\n" .
+                "Nombres/Apellidos:       " . $fullname . "\n" .
+                "Cuenta institucional:     " . $mail . "\n\n" .
+                "--------------------------------------------------------------------------------------" . "\n" .
+                "Guarde estos datos. Si olvidó su contraseña ingrese en el siguiente enlace:" . "\n" .
+                "https://password.uea.edu.ec" . "\n" .
+                "--------------------------------------------------------------------------------------" . "\n" .
+                "---> Correo enviado por el sistema automático de Gestión de identidad. NO RESPONDA ESTE CORREO <---"
+            ;
+
+            Yii::$app->mailer->compose()
+                ->setTo($personalmail)
+                ->setFrom(Yii::$app->params['from'], Yii::$app->params['fromName'])
+                ->setCc(Yii::$app->params['cc'])
+                ->setSubject('UEA | Datos de su cuenta institucional')
+                ->setTextBody($body)
+                ->send();
+            return true;
+    }
+
+
+    public function sendNewStudentToken($dni,$fullname,$personalmail,$resetToken)
+    {
+            $body =
+                "Estimado/a estudiante," . "\n" .
+                "Correo de validación para obtener su cuenta institucional en la " . Yii::$app->params['company'] . "\n\n" .
+                "Céd/Pasaporte/Código: " . $dni . "\n" .
+                "Nombres/Apellidos:       " . $fullname . "\n\n" .
+                "--------------------------------------------------------------------------------------" . "\n" .
+                "TOKEN: " . "\n" .
+                $resetToken . "\n" .
+                "--------------------------------------------------------------------------------------" . "\n" .
+                "RECUERDE: El TOKEN es valido solo hasta hoy " . date('d-m-Y') .  "  23h59" . "\n" .
+                "---> Correo enviado por el sistema automático de Gestión de identidad. NO RESPONDA ESTE CORREO <---"
+            ;
+
+            Yii::$app->mailer->compose()
+                ->setTo($personalmail)
+                ->setFrom(Yii::$app->params['from'], Yii::$app->params['fromName'])
+                ->setCc(Yii::$app->params['cc'])
+                ->setSubject('UEA | Bienvenido a la Universidad Estatal Amazónica')
                 ->setTextBody($body)
                 ->send();
             return true;

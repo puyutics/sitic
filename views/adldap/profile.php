@@ -1,6 +1,7 @@
 <?php
 
 /* @var $this yii\web\View */
+/* @var $model yii\models\user_profile */
 
 use kartik\tabs\TabsX;
 

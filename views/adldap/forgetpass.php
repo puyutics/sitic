@@ -26,7 +26,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     Si su correo personal es INCORRECTO o NO TIENE ACCESO, por favor comuníquese con <?php echo Yii::$app->params['contact']?>
                 </div>
 
-                <p align="center"><a class="btn btn-lg btn-danger" href="index.php?r=site/identity"> Regresar &raquo;</a></p>
+
+                <p align="center">
+                    <a class="btn btn-primary" href="https://www.uea.edu.ec/soporte" target="_blank"> Cambiar Correo Personal </a>
+                    <a class="btn btn-danger" href="index.php?r=site/identity"> Regresar &raquo;</a>
+                </p>
 
             </div>
         </div>
@@ -82,8 +86,6 @@ $this->params['breadcrumbs'][] = $this->title;
                             ?>
 
                             <p><div class="form-group" align="center">
-                                <?= Html::a(Yii::t('app', 'No, regresar'),
-                                    Url::toRoute(['site/identity']), ['class' => 'btn btn-default']) ?>
                                 <?= Html::submitButton('Sí, Enviar TOKEN',['class' => 'btn btn-danger',
                                     'value'=>'sendToken', 'name'=>'sendToken',
                                     //'onClick'=>'buttonClicked'])
@@ -97,7 +99,9 @@ $this->params['breadcrumbs'][] = $this->title;
                                 Si su correo personal es INCORRECTO o NO TIENE ACCESO, por favor comuníquese con <?php echo Yii::$app->params['contact']?> O utilice la Mesa de Ayuda:
                             </div>
 
-                            <p align="center"><a class="btn btn-primary" href="https://www.uea.edu.ec/soporte" target="_blank"> Cambiar Correo Personal </a></p>
+                            <p align="center">
+                                <a class="btn btn-primary" href="https://www.uea.edu.ec/soporte" target="_blank"> No, Cambiar Correo Personal </a>
+                            </p>
 
                         <?php else: ?>
 
