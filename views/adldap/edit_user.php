@@ -22,7 +22,8 @@ if (isset($_GET['search'])) {
         $samaccountname = $_GET['samaccountname'];
         $user = Yii::$app->ad->getProvider('default')->search()
             ->whereEquals('samaccountname', $samaccountname)
-            ->first();    }
+            ->first();
+    }
 
     if (isset($user)) {
         $sAMAccountname = $user->getAttribute('samaccountname',0);

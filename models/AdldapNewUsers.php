@@ -37,6 +37,19 @@ class AdldapNewUsers extends \yii\db\ActiveRecord
             [['fec_nacimiento'], 'safe'],
             [['status'], 'integer'],
             [['dni', 'nombres', 'apellidos', 'campus', 'carrera', 'email_personal', 'celular'], 'string', 'max' => 255],
+            [['email_personal'], 'email'],
+            [['dni'], 'match',
+                'pattern' => '/^[A-Z0-9]+$/u',
+                'message'=>'{attribute} no puede contener letras minúsculas, espacios en blanco o caracteres especiales'],
+            [['nombres', 'apellidos'], 'match',
+                'pattern' => '/^[A-Z ]+$/u',
+                'message'=>'{attribute} no puede contener letras minúsculas, números, espacios en blanco o caracteres especiales'],
+            [['email_personal'], 'match',
+                'pattern' => '/^[a-z0-9.@]+$/u',
+                'message'=>'{attribute} no puede contener letras mayúsculas, espacios en blanco o caracteres especiales'],
+            [['celular'], 'match',
+                'pattern' => '/^[0-9]+$/u',
+                'message'=>'{attribute} no puede contener letras, espacios en blanco o caracteres especiales'],
         ];
     }
 
@@ -47,15 +60,15 @@ class AdldapNewUsers extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'dni' => 'Dni',
-            'nombres' => 'Nombres',
-            'apellidos' => 'Apellidos',
-            'fec_nacimiento' => 'Fec Nacimiento',
-            'campus' => 'Campus',
-            'carrera' => 'Carrera',
-            'email_personal' => 'Email Personal',
-            'celular' => 'Celular',
-            'status' => 'Status',
+            'dni' => 'CÉDULA / PASAPORTE',
+            'nombres' => 'NOMBRES',
+            'apellidos' => 'APELLIDOS',
+            'fec_nacimiento' => 'FEC. NAC.',
+            'campus' => 'CAMPUS',
+            'carrera' => 'CARRERA',
+            'email_personal' => 'EMAIL PERSONAL',
+            'celular' => 'CELULAR',
+            'status' => 'ESTADO',
         ];
     }
 }

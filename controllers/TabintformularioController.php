@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use Da\QrCode\QrCode;
 use Yii;
 use app\models\TabIntFormulario;
 use app\models\TabIntFormularioSearch;
@@ -14,6 +13,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use kartik\mpdf\Pdf;
+use Da\QrCode\QrCode;
 
 /**
  * TabintformularioController implements the CRUD actions for TabIntFormulario model.

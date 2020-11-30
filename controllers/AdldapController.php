@@ -227,31 +227,31 @@ class AdldapController extends Controller
                     ->andWhere(['fec_nacimiento' => $model->fec_nacimiento])
                     ->one();
 
-                $user = \Yii::$app->ad->search()->findBy(Yii::$app->params['dni'], $model->dni);
-                if (isset($user)) {
-                    $model->samaccountname = $user->getAttribute('samaccountname',0);
-                    $model->firstname = $user->getFirstName();
-                    $model->lastname = $user->getLastName();
-                    $model->mail = $user->getEmail();
-                    $model->commonname = $user->getAttribute('cn',0);
-                    $model->displayname = $user->getDisplayName();
-                    $model->personalmail = $user->getAttribute(Yii::$app->params['personalmail'],0);
-                    $model->mobile = $user->getAttribute(Yii::$app->params['mobile'],0);
-                    $model->groups = $user->getGroups();
-                    $model->dn = $user->getDn();
-                    $model->uac = $user->getUserAccountControl();
-                    $model->department = $user->getDepartment();
-                    $model->title = $user->getTitle();
-
-                    $model->token = hash(Yii::$app->params['algorithm'],
-                        Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
-                    $model->step = 6;
-                    return $this->render('create_student',
-                        ['model' => $model]);
-                }
-
-
                 if (isset($adldapnewuser)) {
+
+                    $user = \Yii::$app->ad->search()->findBy(Yii::$app->params['dni'], $model->dni);
+                    if (isset($user) and ($adldapnewuser->status != 3)) {
+                        $model->samaccountname = $user->getAttribute('samaccountname',0);
+                        $model->firstname = $user->getFirstName();
+                        $model->lastname = $user->getLastName();
+                        $model->mail = $user->getEmail();
+                        $model->commonname = $user->getAttribute('cn',0);
+                        $model->displayname = $user->getDisplayName();
+                        $model->personalmail = $user->getAttribute(Yii::$app->params['personalmail'],0);
+                        $model->mobile = $user->getAttribute(Yii::$app->params['mobile'],0);
+                        $model->groups = $user->getGroups();
+                        $model->dn = $user->getDn();
+                        $model->uac = $user->getUserAccountControl();
+                        $model->department = $user->getDepartment();
+                        $model->title = $user->getTitle();
+
+                        $model->token = hash(Yii::$app->params['algorithm'],
+                            Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
+                        $model->step = 6;
+                        return $this->render('create_student',
+                            ['model' => $model]);
+                    }
+
                     $model->firstname = $adldapnewuser->nombres;
                     $model->lastname = $adldapnewuser->apellidos;
                     $model->personalmail = $adldapnewuser->email_personal;
@@ -1535,7 +1535,21 @@ class AdldapController extends Controller
             and (Yii::$app->session->get('authtype') == 'adldap')) {
             $search = $_GET['search'];
 
-            $user = Yii::$app->ad->getProvider('default')->search()->users()->find($search);
+            if (isset($_GET['samaccountname'])) {
+                $samaccountname = $_GET['samaccountname'];
+                $user = Yii::$app->ad->getProvider('default')->search()
+                    ->whereEquals('samaccountname', $samaccountname)
+                    ->first();
+            } else {
+                $user = Yii::$app->ad->getProvider('default')->search()->users()
+                    ->find($search);
+                $users = Yii::$app->ad->getProvider('default')->search()->users()
+                    ->orWhereContains('samaccountname', $search)
+                    ->orWhereContains('cn', $search)
+                    ->orWhereEquals(Yii::$app->params['dni'], $search)
+                    ->sortBy('samaccountname', 'asc')
+                    ->get();
+            }
 
             if (isset($user)) {
                 $sAMAccountname = $user->getAttribute('samaccountname',0);
@@ -1596,9 +1610,18 @@ class AdldapController extends Controller
                             ['model'=>$model]);
                     }
 
-                } else {
-                    return $this->render('view_user',
-                        ['model'=>$model]);
+                }  else {
+
+                    if ((isset($users)) and (count($users)>1)) {
+                        return $this->render('view_user',
+                            [
+                                'model'=>$model,
+                                'users'=>$users
+                            ]);
+                    } else {
+                        return $this->render('view_user',
+                            ['model'=>$model]);
+                    }
                 }
             } else {
                 Yii::$app->session->setFlash('error',
@@ -1760,26 +1783,24 @@ class AdldapController extends Controller
         $model = new AdldapForgetuserForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 
-
             $post_form = Yii::$app->request->post('AdldapForgetuserForm');
             $post_dni = $post_form['dni'];
 
-            $user = Yii::$app->ad->search()->findBy(Yii::$app->params['dni'], $post_dni);
+            $users = Yii::$app->ad->getProvider('default')->search()->users()
+                ->orWhereEquals(Yii::$app->params['dni'], $post_dni)
+                ->sortBy('samaccountname', 'asc')
+                ->get();
 
+            if (isset($users)) {
 
-            if (isset($user)) {
+                Yii::$app->session->setFlash('successSearch');
 
-                $mail = $user->getAttribute('mail',0);
-                $sAMAccountname = $user->getAttribute('samaccountname',0);
-
-                //Crear Registro de Log en la base de datos
-                $description =
-                    'Consulta de nombre de usuario: ' . $sAMAccountname
-                ;
-                $this->saveLog('forgetUser', $sAMAccountname, $description, $sAMAccountname,'adldap');
-
-                //Mensaje de email enviado
-                Yii::$app->session->setFlash('successMail', $mail);
+                if (isset($users)) {
+                    return $this->render('forgetuser', [
+                        'model'=>$model,
+                        'users'=>$users
+                    ]); //Success
+                }
 
                 return $this->render('forgetuser', [
                     'model'=>$model]); //Success
@@ -1793,7 +1814,7 @@ class AdldapController extends Controller
 
         } else {
             return $this->render('forgetuser', [
-                'model' => $model,
+                'model' => $model
             ]);
         }
 

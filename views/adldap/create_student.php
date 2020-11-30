@@ -19,12 +19,14 @@ $this->title = Yii::t('app', 'Crear estudiante');
 //$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Usuarios'), 'url' => ['adldap/index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-//print_r($model);
+$system_status = false;
 ?>
 
-<?php $form = ActiveForm::begin([
-    'method' => 'post',
-]); ?>
+<?php if ($system_status == true) { ?>
+
+    <?php $form = ActiveForm::begin([
+        'method' => 'post',
+    ]); ?>
 
     <div class="alert alert-info" align="center">
         <h3 align="center">Crear cuenta institucional</h3>
@@ -161,197 +163,236 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
 
-        <?php } elseif ($model->step == 4) { ?>
+    <?php } elseif ($model->step == 4) { ?>
 
-            <div class="edit-form">
-                <div class="col-sm-offset-2 col-sm-8">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">PASO 4: Crear usuario</h3>
+        <div class="edit-form">
+            <div class="col-sm-offset-2 col-sm-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">PASO 4: Crear usuario</h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <?= $form->field($model, 'step')->hiddenInput()->label(false) ?>
+
+                        <?= $form->field($model, 'fec_nacimiento')->hiddenInput()->label(false) ?>
+
+                        <?= $form->field($model, 'dni')->textInput(['readOnly' => true]) ?>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <?= $form->field($model, 'lastname')->textInput(['readOnly' => true]) ?>
+                            </div>
+                            <div class="col-md-6">
+                                <?= $form->field($model, 'firstname')->textInput(['readOnly' => true]) ?>
+                            </div>
                         </div>
-                        <div class="panel-body">
 
-                            <?= $form->field($model, 'step')->hiddenInput()->label(false) ?>
+                        <?= $form->field($model, 'commonname')->textInput(['readOnly' => true]) ?>
 
-                            <?= $form->field($model, 'fec_nacimiento')->hiddenInput()->label(false) ?>
+                        <?= $form->field($model, 'displayname')->textInput(['readOnly' => true]) ?>
 
-                            <?= $form->field($model, 'dni')->textInput(['readOnly' => true]) ?>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <?= $form->field($model, 'lastname')->textInput(['readOnly' => true]) ?>
-                                </div>
-                                <div class="col-md-6">
-                                    <?= $form->field($model, 'firstname')->textInput(['readOnly' => true]) ?>
-                                </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <?= $form->field($model, 'personalmail')->textInput(['readOnly' => true, 'maxlength' => true]) ?>
                             </div>
-
-                            <?= $form->field($model, 'commonname')->textInput(['readOnly' => true]) ?>
-
-                            <?= $form->field($model, 'displayname')->textInput(['readOnly' => true]) ?>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <?= $form->field($model, 'personalmail')->textInput(['readOnly' => true, 'maxlength' => true]) ?>
-                                </div>
-                                <div class="col-md-6">
-                                    <?= $form->field($model, 'mobile')->textInput(['readOnly' => true, 'maxlength' => true]) ?>
-                                </div>
+                            <div class="col-md-6">
+                                <?= $form->field($model, 'mobile')->textInput(['readOnly' => true, 'maxlength' => true]) ?>
                             </div>
-
-                            <?= $form->field($model, 'title')->textInput(['readOnly' => true]) ?>
-
-                            <?= $form->field($model, 'department')->textInput(['readOnly' => true]) ?>
-
-                            <div class="alert alert-warning" align="center">
-                                <h4>Verifique que todos sus datos sean correctos antes de crear el usuario institucional</h4>
-                            </div>
-
-                            <div align="center">
-                                <?= Html::submitButton('CREAR USUARIO',['class' => 'btn btn-danger',
-                                    'onClick'=>'alert("Se procederá a crear su nueva cuenta de usuario institucional")'])
-                                ?>
-                            </div>
-
                         </div>
+
+                        <?= $form->field($model, 'title')->textInput(['readOnly' => true]) ?>
+
+                        <?= $form->field($model, 'department')->textInput(['readOnly' => true]) ?>
+
+                        <div class="alert alert-warning" align="center">
+                            <h4>Verifique que todos sus datos sean correctos antes de crear el usuario institucional</h4>
+                        </div>
+
+                        <div align="center">
+                            <?= Html::submitButton('CREAR USUARIO',['class' => 'btn btn-danger',
+                                'onClick'=>'alert("Se procederá a crear su nueva cuenta de usuario institucional")'])
+                            ?>
+                        </div>
+
                     </div>
                 </div>
             </div>
+        </div>
 
-        <?php } elseif ($model->step == 5) { ?>
+    <?php } elseif ($model->step == 5) { ?>
 
-            <div class="edit-form">
-                <div class="col-sm-offset-2 col-sm-8">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">PASO 5: Configurar Contraseña</h3>
+        <div class="edit-form">
+            <div class="col-sm-offset-2 col-sm-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">PASO 5: Configurar Contraseña</h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <?= $form->field($model, 'step')->hiddenInput()->label(false) ?>
+
+                        <?= $form->field($model, 'fec_nacimiento')->hiddenInput()->label(false) ?>
+
+                        <?= $form->field($model, 'dni')->textInput(['readOnly' => true]) ?>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <?= $form->field($model, 'lastname')->textInput(['readOnly' => true]) ?>
+                            </div>
+                            <div class="col-md-6">
+                                <?= $form->field($model, 'firstname')->textInput(['readOnly' => true]) ?>
+                            </div>
                         </div>
-                        <div class="panel-body">
 
-                            <?= $form->field($model, 'step')->hiddenInput()->label(false) ?>
+                        <?= $form->field($model, 'commonname')->hiddenInput()->label(false) ?>
 
-                            <?= $form->field($model, 'fec_nacimiento')->hiddenInput()->label(false) ?>
+                        <?= $form->field($model, 'displayname')->hiddenInput()->label(false) ?>
 
-                            <?= $form->field($model, 'dni')->textInput(['readOnly' => true]) ?>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <?= $form->field($model, 'lastname')->textInput(['readOnly' => true]) ?>
-                                </div>
-                                <div class="col-md-6">
-                                    <?= $form->field($model, 'firstname')->textInput(['readOnly' => true]) ?>
-                                </div>
-                            </div>
-
-                            <?= $form->field($model, 'commonname')->hiddenInput()->label(false) ?>
-
-                            <?= $form->field($model, 'displayname')->hiddenInput()->label(false) ?>
-
-                            <div class="alert alert-success" align="center">
-                                <h4>Cuenta creada correctamente, por favor configure una contraseña</h4>
-                            </div>
-
-                            <?= $form->field($model, 'samaccountname')->hiddenInput()->label(false) ?>
-
-                            <?= $form->field($model, 'mail')->textInput(['readOnly' => true]) ?>
-
-                            <?= $form->field($model, 'personalmail')->hiddenInput()->label(false) ?>
-
-                            <?= $form->field($model, 'mobile')->hiddenInput()->label(false) ?>
-
-                            <?= $form->field($model, 'title')->hiddenInput()->label(false) ?>
-
-                            <?= $form->field($model, 'department')->hiddenInput()->label(false) ?>
-
-                            <?php if (Yii::$app->session->hasFlash('errorReset')) { ?>
-                                <div class="alert alert-danger">
-                                    <?= Yii::$app->session->getFlash('errorReset') ?>
-                                </div>
-                            <?php } ?>
-
-                            <?= $form->field($model, 'newPassword')->widget(PasswordInput::classname(), [
-                                'pluginOptions' => [
-                                    'showMeter' => false,
-                                    'toggleMask' => true
-                                ]])
-                            ?>
-
-                            <?= $form->field($model, 'verifyNewPassword')->widget(PasswordInput::classname(), [
-                                'pluginOptions' => [
-                                    'showMeter' => false,
-                                    'toggleMask' => true
-                                ]])
-                            ?>
-
-                            <div align="center">
-                                <?= Html::submitButton('Guardar contraseña',['class' => 'btn btn-danger',
-                                    'onClick'=>'alert("Se guardará su nueva contraseña")'])
-                                ?>
-                            </div>
-
+                        <div class="alert alert-success" align="center">
+                            <h4>Cuenta creada correctamente, por favor configure una contraseña</h4>
                         </div>
+
+                        <?= $form->field($model, 'samaccountname')->hiddenInput()->label(false) ?>
+
+                        <?= $form->field($model, 'mail')->textInput(['readOnly' => true]) ?>
+
+                        <?= $form->field($model, 'personalmail')->hiddenInput()->label(false) ?>
+
+                        <?= $form->field($model, 'mobile')->hiddenInput()->label(false) ?>
+
+                        <?= $form->field($model, 'title')->hiddenInput()->label(false) ?>
+
+                        <?= $form->field($model, 'department')->hiddenInput()->label(false) ?>
+
+                        <?php if (Yii::$app->session->hasFlash('errorReset')) { ?>
+                            <div class="alert alert-danger">
+                                <?= Yii::$app->session->getFlash('errorReset') ?>
+                            </div>
+                        <?php } ?>
+
+                        <?= $form->field($model, 'newPassword')->widget(PasswordInput::classname(), [
+                            'pluginOptions' => [
+                                'showMeter' => false,
+                                'toggleMask' => true
+                            ]])
+                        ?>
+
+                        <?= $form->field($model, 'verifyNewPassword')->widget(PasswordInput::classname(), [
+                            'pluginOptions' => [
+                                'showMeter' => false,
+                                'toggleMask' => true
+                            ]])
+                        ?>
+
+                        <div align="center">
+                            <?= Html::submitButton('Guardar contraseña',['class' => 'btn btn-danger',
+                                'onClick'=>'alert("Se guardará su nueva contraseña")'])
+                            ?>
+                        </div>
+
                     </div>
                 </div>
             </div>
+        </div>
 
-        <?php } elseif ($model->step == 6) { ?>
+    <?php } elseif ($model->step == 6) { ?>
 
-            <div class="edit-form">
-                <div class="col-sm-offset-2 col-sm-8">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">PASO 6: Datos de su nueva cuenta institucional</h3>
+        <div class="edit-form">
+            <div class="col-sm-offset-2 col-sm-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">PASO 6: Datos de su nueva cuenta institucional</h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <div class="alert alert-warning" align="center">
+                            <h4>Cuenta creada correctamente, por favor proceda a matricularse</h4>
                         </div>
-                        <div class="panel-body">
 
-                            <div class="alert alert-warning" align="center">
-                                <h4>Cuenta creada correctamente, por favor proceda a matricularse</h4>
+                        <?= $form->field($model, 'step')->hiddenInput()->label(false) ?>
+
+                        <?= $form->field($model, 'fec_nacimiento')->hiddenInput()->label(false) ?>
+
+                        <?= $form->field($model, 'dni')->textInput(['readOnly' => true]) ?>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <?= $form->field($model, 'lastname')->textInput(['readOnly' => true]) ?>
                             </div>
-
-                            <?= $form->field($model, 'step')->hiddenInput()->label(false) ?>
-
-                            <?= $form->field($model, 'fec_nacimiento')->hiddenInput()->label(false) ?>
-
-                            <?= $form->field($model, 'dni')->textInput(['readOnly' => true]) ?>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <?= $form->field($model, 'lastname')->textInput(['readOnly' => true]) ?>
-                                </div>
-                                <div class="col-md-6">
-                                    <?= $form->field($model, 'firstname')->textInput(['readOnly' => true]) ?>
-                                </div>
+                            <div class="col-md-6">
+                                <?= $form->field($model, 'firstname')->textInput(['readOnly' => true]) ?>
                             </div>
+                        </div>
 
-                            <?= $form->field($model, 'commonname')->textInput(['readOnly' => true]) ?>
+                        <?= $form->field($model, 'commonname')->textInput(['readOnly' => true]) ?>
 
-                            <?= $form->field($model, 'displayname')->textInput(['readOnly' => true]) ?>
+                        <?= $form->field($model, 'displayname')->textInput(['readOnly' => true]) ?>
 
-                            <?= $form->field($model, 'samaccountname')->textInput(['readOnly' => true]) ?>
+                        <?= $form->field($model, 'samaccountname')->textInput(['readOnly' => true]) ?>
 
-                            <?= $form->field($model, 'mail')->textInput(['readOnly' => true]) ?>
+                        <?= $form->field($model, 'mail')->textInput(['readOnly' => true]) ?>
 
-                            <?= $form->field($model, 'personalmail')->textInput(['readOnly' => true]) ?>
+                        <?= $form->field($model, 'personalmail')->textInput(['readOnly' => true]) ?>
 
-                            <?= $form->field($model, 'mobile')->textInput(['readOnly' => true]) ?>
+                        <?= $form->field($model, 'mobile')->textInput(['readOnly' => true]) ?>
 
-                            <?= $form->field($model, 'title')->textInput(['readOnly' => true]) ?>
+                        <?= $form->field($model, 'title')->textInput(['readOnly' => true]) ?>
 
-                            <?= $form->field($model, 'department')->textInput(['readOnly' => true]) ?>
+                        <?= $form->field($model, 'department')->textInput(['readOnly' => true]) ?>
 
-                            <div align="center">
-                                <?php echo Html::a('Matricularme', 'https://www.uea.edu.ec/siad2nv', [
+                        <?php
+                        $user = Yii::$app->ad->getProvider('default')->search()
+                            ->whereEquals('samaccountname', $model->samaccountname)
+                            ->first();
+
+                        $today = strtotime(date('Y-m-d H:i:s'));
+                        $lastSetPassword = strtotime($user->getPasswordLastSetDate());
+                        $diff = round(($today - $lastSetPassword)/86400);
+                        ?>
+
+                        <div align="left">
+                            <p><b>Último cambio de contraseña: </b>
+                                <?php
+                                echo $diff . ' días (' . $user->getPasswordLastSetDate() . ')';
+                                ?>
+                            </p>
+                        </div>
+
+                        <br>
+
+                        <div align="center">
+                            <?php
+                            if ($diff < 180) {
+                                echo Html::a('Matricularme', 'https://www.uea.edu.ec/siad2nv', [
                                     'class'=>'btn btn-success',
                                     'target'=>'_blank',
                                     'data-toggle'=>'tooltip',
                                     'title'=>'Matricularme SIAD Nivelación'
-                                ]); ?>
-                            </div>
-
+                                ]);
+                            } else {
+                                echo Html::a('Contraseña caducada. Cambiar contraseña', 'https://password.uea.edu.ec', [
+                                    'class'=>'btn btn-danger',
+                                    'target'=>'_blank',
+                                    'data-toggle'=>'tooltip',
+                                    'title'=>'Contraseña caducada. Cambiar contraseña'
+                                ]);
+                            }
+                            ?>
                         </div>
+
                     </div>
                 </div>
             </div>
-        <?php } ?>
+        </div>
+    <?php } ?>
 
-<?php ActiveForm::end(); ?>
+    <?php ActiveForm::end(); ?>
+
+
+
+<?php } else { ?>
+    <div class="alert alert-info" align="center">
+        <h3 align="center">Sistema no habilitado</h3>
+    </div>
+<?php } ?>

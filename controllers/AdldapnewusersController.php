@@ -26,7 +26,7 @@ class AdldapnewusersController extends Controller
                 'only' => ['create','delete','index','update','view'],
                 'rules' => [
                     [
-                        'actions' => ['create','index'],
+                        'actions' => ['create','index','update','view'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
@@ -92,7 +92,8 @@ class AdldapnewusersController extends Controller
         $model = new AdldapNewUsers();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            //return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
         return $this->render('create', [
@@ -112,7 +113,8 @@ class AdldapnewusersController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            //return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [

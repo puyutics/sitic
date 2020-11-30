@@ -29,6 +29,15 @@ use yii\helpers\Html;
             <p align="center"><a class="btn btn-success" href="index.php?r=adldap/edituser"> Editar usuario &raquo;</a></p>
         </div>
         <div class="col-lg-3">
+            <h2 align="center">Postulantes</h2>
+
+            <div align="center">
+                <a href="index.php?r=adldapnewusers/index"><?= Html::img('images/user_search.png');?></a>
+            </div>
+
+            <p align="center"><a class="btn btn-success" href="index.php?r=adldapnewusers/index"> Gestionar Postulantes &raquo;</a></p>
+        </div>
+        <div class="col-lg-3">
             <h2 align="center">Ver usuarios</h2>
 
             <div align="center">
@@ -37,6 +46,9 @@ use yii\helpers\Html;
 
             <p align="center"><a class="btn btn-success" href="index.php?r=adldap/viewuser"> Ver usuario &raquo;</a></p>
         </div>
+    </div>
+
+    <div class="row">
         <div class="col-lg-3">
             <h2 align="center">Ver Grupos</h2>
 

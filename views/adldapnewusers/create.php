@@ -5,13 +5,17 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\AdldapNewUsers */
 
-$this->title = 'Create Adldap New Users';
-$this->params['breadcrumbs'][] = ['label' => 'Adldap New Users', 'url' => ['index']];
+$this->title = 'Crear Estudiante';
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Gestión TI'), 'url' => ['site/management']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Usuarios'), 'url' => ['adldap/index']];
+$this->params['breadcrumbs'][] = ['label' => 'Estudiantes', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="adldap-new-users-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="alert alert-info" align="center">
+        <h3 align="center"><?= Html::encode($this->title) ?></h3>
+    </div>
 
     <?= $this->render('_form', [
         'model' => $model,

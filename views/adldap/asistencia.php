@@ -48,13 +48,6 @@ if (isset($dni)) {
                     ],
 
                 ],
-                'bordered' => true,
-                'condensed'=> true,
-                'enableEditMode'=>false,
-                'panel'=>[
-                    'heading'=> 'DATOS DEL SISTEMA DE CONTROL DE ASISTENCIA',
-                    'type'=>DetailView::TYPE_PRIMARY,
-                ],
             ]) ?>
 
             <?php echo TabsX::widget([

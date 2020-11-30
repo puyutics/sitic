@@ -62,17 +62,17 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-left'],
         'items' => [
             [
-                'label' => 'Identidad',
+                'label' => 'Cuenta Institucional',
                 'items' => [
-                    ['label' => '.. Identidad', 'url' => 'index.php?r=site/identity'],
-                    '<li class="divider"></li>',
-                    ['label' => 'Crear cuenta', 'url' => 'index.php?r=adldap/createstudent'],
-                    ['label' => 'Cambiar Contraseña', 'url' => 'index.php?r=adldap/forgetpass'],
-                    ['label' => 'Mi perfil', 'url' => 'index.php?r=adldap/profile'],
+                    //['label' => 'Crear cuenta', 'url' => 'index.php?r=adldap/createstudent'],
+                    //['label' => 'Cambiar Contraseña', 'url' => 'index.php?r=adldap/forgetpass'],
+                    ['label' => 'Mi cuenta', 'url' => 'index.php?r=adldap/profile'],
                     '<li class="divider"></li>',
                     //'<li class="dropdown-header">Dropdown Header</li>',
                     ['label' => 'Olvidaste tu usuario', 'url' => 'index.php?r=adldap/forgetuser'],
-                    ['label' => 'Olvidaste tu contraseña', 'url' => 'index.php?r=adldap/forgetpass'],
+                    ['label' => 'Cambiar contraseña', 'url' => 'index.php?r=adldap/forgetpass'],
+                    '<li class="divider"></li>',
+                    ['label' => '.. Mas opciones', 'url' => 'index.php?r=site/identity'],
                 ],
             ],
         ],
@@ -179,7 +179,7 @@ AppAsset::register($this);
                 Puyutics / Sitic</a> &copy;
             <?= date('Y') ?>. GNU GPLv3
              -
-            <a href="mailto:sitic@uea.edu.ec?subject=Feedback"> Problemas y Sugerencias </a>
+            <a href="mailto:sitic@uea.edu.ec?subject=SITIC | Feedback"> Problemas y Sugerencias </a>
              -
             IP: <?= Yii::$app->request->userIP; ?>
         </p>

@@ -8,8 +8,8 @@ use yii\widgets\ActiveForm;
 use yii\captcha\Captcha;
 use yii\helpers\Url;
 
-$this->title = 'Olvidaste tu contraseña';
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Identidad'), 'url' => ['site/identity']];
+$this->title = 'Cambiar contraseña';
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Cuenta institucional'), 'url' => ['site/identity']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

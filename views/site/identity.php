@@ -50,7 +50,7 @@ $this->title = 'SITIC - Sistema Integrado para la Gestión de Tecnologías de la
             <div class="col-lg-3">
 
                 <div align="center">
-                    <a href="https://www.uea.edu.ec/ayuda" target="_blank"><?= Html::img('images/user_email.png');?></a>
+                    <a href="https://www.uea.edu.ec/soporte/" target="_blank"><?= Html::img('images/user_email.png');?></a>
                 </div>
 
                 <p align="center"><a class="btn btn-lg btn-primary" href="https://www.uea.edu.ec/soporte" target="_blank"> Cambiar Correo Personal &raquo;</a></p>

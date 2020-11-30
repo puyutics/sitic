@@ -10,6 +10,7 @@ use yii\helpers\ArrayHelper;
 use yii\data\ActiveDataProvider;
 
 /* @var $this yii\web\View */
+/* @var $model app\models\ItProjectsSearch */
 /* @var $searchModel app\models\ItProjectsPurchaseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 ?>
