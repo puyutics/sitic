@@ -231,6 +231,57 @@ class AdldapController extends Controller
 
                     $user = \Yii::$app->ad->search()->findBy(Yii::$app->params['dni'], $model->dni);
                     if (isset($user) and ($adldapnewuser->status != 3)) {
+
+                        //OBTENER PRIMERA INICIAL DE CADA NOMBRE
+                        $fn = explode(' ', $adldapnewuser->nombres);
+                        $result_fn = '';
+                        foreach($fn as $t) {
+                            $result_fn .= $t[0];
+                        }
+                        if (strlen($result_fn)>2) {
+                            $result_fn = substr($result_fn,0,2);
+                        }
+
+                        //OBTENER EL PRIMER APELLIDO
+                        $ln = explode(' ', $adldapnewuser->apellidos);
+                        $result_ln = $ln[0];
+
+                        //OBTENER PRIMERA INICIAL DEL SEGUNDO APELLIDO
+                        $ln2 = explode(' ', $adldapnewuser->apellidos);
+                        $result_ln2= '';
+                        foreach($ln2 as $t) {
+                            $result_ln2 .= $t[0];
+                        }
+                        if (strlen($result_ln2)>1) {
+                            $result_ln2 = substr($result_ln2,1,1);
+                        }
+
+                        //VERIFICAR SI EXISTE EL USUARIO EN EL NUEVO FORMATO
+                        $samaccountname = strtolower($result_fn . '.' . $result_ln . $result_ln2);
+                        if ($samaccountname == $user->getAttribute('samaccountname',0)) {
+                            $adldapnewuser->status = 3;
+                            if ($adldapnewuser->save(false)) {
+
+                                $model->samaccountname = $user->getAttribute('samaccountname',0);
+                                $model->mail = $user->getEmail();
+
+                                $model->firstname = $adldapnewuser->nombres;
+                                $model->lastname = $adldapnewuser->apellidos;
+                                $model->personalmail = $adldapnewuser->email_personal;
+                                $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                                $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
+                                $model->mobile = $adldapnewuser->celular;
+                                $model->title = 'Estudiante';
+                                $model->department = $adldapnewuser->carrera;
+                                $model->token = hash(Yii::$app->params['algorithm'],
+                                    Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
+                                $model->step = 5;
+                                return $this->render('create_student',
+                                    ['model' => $model]);
+                            }
+                        }
+
+
                         $model->samaccountname = $user->getAttribute('samaccountname',0);
                         $model->firstname = $user->getFirstName();
                         $model->lastname = $user->getLastName();
@@ -247,7 +298,7 @@ class AdldapController extends Controller
 
                         $model->token = hash(Yii::$app->params['algorithm'],
                             Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
-                        $model->step = 6;
+                        $model->step = 0;
                         return $this->render('create_student',
                             ['model' => $model]);
                     }
@@ -570,7 +621,7 @@ class AdldapController extends Controller
                             $model->step = 4;
                             $adldapnewuser->email_personal = $model->personalmail;
                             $adldapnewuser->status = 2;
-                            $adldapnewuser->save();
+                            $adldapnewuser->save(false);
 
                             return $this->render('create_student',['model' => $model]);
 
@@ -854,7 +905,7 @@ class AdldapController extends Controller
                                     $this->saveLog('adldapCreateUser', $model->samaccountname, $description, $model->samaccountname,'adldap');
 
                                     $adldapnewuser->status = 3;
-                                    $adldapnewuser->save();
+                                    $adldapnewuser->save(false);
                                     $model->step = 5;
                                     return $this->render('create_student',
                                         ['model' => $model]);
@@ -1032,27 +1083,117 @@ class AdldapController extends Controller
                                 $user->save();
 
                                 // Agregar licencias para estudiantes
-                                $groupObject = \Yii::$app->ad->search()->findBy('cn', 'Microsoft 365 Apps para Estudiantes');
-                                $user->addGroup($groupObject);
-                                $groupObject = \Yii::$app->ad->search()->findBy('cn', 'Power BI (free)');
-                                $user->addGroup($groupObject);
-                                $groupObject = \Yii::$app->ad->search()->findBy('cn', 'Office 365 A1 para Estudiantes');
-                                $user->addGroup($groupObject);
-                                $groupObject = \Yii::$app->ad->search()->findBy('cn', 'estudiantes');
-                                $user->addGroup($groupObject);
-                                $groupObject = \Yii::$app->ad->search()->findBy('cn', '3gm4v0hkup5dx55');
-                                $user->addGroup($groupObject);
-                                if ($adldapnewuser->campus == 'PUYO') {
-                                    $groupObject = \Yii::$app->ad->search()->findBy('cn', 'ob1suke36w6hpyl');
+                                $groupNames = $user->getGroupNames($recursive = true);
+                                if (count($groupNames)>1) {
+                                    $existGroup = '';
+                                    foreach ($groupNames as $groupName) {
+                                        if ($groupName == 'Microsoft 365 Apps para Estudiantes') {
+                                            $existGroup = 'SI';
+                                        }
+                                    }
+                                    if ($existGroup != 'SI') {
+                                        $groupObject = \Yii::$app->ad->search()->findBy('cn', 'Microsoft 365 Apps para Estudiantes');
+                                        $user->addGroup($groupObject);
+                                    }
+                                    $existGroup = '';
+                                    foreach ($groupNames as $groupName) {
+                                        if ($groupName == 'Power BI (free)') {
+                                            $existGroup = 'SI';
+                                        }
+                                    }
+                                    if ($existGroup != 'SI') {
+                                        $groupObject = \Yii::$app->ad->search()->findBy('cn', 'Power BI (free)');
+                                        $user->addGroup($groupObject);
+                                    }
+                                    $existGroup = '';
+                                    foreach ($groupNames as $groupName) {
+                                        if ($groupName == 'Office 365 A1 para Estudiantes') {
+                                            $existGroup = 'SI';
+                                        }
+                                    }
+                                    if ($existGroup != 'SI') {
+                                        $groupObject = \Yii::$app->ad->search()->findBy('cn', 'Office 365 A1 para Estudiantes');
+                                        $user->addGroup($groupObject);
+                                    }
+                                    $existGroup = '';
+                                    foreach ($groupNames as $groupName) {
+                                        if ($groupName == 'estudiantes') {
+                                            $existGroup = 'SI';
+                                        }
+                                    }
+                                    if ($existGroup != 'SI') {
+                                        $groupObject = \Yii::$app->ad->search()->findBy('cn', 'estudiantes');
+                                        $user->addGroup($groupObject);
+                                    }
+                                    $existGroup = '';
+                                    foreach ($groupNames as $groupName) {
+                                        if ($groupName == '3gm4v0hkup5dx55') {
+                                            $existGroup = 'SI';
+                                        }
+                                    }
+                                    if ($existGroup != 'SI') {
+                                        $groupObject = \Yii::$app->ad->search()->findBy('cn', '3gm4v0hkup5dx55');
+                                        $user->addGroup($groupObject);
+                                    }
+                                    if ($adldapnewuser->campus == 'PUYO') {
+                                        $existGroup = '';
+                                        foreach ($groupNames as $groupName) {
+                                            if ($groupName == 'ob1suke36w6hpyl') {
+                                                $existGroup = 'SI';
+                                            }
+                                        }
+                                        if ($existGroup != 'SI') {
+                                            $groupObject = \Yii::$app->ad->search()->findBy('cn', 'ob1suke36w6hpyl');
+                                            $user->addGroup($groupObject);
+                                        }
+                                    }
+                                    if ($adldapnewuser->campus == 'LAGO AGRIO') {
+                                        $existGroup = '';
+                                        foreach ($groupNames as $groupName) {
+                                            if ($groupName == 'djga0oexs3jesqu') {
+                                                $existGroup = 'SI';
+                                            }
+                                        }
+                                        if ($existGroup != 'SI') {
+                                            $groupObject = \Yii::$app->ad->search()->findBy('cn', 'djga0oexs3jesqu');
+                                            $user->addGroup($groupObject);
+                                        }
+                                    }
+                                    if ($adldapnewuser->campus == 'PANGUI') {
+                                        $existGroup = '';
+                                        foreach ($groupNames as $groupName) {
+                                            if ($groupName == 'ohgs7tioixj8dr4') {
+                                                $existGroup = 'SI';
+                                            }
+                                        }
+                                        if ($existGroup != 'SI') {
+                                            $groupObject = \Yii::$app->ad->search()->findBy('cn', 'ohgs7tioixj8dr4');
+                                            $user->addGroup($groupObject);
+                                        }
+                                    }
+                                } else {
+                                    $groupObject = \Yii::$app->ad->search()->findBy('cn', 'Microsoft 365 Apps para Estudiantes');
                                     $user->addGroup($groupObject);
-                                }
-                                if ($adldapnewuser->campus == 'LAGO AGRIO') {
-                                    $groupObject = \Yii::$app->ad->search()->findBy('cn', 'djga0oexs3jesqu');
+                                    $groupObject = \Yii::$app->ad->search()->findBy('cn', 'Power BI (free)');
                                     $user->addGroup($groupObject);
-                                }
-                                if ($adldapnewuser->campus == 'PANGUI') {
-                                    $groupObject = \Yii::$app->ad->search()->findBy('cn', 'ohgs7tioixj8dr4');
+                                    $groupObject = \Yii::$app->ad->search()->findBy('cn', 'Office 365 A1 para Estudiantes');
                                     $user->addGroup($groupObject);
+                                    $groupObject = \Yii::$app->ad->search()->findBy('cn', 'estudiantes');
+                                    $user->addGroup($groupObject);
+                                    $groupObject = \Yii::$app->ad->search()->findBy('cn', '3gm4v0hkup5dx55');
+                                    $user->addGroup($groupObject);
+                                    if ($adldapnewuser->campus == 'PUYO') {
+                                        $groupObject = \Yii::$app->ad->search()->findBy('cn', 'ob1suke36w6hpyl');
+                                        $user->addGroup($groupObject);
+                                    }
+                                    if ($adldapnewuser->campus == 'LAGO AGRIO') {
+                                        $groupObject = \Yii::$app->ad->search()->findBy('cn', 'djga0oexs3jesqu');
+                                        $user->addGroup($groupObject);
+                                    }
+                                    if ($adldapnewuser->campus == 'PANGUI') {
+                                        $groupObject = \Yii::$app->ad->search()->findBy('cn', 'ohgs7tioixj8dr4');
+                                        $user->addGroup($groupObject);
+                                    }
                                 }
 
                                 //Crear Registro de Log en la base de datos
@@ -1061,13 +1202,17 @@ class AdldapController extends Controller
                                 ;
                                 $this->saveLog('resetPasswordToken', $model->samaccountname, $description, $model->samaccountname,'adldap');
 
-                                //Actualizar el correo institucional en SIAD Nivelacion
+                                //Actualizar datos en SIAD Nivelacion
                                 $estudianteNivelacion = \app\models\EstudiantesNivelacion::find()
                                     ->where(['cedula_pasaporte' => $model->dni])
                                     ->one();
                                 if (isset($estudianteNivelacion)) {
+                                    $estudianteNivelacion->FechNacimPer = $model->fec_nacimiento;
+                                    $estudianteNivelacion->CelularInfPer = $model->mobile;
+                                    $estudianteNivelacion->mailPer = $model->personalmail;
                                     $estudianteNivelacion->mailInst = $model->mail;
-                                    $estudianteNivelacion->save();
+                                    $estudianteNivelacion->statusper = 1;
+                                    $estudianteNivelacion->save(false);
                                 }
 
                                 //Enviar usuario creado por email
@@ -1081,7 +1226,7 @@ class AdldapController extends Controller
                                 Yii::$app->session->setFlash('successReset');
 
                                 $adldapnewuser->status = 4;
-                                $adldapnewuser->save();
+                                $adldapnewuser->save(false);
                                 $model->step = 6;
                                 return $this->render('create_student',
                                     ['model'=>$model]);
@@ -1345,32 +1490,42 @@ class AdldapController extends Controller
                         // https://github.com/Adldap2/Adldap2/blob/master/docs/models/traits/has-member-of.md#adding-a-group
                         // find user
                         $userObject = \Yii::$app->ad->search()->findBy('sAMAccountname', $sAMAccountname);
-                        // find group
-                        $groupObject = \Yii::$app->ad->search()->findBy('cn', $model->addGroup);
-                        // add group to user
-                        $userObject->addGroup($groupObject);
 
-                        if ($groupObject != null && $groupObject->exists && $userObject->save()) {
-
-                            //Crear Registro de Log en la base de datos
-                            $description =
-                                'Grupo agregado: ' . $model->addGroup
-                            ;
-                            $this->saveLog('addGroup', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
-
-                            //Mensaje de grupo eliminado
-                            Yii::$app->session->setFlash('success', 'Grupo agregado correctamente');
-
-                            $user = \Yii::$app->ad->search()->findBy('sAMAccountname', $sAMAccountname);
-                            $model->groups = $user->getGroups();
-                            $model->addGroup = '';
-                            $model->deleteGroup = '';
-
-                        } else {
-                            //Mensaje de grupo eliminado
-                            Yii::$app->session->setFlash('error', 'Error al agregar grupo');
+                        $groupNames = $userObject->getGroupNames($recursive = true);
+                        $existGroup = '';
+                        foreach ($groupNames as $groupName) {
+                            if ($groupName == $model->addGroup) {
+                                $existGroup = 'SI';
+                            }
                         }
 
+                        if ($existGroup != 'SI') {
+                            // find group
+                            $groupObject = \Yii::$app->ad->search()->findBy('cn', $model->addGroup);
+                            // add group to user
+                            $userObject->addGroup($groupObject);
+
+                            if ($groupObject != null && $groupObject->exists && $userObject->save()) {
+
+                                //Crear Registro de Log en la base de datos
+                                $description =
+                                    'Grupo agregado: ' . $model->addGroup
+                                ;
+                                $this->saveLog('addGroup', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
+
+                                //Mensaje de grupo eliminado
+                                Yii::$app->session->setFlash('success', 'Grupo agregado correctamente');
+
+                                $user = \Yii::$app->ad->search()->findBy('sAMAccountname', $sAMAccountname);
+                                $model->groups = $user->getGroups();
+                                $model->addGroup = '';
+                                $model->deleteGroup = '';
+
+                            } else {
+                                //Mensaje de grupo eliminado
+                                Yii::$app->session->setFlash('error', 'Error al agregar grupo');
+                            }
+                        }
                         return $this->render('edit_user',
                             ['model'=>$model]);
                     }

@@ -5,16 +5,17 @@ use kartik\grid\GridView;
 use yii\helpers\Url;
 
 /* @var $this yii\web\View */
+/* @var $model yii\web\View */
 /* @var $searchModel app\models\EstudiantesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $dni = $model->dni;
 
-$searchModel = new app\models\EstudiantesSearch();
+$searchModel = new \app\models\EstudiantesNivelacionSearch();
 $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 $dataProvider->query->Where('CIInfPer = "' . $dni .'"');
 
-$searchModelMatricula = new \app\models\MatriculaSearch();
+$searchModelMatricula = new \app\models\MatriculaNivelacionSearch();
 $searchModelMatricula->CIInfPer = $dni;
 //$searchModelMatricula->idPer = '34';
 $dataProviderMatricula = $searchModelMatricula->search(Yii::$app->request->queryParams);
@@ -48,7 +49,7 @@ $dataProviderMatricula->sort->defaultOrder = [
             'NombInfPer',
             //'NacionalidadPer',
             //'EtniaPer',
-            'FechNacimPer',
+            //'FechNacimPer',
             //'LugarNacimientoPer',
             //'GeneroPer',
             //'EstadoCivilPer',
@@ -80,7 +81,7 @@ $dataProviderMatricula->sort->defaultOrder = [
                 'buttons'=>[
                     'update' => function ($url, $model) {
                         return Html::a('<span class="btn btn-primary center-block"><i class="fa fa-fw fa-edit"></i>Editar</span>',
-                            Url::to(['estudiantes/update',
+                            Url::to(['estudiantesnivelacion/update',
                                 'id' => $model->CIInfPer
                             ]),
                             ['title' => Yii::t('yii', 'Editar Estudiante')]);

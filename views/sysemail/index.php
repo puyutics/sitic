@@ -10,6 +10,9 @@ use yii\helpers\Url;
 
 $this->title = 'Servicio de Email';
 $this->params['breadcrumbs'][] = $this->title;
+
+$dataProvider->sort->defaultOrder = ['id' => SORT_DESC];
+
 ?>
 <div class="sys-email-index">
 

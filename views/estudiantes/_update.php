@@ -20,6 +20,8 @@ use yii\bootstrap\ActiveForm;
 
     <?= $form->field($model, 'mailInst')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'statusper')->dropDownList(['1'=>'ACTIVO','0'=>'INACTIVO']) ?>
+
     <div class="form-group" align="center">
         <?= Html::submitButton(Yii::t('app', 'Guardar'), ['class' => 'btn btn-lg btn btn-success']) ?>
     </div>

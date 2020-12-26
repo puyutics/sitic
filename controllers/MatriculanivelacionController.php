@@ -3,17 +3,17 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\SysEmail;
-use app\models\SysEmailSearch;
+use app\models\MatriculaNivelacion;
+use app\models\MatriculaNivelacionSearch;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * SysemailController implements the CRUD actions for SysEmail model.
+ * MatriculanivelacionController implements the CRUD actions for MatriculaNivelacion model.
  */
-class SysemailController extends Controller
+class MatriculanivelacionController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -23,18 +23,16 @@ class SysemailController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','delete','index','update','send','sendadldapgroup','view'],
+                'only' => ['create','delete','index','update','view'],
                 'rules' => [
                     [
-                        'actions' => ['create','index','update','send','sendadldapgroup',
-                            'view'],
+                        'actions' => ['index','view'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
                     [
-                        'actions' => ['view','create','index','update','send'],
-                        'allow' => true,
-                        'roles' => ['rolComunicados'],
+                        'actions' => ['create','update','index','view'],
+                        'allow' => false,
                     ],
                     [
                         'actions' => ['delete'],
@@ -52,12 +50,12 @@ class SysemailController extends Controller
     }
 
     /**
-     * Lists all SysEmail models.
+     * Lists all MatriculaNivelacion models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new SysEmailSearch();
+        $searchModel = new MatriculaNivelacionSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -67,35 +65,29 @@ class SysemailController extends Controller
     }
 
     /**
-     * Displays a single SysEmail model.
-     * @param integer $id
+     * Displays a single MatriculaNivelacion model.
+     * @param string $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-        $id = base64_decode($id);
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new SysEmail model.
+     * Creates a new MatriculaNivelacion model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new SysEmail();
+        $model = new MatriculaNivelacion();
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->datetime = date('Y-m-d H:i:s');
-            $model->to = json_encode($model->to);
-
-            if ($model->save()) {
-                return $this->redirect(['view', 'id' => base64_encode($model->id)]);
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->idMatricula]);
         }
 
         return $this->render('create', [
@@ -104,25 +96,18 @@ class SysemailController extends Controller
     }
 
     /**
-     * Updates an existing SysEmail model.
+     * Updates an existing MatriculaNivelacion model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
+     * @param string $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
     {
-        $id = base64_decode($id);
         $model = $this->findModel($id);
-        $model->to = json_decode($model->to);
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->datetime = date('Y-m-d H:i:s');
-            $model->to = json_encode($model->to);
-
-            if ($model->save()) {
-                return $this->redirect(['view', 'id' => base64_encode($model->id)]);
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->idMatricula]);
         }
 
         return $this->render('update', [
@@ -131,9 +116,9 @@ class SysemailController extends Controller
     }
 
     /**
-     * Deletes an existing SysEmail model.
+     * Deletes an existing MatriculaNivelacion model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
+     * @param string $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -145,50 +130,18 @@ class SysemailController extends Controller
     }
 
     /**
-     * Finds the SysEmail model based on its primary key value.
+     * Finds the MatriculaNivelacion model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return SysEmail the loaded model
+     * @param string $id
+     * @return MatriculaNivelacion the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = SysEmail::findOne($id)) !== null) {
+        if (($model = MatriculaNivelacion::findOne($id)) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
-
-
-    public function actionSend($id,$type)
-    {
-        $id = base64_decode($id);
-        $type = base64_decode($type);
-
-        //Datos
-        $model = $this->findModel($id);
-        $head = $this->renderPartial('_head');
-        $footer = $this->renderPartial('_footer');
-
-        return $this->render('send', [
-            'model' => $model,
-            'type' => $type,
-            'head' => $head,
-            'footer' => $footer,
-        ]);
-
-    }
-
-    public function actionSendadldapgroup($id)
-    {
-        $id = base64_decode($id);
-        $model = $this->findModel($id);
-
-        $head = $this->renderPartial('_head');
-        $footer = $this->renderPartial('_footer');
-
-
-    }
-
 }

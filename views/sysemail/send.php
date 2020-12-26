@@ -19,9 +19,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <h3 align="center"><?= Html::encode($this->title) ?></h3>
     </div>
 
-    <?php if ($type == 'adldapgroup') {
+    <?php if ($type == 'adldapgroup') { ?>
 
-        if (Yii::$app->session->get('authtype') == 'adldap') {
+        <?php if (Yii::$app->session->get('authtype') == 'adldap') {
             $modelAdldapGroup = new \app\models\AdldapGroupForm();
 
             // find group
@@ -54,12 +54,12 @@ $this->params['breadcrumbs'][] = $this->title;
             if ($model->save()) {
                 //return $this->redirect(['view', 'id' => base64_encode($model->id)]);
             }
-        }
+        } ?>
 
 
-    } else if ($type == 'emailuser') {
+    <?php } else if ($type == 'emailuser') { ?>
 
-        Yii::$app->mailerComunicados->compose()
+        <?php Yii::$app->mailerComunicados->compose()
             //->setTo($model->to)
             ->setFrom($model->from)
             ->setReplyTo($model->replyto)
@@ -72,16 +72,16 @@ $this->params['breadcrumbs'][] = $this->title;
         $model->status = 2;
         if ($model->save()) {
             //return $this->redirect(['view', 'id' => base64_encode($model->id)]);
-        }
+        } ?>
 
-    } else if ($type == 'o365list') {
+    <?php } else if ($type == 'o365list') { ?>
 
-        $destinatarios = json_decode($model->to);
+        <?php $destinatarios = json_decode($model->to);
 
         //enviarEmail
         foreach($destinatarios as $destinatario) {
             Yii::$app->mailerComunicados->compose()
-                //->setTo($model->to)
+                ->setTo($model->replyto)
                 ->setFrom($model->from)
                 ->setReplyTo($model->replyto)
                 ->setBcc($destinatario)
@@ -89,16 +89,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 ->setHtmlBody($head . $model->body . $footer)
                 //->attach('uploads/tabintformulario/contrato/' . $filename)
                 ->send();
-
-            echo('Correo enviado a: ' . $destinatario);
-
         }
 
+        ?>
+        <div class="alert alert-success" align="center">
+            <h4 align="center">Su comunicado ha sido enviado correctamente.</h4>
+        </div>
+        <?php
         $model->status = 2;
         if ($model->save()) {
             //return $this->redirect(['view', 'id' => base64_encode($model->id)]);
-        }
+        } ?>
 
-    } ?>
+    <?php } ?>
 
 </div>

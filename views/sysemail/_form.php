@@ -31,7 +31,9 @@ $email = $user->getEmail();
     ], ['value' => 'comunicados@uea.edu.ec'])
     ?>
 
-    <?= $form->field($model, 'replyto')->widget(Select2::classname(), [
+    <?= $form->field($model, 'replyto')->textInput(['readOnly' => true, 'value' => $email]) ?>
+
+    <?php /*echo $form->field($model, 'replyto')->widget(Select2::classname(), [
         'data' =>ArrayHelper::map(\app\models\UserProfile::find()->all(), 'mail', 'mail'),
         'options' => [
             'placeholder' => 'Seleccionar usuario',
@@ -40,28 +42,18 @@ $email = $user->getEmail();
         'pluginOptions' => [
             'allowClear' => true
         ],
-    ]); ?>
-
-    <?php //= $form->field($model, 'to')->textarea(['rows' => 6]) ?>
+    ]); */?>
 
    <?php echo $form->field($model, 'to')->widget(Select2::classname(), [
         'data' => Yii::$app->params['listas-correo'],
         'options' => [
-            'placeholder' => 'Seleccionar lista',
+            'placeholder' => 'Seleccionar listas de correo',
             'multiple' => true
         ],
         'pluginOptions' => [
             'allowClear' => true
         ],
     ]); ?>
-
-    <?php /*echo $form->field($model, 'to')->widget(Select2::classname(), [
-        'data' =>ArrayHelper::map(\app\models\UserProfile::find()->all(), 'mail', 'mail'),
-        'options' => ['placeholder' => 'Seleccionar usuario'],
-        'pluginOptions' => [
-            'allowClear' => true
-        ],
-    ]); */?>
 
     <?php //= $form->field($model, 'cc')->textarea(['rows' => 6]) ?>
 

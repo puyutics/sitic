@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'dni',
             'nombres',
             'apellidos',
-            //'fec_nacimiento',
+            'fec_nacimiento',
             [
                 'attribute' => 'campus',
                 'filter'=>[
@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ],
             //'email_personal:email',
-            //'celular',
+            'celular',
             [
                 'attribute' => 'status',
                 'value' => function($model) {

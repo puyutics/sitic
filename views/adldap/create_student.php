@@ -19,20 +19,94 @@ $this->title = Yii::t('app', 'Crear estudiante');
 //$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Usuarios'), 'url' => ['adldap/index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-$system_status = false;
+$system_status = true;
 ?>
 
 <?php if ($system_status == true) { ?>
 
     <?php $form = ActiveForm::begin([
         'method' => 'post',
+        'options' => ['autocomplete' => 'off'],
     ]); ?>
 
     <div class="alert alert-info" align="center">
         <h3 align="center">Crear cuenta institucional</h3>
     </div>
 
-    <?php if ($model->step == 1) { ?>
+    <?php if ($model->step == 0) { ?>
+
+        <div class="edit-form">
+            <div class="col-sm-offset-2 col-sm-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">PASO 1: Validar datos del usuario</h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <div class="alert alert-danger" align="center">
+                            <h3>Usted ya tiene una cuenta institucional creada anteriormente</h3>
+                        </div>
+                        <br>
+                        <div align="center">
+                            <div class="alert btn-info" align="center">
+                                <h3>Notificar su caso <a href="mailto:admision@uea.edu.ec?cc=soporte@uea.edu.ec&subject=SITIC | Eliminar cuenta anterior">aquí</a> o al correo <a href="mailto:admision@uea.edu.ec?cc=soporte@uea.edu.ec&subject=SITIC | Eliminar cuenta anterior">admision@uea.edu.ec</a></h3>
+                                <h4><code>RECUERDE incluir su No. Cédula para validar su información</code></h4>
+                            </div>
+                        </div>
+
+                        <?= $form->field($model, 'step')->hiddenInput()->label(false) ?>
+
+                        <?= $form->field($model, 'fec_nacimiento')->hiddenInput()->label(false) ?>
+
+                        <?= $form->field($model, 'dni')->textInput(['readOnly' => true]) ?>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <?= $form->field($model, 'lastname')->textInput(['readOnly' => true]) ?>
+                            </div>
+                            <div class="col-md-6">
+                                <?= $form->field($model, 'firstname')->textInput(['readOnly' => true]) ?>
+                            </div>
+                        </div>
+
+                        <?= $form->field($model, 'commonname')->textInput(['readOnly' => true]) ?>
+
+                        <?= $form->field($model, 'displayname')->textInput(['readOnly' => true]) ?>
+
+                        <?= $form->field($model, 'samaccountname')->textInput(['readOnly' => true]) ?>
+
+                        <?= $form->field($model, 'mail')->textInput(['readOnly' => true]) ?>
+
+                        <?= $form->field($model, 'personalmail')->textInput(['readOnly' => true]) ?>
+
+                        <?= $form->field($model, 'mobile')->textInput(['readOnly' => true]) ?>
+
+                        <?= $form->field($model, 'title')->textInput(['readOnly' => true]) ?>
+
+                        <?= $form->field($model, 'department')->textInput(['readOnly' => true]) ?>
+
+                        <?php
+                        $user = Yii::$app->ad->getProvider('default')->search()
+                            ->whereEquals('samaccountname', $model->samaccountname)
+                            ->first();
+
+                        $today = strtotime(date('Y-m-d H:i:s'));
+                        $lastSetPassword = strtotime($user->getPasswordLastSetDate());
+                        $diff = round(($today - $lastSetPassword)/86400);
+                        ?>
+
+                        <div align="left">
+                            <p><b>Último cambio de contraseña: </b>
+                                <?php
+                                echo $diff . ' días (' . $user->getPasswordLastSetDate() . ')';
+                                ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php } elseif ($model->step == 1) { ?>
         <div class="edit-form">
             <div class="col-sm-offset-2 col-sm-8">
                 <div class="panel panel-default">
@@ -306,8 +380,8 @@ $system_status = false;
                     </div>
                     <div class="panel-body">
 
-                        <div class="alert alert-warning" align="center">
-                            <h4>Cuenta creada correctamente, por favor proceda a matricularse</h4>
+                        <div class="alert alert-success" align="center">
+                            <h4>Etapa 1: Cuenta creada correctamente</h4>
                         </div>
 
                         <?= $form->field($model, 'step')->hiddenInput()->label(false) ?>
@@ -362,23 +436,35 @@ $system_status = false;
                         <br>
 
                         <div align="center">
-                            <?php
-                            if ($diff < 180) {
-                                echo Html::a('Matricularme', 'https://www.uea.edu.ec/siad2nv', [
-                                    'class'=>'btn btn-success',
-                                    'target'=>'_blank',
-                                    'data-toggle'=>'tooltip',
-                                    'title'=>'Matricularme SIAD Nivelación'
-                                ]);
-                            } else {
-                                echo Html::a('Contraseña caducada. Cambiar contraseña', 'https://password.uea.edu.ec', [
+                            <?php if ($diff < 180) { ?>
+
+                                <div class="alert alert-success" align="center">
+                                    <h4>Etapa 2: Matricúlate</h4>
+                                    <?php echo Html::a('SIAD Nivelación', 'https://www.uea.edu.ec/siad2nv', [
+                                        'class'=>'btn btn-primary',
+                                        'target'=>'_blank',
+                                        'data-toggle'=>'tooltip',
+                                        'title'=>'Matricúlate - SIAD Nivelación'
+                                    ]); ?>
+                                </div>
+
+                                <div class="alert alert-success" align="center">
+                                    <h4>Etapa 3: Capacítate</h4>
+                                    <?php echo Html::a('EVA Nivelación', 'https://eva.uea.edu.ec/evanv2020/web', [
+                                        'class'=>'btn btn-primary',
+                                        'target'=>'_blank',
+                                        'data-toggle'=>'tooltip',
+                                        'title'=>'Capacítate - EVA Nivelación'
+                                    ]); ?>
+                                </div>
+                            <?php } else { ?>
+                                <?php echo Html::a('Contraseña caducada. Cambiar contraseña', 'https://password.uea.edu.ec', [
                                     'class'=>'btn btn-danger',
                                     'target'=>'_blank',
                                     'data-toggle'=>'tooltip',
                                     'title'=>'Contraseña caducada. Cambiar contraseña'
-                                ]);
-                            }
-                            ?>
+                                ]); ?>
+                            <?php } ?>
                         </div>
 
                     </div>

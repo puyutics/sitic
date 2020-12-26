@@ -64,7 +64,7 @@ AppAsset::register($this);
             [
                 'label' => 'Cuenta Institucional',
                 'items' => [
-                    //['label' => 'Crear cuenta', 'url' => 'index.php?r=adldap/createstudent'],
+                    ['label' => 'Crear cuenta', 'url' => 'index.php?r=adldap/createstudent'],
                     //['label' => 'Cambiar Contraseña', 'url' => 'index.php?r=adldap/forgetpass'],
                     ['label' => 'Mi cuenta', 'url' => 'index.php?r=adldap/profile'],
                     '<li class="divider"></li>',
@@ -124,6 +124,7 @@ AppAsset::register($this);
                         //['label' => 'Encuestas SENESCYT', 'url' => 'index.php?r=tabintsenescyt/index'],
                         //['label' => 'Buscar Beneficiario', 'url' => 'index.php?r=tabintformulario/beneficiarioadmin'],
                         //['label' => 'Tablets e Internet', 'url' => 'index.php?r=tabintformulario/index'],
+                        ['label' => 'Comunicados', 'url' => 'index.php?r=sysemail/index'],
                     ],
                 ],
                 [

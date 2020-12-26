@@ -74,6 +74,7 @@ class Estudiantes extends \yii\db\ActiveRecord implements IdentityInterface
         return [
             [['mailPer', 'mailInst'], 'string', 'max' => 60],
             [['mailPer', 'mailInst'], 'email'],
+            [['statusper'], 'required'],
         ];
     }
 
@@ -100,7 +101,7 @@ class Estudiantes extends \yii\db\ActiveRecord implements IdentityInterface
             'Telf1InfPer' => 'Telf1',
             'CelularInfPer' => 'Celular',
             'TipoInfPer' => 'Tipo Inf Per',
-            'statusper' => 'Statusper',
+            'statusper' => '(SIAD) Estado',
             'mailPer' => 'Correo Personal',
             'mailInst' => ' (SIAD) Correo Institucional',
             'GrupoSanguineo' => 'Grupo Sanguineo',

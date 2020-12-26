@@ -11,6 +11,9 @@ use kartik\select2\Select2;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 
+/* @var $model app\models\adldap */
+/* @var $form */
+
 if (isset($_GET['search'])) { ?>
     <div class="edit-form">
 

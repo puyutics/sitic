@@ -119,7 +119,8 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
                                 'search' => $_GET['search'],
                                 'samaccountname' => $single_user->getAttribute('samaccountname',0)
                             ]),['title' => Yii::t('yii', 'Editar')]);
-                        ?></th>
+                        ?>
+                    </th>
 
 
                 </tr>

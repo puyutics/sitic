@@ -108,6 +108,7 @@ class EstudiantesController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post())) {
+
             $dominio= explode("@", $model->mailInst);
             $dominio = $dominio[1];
             $modelEstudiante = $this->findModel($id);
@@ -115,6 +116,31 @@ class EstudiantesController extends Controller
             if (($modelEstudiante->mailInst != $model->mailInst) and ($dominio == 'uea.edu.ec')) {
                 $log = $log . '(SIAD) Correo Institucional: ' . $modelEstudiante->mailInst
                     . ' -> ' . $model->mailInst;
+
+                if ($modelEstudiante->statusper != $model->statusper) {
+                    $log = $log . '. (SIAD) Estado: ' . $modelEstudiante->statusper
+                        . ' -> ' . $model->statusper;
+                }
+
+                //Crear Registro de Log en la base de datos
+                $description =
+                    'Información actualizada del usuario: ' . $model->CIInfPer
+                    . '. ' . $log
+                ;
+
+                $username = Yii::$app->user->identity->username;
+                $external_id = explode("@", $model->mailInst);
+                $external_id = $external_id[0];
+
+                if ($model->save()) {
+                    $this->saveLog('siadEmail', $username, $description, $external_id,'adldap');
+                    return $this->redirect(['adldap/edituser', 'search' => $model->cedula_pasaporte]);
+                }
+            }
+
+            if ($modelEstudiante->statusper != $model->statusper) {
+                $log = $log . '(SIAD) Estado: ' . $modelEstudiante->statusper
+                    . ' -> ' . $model->statusper;
 
                 //Crear Registro de Log en la base de datos
                 $description =
@@ -124,9 +150,9 @@ class EstudiantesController extends Controller
                 $username = Yii::$app->user->identity->username;
                 $external_id = explode("@", $model->mailInst);
                 $external_id = $external_id[0];
-                $this->saveLog('siadEmail', $username, $description, $external_id,'adldap');
 
-                if ($model->save()) {
+                if ($model->save(false)) {
+                    $this->saveLog('siadStatus', $username, $description, $external_id,'adldap');
                     return $this->redirect(['adldap/edituser', 'search' => $model->cedula_pasaporte]);
                 }
             }
