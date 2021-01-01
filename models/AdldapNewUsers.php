@@ -45,7 +45,7 @@ class AdldapNewUsers extends \yii\db\ActiveRecord
                 'pattern' => '/^[A-Z ]+$/u',
                 'message'=>'{attribute} no puede contener letras minúsculas, números, espacios en blanco o caracteres especiales'],
             [['email_personal'], 'match',
-                'pattern' => '/^[a-z0-9.@]+$/u',
+                'pattern' => '/^[a-z0-9.@_]+$/u',
                 'message'=>'{attribute} no puede contener letras mayúsculas, espacios en blanco o caracteres especiales'],
             [['celular'], 'match',
                 'pattern' => '/^[0-9]+$/u',

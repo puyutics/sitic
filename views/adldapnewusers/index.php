@@ -87,7 +87,18 @@ $this->params['breadcrumbs'][] = $this->title;
                     'update' => function ($url, $model) {
                         return Html::a('<span class="btn btn-primary center-block"><i class="fa fa-fw fa-folder"></i>Editar</span>',
                             Url::to(['update', 'id' => $model->id]),
-                            ['title' => Yii::t('yii', 'Editar')]);
+                            ['target'=>'_blank','title' => Yii::t('yii', 'Editar')]);
+                    },
+                ]
+            ],
+
+            ['class' => 'kartik\grid\ActionColumn',
+                'template'=>'{edituser}',
+                'buttons'=>[
+                    'edituser' => function ($url, $model) {
+                        return Html::a('<span class="btn btn-success center-block"><i class="fa fa-fw fa-folder"></i>Cuenta</span>',
+                            Url::to(['adldap/edituser', 'search' => $model->dni]),
+                            ['target'=>'_blank','title' => Yii::t('yii', 'Cuenta')]);
                     },
                 ]
             ],

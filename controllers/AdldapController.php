@@ -10,6 +10,7 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\Logs;
 use app\models\AdldapForgetpassForm;
+use app\models\AdldapEditemailForm;
 use app\models\AdldapForgetuserForm;
 use app\models\AdldapPasswordForm;
 use app\models\AdldapResetForm;
@@ -30,7 +31,7 @@ class AdldapController extends Controller
                 'class' => AccessControl::className(),
                 'only' => ['create','index','profile','edituser','viewuser','forgetpass',
                     'forgetuser','password','reset','saveLog','sendToken','sendNewUser',
-                    'viewgroups','createstudent'],
+                    'viewgroups','createstudent','editemail'],
                 'rules' => [
                     [
                         'actions' => ['index','profile','edituser',
@@ -51,7 +52,7 @@ class AdldapController extends Controller
                     ],
                     [
                         'actions' => ['index','forgetpass','forgetuser','password','reset',
-                                        'saveLog','createstudent'],
+                                        'saveLog','createstudent','editemail'],
                         'allow' => true,
                     ],
                     [
@@ -230,7 +231,7 @@ class AdldapController extends Controller
                 if (isset($adldapnewuser)) {
 
                     $user = \Yii::$app->ad->search()->findBy(Yii::$app->params['dni'], $model->dni);
-                    if (isset($user) and ($adldapnewuser->status != 3)) {
+                    if (isset($user) and ($adldapnewuser->status == 1)) {
 
                         //OBTENER PRIMERA INICIAL DE CADA NOMBRE
                         $fn = explode(' ', $adldapnewuser->nombres);
@@ -1929,7 +1930,149 @@ class AdldapController extends Controller
                 'model' => $model,
             ]);
         }
+    }
 
+
+    public function actionEditemail()
+    {
+        $model = new AdldapEditemailForm();
+        if ($model->load(Yii::$app->request->post())) {
+
+            if ($model->step == 1) {
+                $post_form = Yii::$app->request->post('AdldapEditemailForm');
+                $post_mail = strtolower($post_form['mail']);
+                $post_dni = $post_form['dni'];
+                $post_sAMAccountname = explode("@", $post_mail);
+                $sAMAccountname = $post_sAMAccountname[0];
+
+                $user = Yii::$app->ad->getProvider('default')->search()
+                    ->findBy('sAMAccountname', $sAMAccountname);
+
+                if (isset($user)) {
+                    $estudiante_nivelacion = \app\models\EstudiantesNivelacion::find()
+                        ->where(['cedula_pasaporte' => $post_dni])
+                        ->one();
+                    if (isset($estudiante_nivelacion)) {
+                        $fec_nacimiento = $estudiante_nivelacion->FechNacimPer;
+                    }
+
+                    $estudiante_pregrado = \app\models\Estudiantes::find()
+                        ->where(['cedula_pasaporte' => $post_dni])
+                        ->one();
+                    if (isset($estudiante_pregrado)) {
+                        $fec_nacimiento = $estudiante_pregrado->FechNacimPer;
+                    }
+
+                    if (isset($fec_nacimiento)) {
+                        if ($fec_nacimiento == $model->fec_nacimiento) {
+                            $model->personalmail = $user->getAttribute(Yii::$app->params['personalmail'],0);
+                            $model->step = 2;
+                            return $this->render('edit_email', [
+                                'model' => $model,
+                            ]);
+                        }
+                    }
+
+                    Yii::$app->session->setFlash('errorFecha','Fecha de nacimiento incorrecta o usted no consta en las bases de datos de estudiantes de Pregrado o Nivelación');
+                    $model->step = 1;
+                    return $this->render('edit_email', [
+                        'model' => $model,
+                    ]);
+
+                } else {
+                    Yii::$app->session->setFlash('errorUser','Cédula, Pasaporte o Correo institucional incorrecto');
+                    $model->step = 1;
+                    return $this->render('edit_email',
+                        ['model'=>$model]);
+                }
+            }
+
+            if ($model->step == 2) {
+                $post_form = Yii::$app->request->post('AdldapEditemailForm');
+                $post_mail = strtolower($post_form['mail']);
+                $post_sAMAccountname = explode("@", $post_mail);
+                $sAMAccountname = $post_sAMAccountname[0];
+
+                $user = Yii::$app->ad->getProvider('default')->search()
+                    ->findBy('sAMAccountname', $sAMAccountname);
+
+                $mail = $user->getAttribute('mail',0);
+                $dni = $user->getAttribute(Yii::$app->params['dni'],0);
+                $personalmail = $user->getAttribute(Yii::$app->params['personalmail'],0);
+                $fullname = $user->getAttribute('cn',0);
+
+                if ($model->personalmail != $personalmail) {
+
+                    //Crear un Reset TOKEN
+                    $resetToken = hash(Yii::$app->params['algorithm'],
+                        Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
+
+                    //Enviar Reset TOKEN por email
+                    $this->sendTokenEmail($dni,$fullname,$mail,$model->personalmail,$resetToken);
+
+                    //Crear Registro de Log en la base de datos
+                    $description =
+                        'Envío de Token para el usuario: ' . $sAMAccountname
+                        . ', al correo electrónico personal: ' . $personalmail
+                    ;
+                    $this->saveLog('sendTokenEmail', $sAMAccountname, $description, $sAMAccountname,'adldap');
+
+                    $model->step = 3;
+                    return $this->render('edit_email', [
+                        'model'=>$model]); //Success
+                }
+                Yii::$app->session->setFlash('errorEmail', 'El nuevo correo personal debe ser diferente al correo personal actual');
+                $model->step = 2;
+                return $this->render('edit_email', [
+                    'model'=>$model]); //Success
+
+            }
+
+            if ($model->step == 3) {
+                $post_form = Yii::$app->request->post('AdldapEditemailForm');
+                $post_mail = strtolower($post_form['mail']);
+                $post_sAMAccountname = explode("@", $post_mail);
+                $sAMAccountname = $post_sAMAccountname[0];
+
+                $user = Yii::$app->ad->getProvider('default')->search()
+                    ->findBy('sAMAccountname', $sAMAccountname);
+
+                $personalmail = $user->getAttribute(Yii::$app->params['personalmail'],0);
+
+                //Crear un Reset TOKEN
+                $resetToken = hash(Yii::$app->params['algorithm'],
+                    Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
+
+                if ($model->token == $resetToken) {
+
+                    $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);
+                    $user->save();
+
+                    //Crear Registro de Log en la base de datos
+                    $description =
+                        'Cambio de correo personal: ' . $personalmail
+                        . ' -> ' . $model->personalmail
+                    ;
+                    $this->saveLog('adldapEditEmail', $sAMAccountname, $description, $sAMAccountname,'adldap');
+
+                    $model->step = 4;
+                    return $this->render('edit_email', [
+                        'model'=>$model]); //Success
+                }
+                Yii::$app->session->setFlash('errorToken', 'TOKEN incorrecto o caducado. Lea detalladamente toda la información enviada a su correo personal');
+                $model->step = 3;
+                return $this->render('edit_email', [
+                    'model' => $model,
+                ]);
+
+            }
+
+        }
+        $model->personalmail = 'test@uea.edu.ec';
+        $model->step = 1;
+        return $this->render('edit_email', [
+                'model' => $model,
+            ]);
     }
 
 
@@ -2128,7 +2271,7 @@ class AdldapController extends Controller
 
     public function saveLog($type, $username, $description, $external_id, $external_type)
     {
-        //Registro (Log) Evento sendToken
+        //Registro (Log) Evento
         $modelLogs              = new Logs();
         $modelLogs->type        = $type;
         $modelLogs->username    = $username;
@@ -2163,6 +2306,33 @@ class AdldapController extends Controller
                 ->setFrom(Yii::$app->params['from'], Yii::$app->params['fromName'])
                 ->setCc(Yii::$app->params['cc'])
                 ->setSubject(Yii::$app->params['subject'])
+                ->setTextBody($body)
+                ->send();
+            return true;
+    }
+
+
+    public function sendTokenEmail($dni,$fullname,$mail,$personalmail,$resetToken)
+    {
+            $body =
+                "Estimado usuario," . "\n" .
+                "Se ha solicitado cambiar el correo personal de su cuenta institucional en la " . Yii::$app->params['company'] . "\n\n" .
+                "Céd/Pasaporte:            " . $dni . "\n" .
+                "Nombres/Apellidos:      " . $fullname . "\n" .
+                "Cuenta institucional:     " . $mail . "\n\n" .
+                "--------------------------------------------------------------------------------------" . "\n" .
+                "Utilice el siguiente TOKEN para validar su cuenta personal:" . "\n\n" .
+                $resetToken . "\n\n" .
+                "--------------------------------------------------------------------------------------" . "\n" .
+                "NOTA: TOKEN válido SOLO el ". date('d-m-Y') . " (dd-mm-AA) desde las 00:00 hasta las 23:59" . "\n\n" .
+                "---> Correo enviado por el sistema automático de Gestión de identidad. NO RESPONDA ESTE CORREO <---"
+            ;
+
+            Yii::$app->mailer->compose()
+                ->setTo($personalmail)
+                ->setFrom(Yii::$app->params['from'], Yii::$app->params['fromName'])
+                ->setCc(Yii::$app->params['cc'])
+                ->setSubject('Validar correo personal')
                 ->setTextBody($body)
                 ->send();
             return true;

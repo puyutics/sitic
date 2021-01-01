@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
                 <p align="center">
-                    <a class="btn btn-primary" href="https://www.uea.edu.ec/soporte" target="_blank"> Cambiar Correo Personal </a>
+                    <a class="btn btn-primary" href="https://www.uea.edu.ec/sitic/index.php?r=adldap/editemail" target="_blank"> Cambiar Correo Personal </a>
                     <a class="btn btn-danger" href="index.php?r=site/identity"> Regresar &raquo;</a>
                 </p>
 
@@ -100,7 +100,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             </div>
 
                             <p align="center">
-                                <a class="btn btn-primary" href="https://www.uea.edu.ec/soporte" target="_blank"> No, Cambiar Correo Personal </a>
+                                <a class="btn btn-primary" href="https://www.uea.edu.ec/sitic/index.php?r=adldap/editemail" target="_blank"> No, Cambiar Correo Personal </a>
                             </p>
 
                         <?php else: ?>

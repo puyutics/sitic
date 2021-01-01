@@ -475,8 +475,6 @@ $system_status = true;
 
     <?php ActiveForm::end(); ?>
 
-
-
 <?php } else { ?>
     <div class="alert alert-info" align="center">
         <h3 align="center">Sistema no habilitado</h3>
