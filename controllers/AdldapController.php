@@ -2013,7 +2013,7 @@ class AdldapController extends Controller
                     //Crear Registro de Log en la base de datos
                     $description =
                         'Envío de Token para el usuario: ' . $sAMAccountname
-                        . ', al correo electrónico personal: ' . $personalmail
+                        . ', al correo electrónico personal: ' . $model->personalmail
                     ;
                     $this->saveLog('sendTokenEmail', $sAMAccountname, $description, $sAMAccountname,'adldap');
 

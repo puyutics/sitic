@@ -12,7 +12,9 @@ $dni = $model->dni;
 ////////SIAD NIVELACION//////////
 $searchModelNivelacion = new \app\models\EstudiantesNivelacionSearch();
 $dataProviderNivelacion = $searchModelNivelacion->search(Yii::$app->request->queryParams);
-$dataProviderNivelacion->query->Where('CIInfPer = "' . $dni .'"');
+$dataProviderNivelacion->query
+    ->Where('CIInfPer = "' . $dni .'"')
+    ->orWhere('cedula_pasaporte = "' . $dni .'"');
 
 $searchModelMatriculaNivelacion = new \app\models\MatriculaNivelacionSearch();
 $searchModelMatriculaNivelacion->CIInfPer = $dni;
@@ -25,7 +27,9 @@ $dataProviderMatriculaNivelacion->sort->defaultOrder = [
 ////////SIAD PREGRADO//////////
 $searchModelPregrado = new app\models\EstudiantesSearch();
 $dataProviderPregrado = $searchModelPregrado->search(Yii::$app->request->queryParams);
-$dataProviderPregrado->query->Where('CIInfPer = "' . $dni .'"');
+$dataProviderPregrado->query
+    ->Where('CIInfPer = "' . $dni .'"')
+    ->orWhere('cedula_pasaporte = "' . $dni .'"');
 
 $searchModelMatriculaPregrado = new \app\models\MatriculaSearch();
 $searchModelMatriculaPregrado->CIInfPer = $dni;
@@ -54,7 +58,7 @@ $dataProviderMatriculaPregrado->sort->defaultOrder = [
 
                 'CIInfPer',
                 //'num_expediente',
-                //'cedula_pasaporte',
+                'cedula_pasaporte',
                 //'TipoDocInfPer',
                 'ApellInfPer',
                 'ApellMatInfPer',
@@ -194,7 +198,7 @@ $dataProviderMatriculaPregrado->sort->defaultOrder = [
 
                 'CIInfPer',
                 //'num_expediente',
-                //'cedula_pasaporte',
+                'cedula_pasaporte',
                 //'TipoDocInfPer',
                 'ApellInfPer',
                 'ApellMatInfPer',
