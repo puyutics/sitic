@@ -39,6 +39,7 @@ if (isset($dni)) {
                 'attributes' => [
                     'BADGENUMBER',
                     'SSN',
+                    'NAME',
                     'sca_Nombre',
                     'sca_Apellido',
                     'sca_Correo',

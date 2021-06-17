@@ -26,6 +26,11 @@ class CheckinoutController extends Controller
                 'only' => ['create','index'],
                 'rules' => [
                     [
+                        'actions' => ['create','update','index','view'],
+                        'allow' => true,
+                        'roles' => ['rolAdministrador'],
+                    ],
+                    [
                         'actions' => ['index','delete','view','create','update'],
                         'allow' => false,
                     ],

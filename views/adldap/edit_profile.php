@@ -65,12 +65,12 @@ $diff = round(($today - $lastSetPassword)/86400);
                         <div class="row">
                             <div class="col-md-6">
 
-                                <?= $form->field($model, 'personalmail')->textInput(['maxlength' => true]) ?>
+                                <?= $form->field($model, 'personalmail')->textInput(['readOnly' => true, 'maxlength' => true]) ?>
 
                             </div>
                             <div class="col-md-6">
 
-                                <?= $form->field($model, 'mobile')->textInput(['maxlength' => true]) ?>
+                                <?= $form->field($model, 'mobile')->textInput(['readOnly' => true, 'maxlength' => true]) ?>
 
                             </div>
                         </div>
@@ -111,7 +111,9 @@ $diff = round(($today - $lastSetPassword)/86400);
 
                         <div align="center" class="form-group">
 
-                            <?= Html::submitButton(Yii::t('app','Guardar'),['class' => 'btn btn-success']) ?>
+                            <p align="center"><a class="btn btn-warning" href="index.php?r=adldap/editemail" target="_blank"> Cambiar Correo Personal &raquo;</a></p>
+
+                            <?php //= Html::submitButton(Yii::t('app','Guardar'),['class' => 'btn btn-success']) ?>
 
                             <!--<a class="btn btn-sg btn-primary" href="./index.php?r=adldap/password">Cambiar contraseña</a>-->
 

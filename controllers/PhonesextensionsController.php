@@ -35,6 +35,12 @@ class PhonesextensionsController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
+                        'actions' => ['create','index','update',
+                            'embedded'],
+                        'allow' => true,
+                        'roles' => ['rolTecnicos'],
+                    ],
+                    [
                         'actions' => ['delete','view'],
                         'allow' => false,
                     ],

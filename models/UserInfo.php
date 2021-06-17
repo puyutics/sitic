@@ -119,7 +119,7 @@ class UserInfo extends \yii\db\ActiveRecord
             'USERID' => 'Userid',
             'BADGENUMBER' => 'Código Biométrico',
             'SSN' => 'No. Cédula',
-            'NAME' => 'Nombre Corto',
+            'NAME' => 'Nombre Biométrico',
             'GENDER' => 'Gender',
             'TITLE' => 'Title',
             'PAGER' => 'Pager',

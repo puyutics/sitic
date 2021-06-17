@@ -38,6 +38,11 @@ class InvitemuserController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['rolTecnicos'],
+                    ],
+                    [
                         'actions' => ['delete',],
                         'allow' => false,
                     ],

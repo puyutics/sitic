@@ -44,6 +44,13 @@ class InvpurchaseitemController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
+                        'actions' => ['admin','create','index','unassigned','view',
+                            'edescription','einvpurchaseid','einvmodelsid',
+                            'eserialnumber','econtrolcode','eamount'],
+                        'allow' => true,
+                        'roles' => ['rolTecnicos'],
+                    ],
+                    [
                         'actions' => ['delete','update'],
                         'allow' => false,
                     ],

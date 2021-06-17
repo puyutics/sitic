@@ -10,6 +10,7 @@ use yii\helpers\Url;
 use yii\data\ActiveDataProvider;
 
 /* @var $this yii\web\View */
+/* @var $model app\models\InvPurchase */
 /* @var $searchModel app\models\InvItemUserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 

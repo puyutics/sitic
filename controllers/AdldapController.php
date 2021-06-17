@@ -439,6 +439,11 @@ class AdldapController extends Controller
                         return $this->render('create_student',
                             ['model' => $model]);
                     }
+                } else {
+                    Yii::$app->session->setFlash('errorNoBd',
+                        "Es posible que sus datos sean incorrectos o que usted no conste en los listados enviados por la SENESCYT");
+                    return $this->render('create_student',
+                        ['model' => $model]);
                 }
             } elseif ($model->step == 2) {
                 $adldapnewuser = \app\models\AdldapNewUsers::find()
@@ -2001,31 +2006,39 @@ class AdldapController extends Controller
                 $personalmail = $user->getAttribute(Yii::$app->params['personalmail'],0);
                 $fullname = $user->getAttribute('cn',0);
 
-                if ($model->personalmail != $personalmail) {
+                $post_personalmail = explode("@", $model->personalmail);
+                $dominio_personalmail = $post_personalmail[1];
 
-                    //Crear un Reset TOKEN
-                    $resetToken = hash(Yii::$app->params['algorithm'],
-                        Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
+                if ($dominio_personalmail != 'uea.edu.ec') {
+                    if ($model->personalmail != $personalmail) {
 
-                    //Enviar Reset TOKEN por email
-                    $this->sendTokenEmail($dni,$fullname,$mail,$model->personalmail,$resetToken);
+                        //Crear un Reset TOKEN
+                        $resetToken = hash(Yii::$app->params['algorithm'],
+                            Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $model->personalmail);
 
-                    //Crear Registro de Log en la base de datos
-                    $description =
-                        'Envío de Token para el usuario: ' . $sAMAccountname
-                        . ', al correo electrónico personal: ' . $model->personalmail
-                    ;
-                    $this->saveLog('sendTokenEmail', $sAMAccountname, $description, $sAMAccountname,'adldap');
+                        //Enviar Reset TOKEN por email
+                        $this->sendTokenEmail($dni,$fullname,$mail,$model->personalmail,$resetToken);
 
-                    $model->step = 3;
+                        //Crear Registro de Log en la base de datos
+                        $description =
+                            'Envío de Token para el usuario: ' . $sAMAccountname
+                            . ', al correo electrónico personal: ' . $model->personalmail
+                        ;
+                        $this->saveLog('sendTokenEmail', $sAMAccountname, $description, $sAMAccountname,'adldap');
+
+                        $model->step = 3;
+                        return $this->render('edit_email', [
+                            'model'=>$model]); //Success
+                    }
+                    Yii::$app->session->setFlash('errorEmail', 'El nuevo correo personal debe ser diferente al correo personal actual');
+                    $model->step = 2;
                     return $this->render('edit_email', [
-                        'model'=>$model]); //Success
+                        'model'=>$model]);
                 }
-                Yii::$app->session->setFlash('errorEmail', 'El nuevo correo personal debe ser diferente al correo personal actual');
+                Yii::$app->session->setFlash('errorEmail', 'El nuevo correo debe ser personal y no contener el dominio uea.edu.ec');
                 $model->step = 2;
                 return $this->render('edit_email', [
-                    'model'=>$model]); //Success
-
+                    'model'=>$model]);
             }
 
             if ($model->step == 3) {

@@ -25,11 +25,34 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'USERID',
+            [
+                'label'=>'Nombre',
+                'attribute' => 'USERID',
+                'value'=>function($model){
+                    $user = \app\models\UserInfo::find()
+                        ->where(['USERID'=>$model->USERID])
+                        ->one();
+                    return $user->NAME;
+                },
+            ],
             'CHECKTIME',
-            'CHECKTYPE',
+            [
+                'attribute' => 'CHECKTYPE',
+                'value'=>function($model){
+                    if ($model->CHECKTYPE == '0') {
+                        return "E/S Asistencia";
+                    } else {
+                        return "No definido";
+                    }
+                },
+            ],
             'VERIFYCODE',
-            'SENSORID',
+            [
+                'label'=>'Biométrico',
+                'attribute'=>'SENSORID',
+                'value' => 'machines.MachineAlias',
+                'format'=>'raw',
+            ],
             //'Memoinfo',
             //'WorkCode',
             //'sn',

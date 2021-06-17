@@ -19,7 +19,17 @@ $this->title = Yii::t('app', 'Crear estudiante');
 //$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Usuarios'), 'url' => ['adldap/index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-$system_status = true;
+if (strtotime(date("Y-m-d H:i:00",time())) > strtotime("2021-06-07 08:00:00")) {
+    $system_status = true;
+} else {
+    $system_status = false;
+}
+
+if (isset($_GET['test'])) {
+    if ($_GET['test'] == 'true') {
+        $system_status = true;
+    }
+}
 ?>
 
 <?php if ($system_status == true) { ?>
@@ -114,6 +124,12 @@ $system_status = true;
                         <h3 class="panel-title">PASO 1: Validar datos del usuario</h3>
                     </div>
                     <div class="panel-body">
+
+                        <?php if (Yii::$app->session->hasFlash('errorNoBd')) { ?>
+                            <div class="alert alert-danger">
+                                <?= Yii::$app->session->getFlash('errorNoBd') ?>
+                            </div>
+                        <?php } ?>
 
                         <div class="alert alert-success" align="center">
                             <h4>Bienvenid@ a la Universidad Estatal Amazónica. En 6 pasos vamos a crear su nueva cuenta institucional. Es necesario que ingrese los siguientes datos:</h4>
@@ -436,28 +452,7 @@ $system_status = true;
                         <br>
 
                         <div align="center">
-                            <?php if ($diff < 180) { ?>
-
-                                <div class="alert alert-success" align="center">
-                                    <h4>Etapa 2: Matricúlate</h4>
-                                    <?php echo Html::a('SIAD Nivelación', 'https://www.uea.edu.ec/siad2nv', [
-                                        'class'=>'btn btn-primary',
-                                        'target'=>'_blank',
-                                        'data-toggle'=>'tooltip',
-                                        'title'=>'Matricúlate - SIAD Nivelación'
-                                    ]); ?>
-                                </div>
-
-                                <div class="alert alert-success" align="center">
-                                    <h4>Etapa 3: Capacítate</h4>
-                                    <?php echo Html::a('EVA Nivelación', 'https://eva.uea.edu.ec/evanv2020/web', [
-                                        'class'=>'btn btn-primary',
-                                        'target'=>'_blank',
-                                        'data-toggle'=>'tooltip',
-                                        'title'=>'Capacítate - EVA Nivelación'
-                                    ]); ?>
-                                </div>
-                            <?php } else { ?>
+                            <?php if ($diff > 179) { ?>
                                 <?php echo Html::a('Contraseña caducada. Cambiar contraseña', 'https://password.uea.edu.ec', [
                                     'class'=>'btn btn-danger',
                                     'target'=>'_blank',
@@ -465,6 +460,26 @@ $system_status = true;
                                     'title'=>'Contraseña caducada. Cambiar contraseña'
                                 ]); ?>
                             <?php } ?>
+
+                            <div class="alert alert-success" align="center">
+                                <h4>Etapa 2: Inscribirse</h4>
+                                <?php echo Html::a('SIAD Nivelación', 'https://www.uea.edu.ec/siad2nv', [
+                                    'class'=>'btn btn-primary',
+                                    'target'=>'_blank',
+                                    'data-toggle'=>'tooltip',
+                                    'title'=>'Matricúlate - SIAD Nivelación'
+                                ]); ?>
+                            </div>
+
+                            <div class="alert alert-success" align="center">
+                                <h4>Etapa 3: Accede a los Cursos de Inducción</h4>
+                                <?php echo Html::a('EVA Nivelación', 'https://eva.uea.edu.ec/evanv2020/web', [
+                                    'class'=>'btn btn-primary',
+                                    'target'=>'_blank',
+                                    'data-toggle'=>'tooltip',
+                                    'title'=>'Capacítate - EVA Nivelación'
+                                ]); ?>
+                            </div>
                         </div>
 
                     </div>
@@ -477,6 +492,6 @@ $system_status = true;
 
 <?php } else { ?>
     <div class="alert alert-info" align="center">
-        <h3 align="center">Sistema no habilitado</h3>
+        <h3 align="center">El sistema no se encuentra habilitado. A partir del próximo lunes 07 de junio de 2021 desde las 08h00, empezará el proceso de inscripción para todos los estudiantes que hayan aceptado el cupo para nuestra institución.</h3>
     </div>
 <?php } ?>

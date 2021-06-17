@@ -23,8 +23,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="alert alert-info" align="center">
         <h3 align="center"><?= $this->title ?></h3>
-        <h4><code>Este proceso es exclusivo para estudiantes de Pregrado y Nivelación</code></h4>
-        <h4><code>Para los diferentes usuarios deben crear un ticket</code> <a target="_blank" href="https://www.uea.edu.ec/soporte">aquí</a></h4>
+        <h4><code>Este proceso es exclusivo para estudiantes de Pregrado y Nivelación.</code></h4>
+        <h4><code>Para estudiantes de Posgrado, personal Docente o Administrativo, deben crear un ticket</code> <a target="_blank" href="https://www.uea.edu.ec/soporte">aquí</a></h4>
     </div>
 
     <?php if ($model->step == 1) { ?>

@@ -85,6 +85,7 @@ use yii\data\ActiveDataProvider;
                         'displayValueConfig'=> [
                             '0' => '<i class="glyphicon glyphicon-remove text-danger"></i> INACTIVO',
                             '1' => '<i class="glyphicon glyphicon-ok text-success"></i> ACTIVO',
+                            '2' => '<i class="glyphicon glyphicon-ok text-success"></i> DEVOLUCION',
                         ],
                         'options' => [
                             'class'=>'form-control', 'prompt'=>'Seleccionar estado',
