@@ -141,7 +141,7 @@ if (isset($_GET['test'])) {
 
                         <div align="center">
                             <?= $form->field($model, 'fec_nacimiento')->widget(DatePicker::className(), [
-                                'type' => DatePicker::TYPE_INLINE,
+                                'options' => ['placeholder' => 'Seleccionar fecha'],
                                 'pluginOptions' => [
                                     'autoclose'=>true,
                                     'todayHighlight' => true,

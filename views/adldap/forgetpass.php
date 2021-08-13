@@ -17,9 +17,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php if (Yii::$app->session->hasFlash('successMail')): ?>
         <div class="row">
-            <div>             &nbsp;
+            <div>
+                <br>
                 <div class="alert alert-success">
                     Se ha enviado un correo a <code><?= Yii::$app->session->getFlash('successMail') ?></code> con un enlace (RESET TOKEN) para restablecer su contraseña.
+                </div>
+                <br>
+                <div class="alert alert-alert">
+                    EN CASO DE QUE NO LLEGUE EL CORREO A SU BUZÓN DE ENTRADA. REVISE EL BUZÓN DE CORREO SPAM (CORREO NO DESEADO).
                 </div>
 
                 <div class="alert alert-warning">
