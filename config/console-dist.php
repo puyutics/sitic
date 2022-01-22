@@ -36,14 +36,14 @@ $config = [
                 'default' => [
                     'autoconnect' => true,
                     'config' => [
-                        'domain_controllers' => [
-                            'dominio.com',
+                        'hosts' => [
                             'ipaddress',
+                            'dominio.com',
                         ],
                         'account_suffix'      => '@dominio.com',
                         'base_dn'             => 'dc=dominio,dc=com',
-                        'admin_username'      => 'administrador',
-                        'admin_password'      => '',
+                        'username'            => 'administrador@dominio.com',
+                        'password'            => '',
                         'port'                => 636,
                         'use_ssl'             => true,
                         'use_tls'             => true,

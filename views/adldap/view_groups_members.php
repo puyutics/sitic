@@ -21,13 +21,7 @@ if (isset($_GET['search'])) { ?>
                 </div>
                 <div class="panel-body">
 
-                    <?php echo "<p></p>";
-                    echo "<p><b>Miembro(s)</b></p>";
-                        foreach($model->members as $member)
-                        {
-                            echo $member->getName().", ";
-                        }
-                    ?>
+
 
                     <?php $i=0;
                     $members = array();
@@ -55,6 +49,16 @@ if (isset($_GET['search'])) { ?>
                             'value'=>'deleteMember', 'name'=>'deleteMember',
                             'onClick'=>'buttonClicked']) ?>
                     </div>
+
+                    <?php echo "<p></p>";
+                    echo "<p><b>Miembro(s)</b></p>";
+                        $i=0;
+                        foreach($model->members as $member)
+                        {
+                            $i=$i+1;
+                            echo $i . '. ' . $member->getName()."<br>";
+                        }
+                    ?>
 
                 </div>
             </div>

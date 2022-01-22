@@ -130,15 +130,21 @@ class AdldapController extends Controller
                     $log = $log . 'Correo: ' . $model->mail . '. ';
 
                     // create dn
-                    $dn = $user->getDnBuilder();
-                    $dn->addCn($user->getCommonName());
-                    $dn->addOu($model->dn);
-                    $user->setDn($dn);
+                    //$dn = $user->getDnBuilder();
+                    //$dn->addCn($user->getCommonName());
+                    //$dn->addOu($model->dn);
+                    $dnBuilder = 'CN=' . $model->commonname . ',' . $model->dn;
+                    $user->setDn($dnBuilder);
+                    //
+                    $user->setTitle($model->title);
+                    $security = new Security();
+                    $user->setPassword($security->generateRandomString(8));
+                    $user->setAttribute(Yii::$app->params['dni'],$model->dni);
+                    $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);
+                    $user->setEmail($model->mail);
 
                     // save an check return value
                     if ($user->save()) {
-
-                        $security = new Security();
 
                         //Comprobar que el usuario ha sido creado
                         do {
@@ -147,20 +153,15 @@ class AdldapController extends Controller
 
                         if (isset($checkuser) == 1) {
                             $user = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
-                            $user->setTitle($model->title);
-                            $user->setPassword($security->generateRandomString(8));
-                            $user->setAttribute(Yii::$app->params['dni'],$model->dni);
-                            $log = $log . 'Cédula: ' . $model->dni . '. ';
-                            $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);
-                            $log = $log . 'Correo personal: ' . $model->personalmail . '. ';
                             $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
-                            $log = $log . 'Celular: ' . $model->mobile . '. ';
                             $user->setUserAccountControl($model->uac);
                             $user->setDepartment($model->department);
-                            $log = $log . 'Departamento: ' . $model->department . '. ';
                             $user->setTitle($model->title);
+                            $log = $log . 'Cédula: ' . $model->dni . '. ';
+                            $log = $log . 'Correo personal: ' . $model->personalmail . '. ';
+                            $log = $log . 'Celular: ' . $model->mobile . '. ';
+                            $log = $log . 'Departamento: ' . $model->department . '. ';
                             $log = $log . 'Titulo: ' . $model->title . '.';
-                            $user->setEmail($model->mail);
 
                             if ($user->save()) {
                                 Yii::$app->session->setFlash('success', "Usuario creado correctamente");
@@ -201,8 +202,51 @@ class AdldapController extends Controller
                     }
                 } else {
                     Yii::$app->session->setFlash('error', "Ya existe el usuario");
-                    return $this->render('create',
-                        ['model'=>$model]);
+
+                    $user = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
+                    $security = new Security();
+                    $user->setPassword($security->generateRandomString(8));
+                    $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
+                    $user->setUserAccountControl($model->uac);
+                    $user->setDepartment($model->department);
+                    $user->setTitle($model->title);
+
+                    $log = '';
+                    $log = $log . 'Usuario: ' . $model->samaccountname . '. ';
+                    $log = $log . 'Nombre completo: ' . $model->displayname . '. ';
+                    $log = $log . 'Nombres: ' . $model->firstname . '. ';
+                    $log = $log . 'Apellidos: ' . $model->lastname . '. ';
+                    $log = $log . 'Correo: ' . $model->mail . '. ';
+                    $log = $log . 'Cédula: ' . $model->dni . '. ';
+                    $log = $log . 'Correo personal: ' . $model->personalmail . '. ';
+                    $log = $log . 'Celular: ' . $model->mobile . '. ';
+                    $log = $log . 'Departamento: ' . $model->department . '. ';
+                    $log = $log . 'Titulo: ' . $model->title . '.';
+
+                    if ($user->update()) {
+                        Yii::$app->session->setFlash('success', "Usuario creado correctamente");
+                        $username = Yii::$app->user->identity->username;
+
+                        //Enviar usuario creado por email
+                        $dni = $model->dni;
+                        $fullname = $model->commonname;
+                        $mail = $model->mail;
+                        $personalmail = $model->personalmail;
+
+                        $this->sendNewUser($dni,$fullname,$mail,$personalmail);
+
+                        //Crear Registro de Log en la base de datos
+                        $description =
+                            'Usuario creado. ' . $log
+                        ;
+                        $this->saveLog('adldapCreateUser', $username, $description, $model->samaccountname,'adldap');
+                        return $this->redirect(['edituser', 'search' => $model->samaccountname]);
+                        //return $this->render('edituser',['model'=>$model]);
+
+                    }
+
+                    //return $this->render('create',['model'=>$model]);
+                    return $this->redirect(['edituser', 'search' => $model->samaccountname]);
                 }
 
             } else {
@@ -226,6 +270,7 @@ class AdldapController extends Controller
                 $adldapnewuser = \app\models\AdldapNewUsers::find()
                     ->where(['dni' => $model->dni])
                     ->andWhere(['fec_nacimiento' => $model->fec_nacimiento])
+                    //->orderBy('id DESC')
                     ->one();
 
                 if (isset($adldapnewuser)) {
@@ -329,7 +374,7 @@ class AdldapController extends Controller
                             ['model' => $model]);
                     } elseif ($adldapnewuser->status == 3) {
 
-                        //OBTENER PRIMERA INICIAL DE CADA NOMBRE
+                        /*//OBTENER PRIMERA INICIAL DE CADA NOMBRE
                         $fn = explode(' ', $model->firstname);
                         $result_fn = '';
                         foreach($fn as $t) {
@@ -401,7 +446,9 @@ class AdldapController extends Controller
                                         "Error al identificar su usuario. Por favor notifique su inconveniente en la Mesa de Ayuda");
                                 }
                             }
-                        }
+                        }*/
+
+                        $checkuser = \Yii::$app->ad->search()->findBy(Yii::$app->params['dni'], $model->dni);;
 
                         $model->samaccountname = $checkuser->getAttribute('samaccountname',0);
                         $model->mail = $checkuser->getEmail();
@@ -441,7 +488,7 @@ class AdldapController extends Controller
                     }
                 } else {
                     Yii::$app->session->setFlash('errorNoBd',
-                        "Es posible que sus datos sean incorrectos o que usted no conste en los listados enviados por la SENESCYT");
+                        "Es posible que sus datos sean incorrectos o que usted no conste en los listados enviados por la SENESCYT. <br><br> Recuerde que debe esperar a que se cumplan todas las etapas de postulación dispuestas por SENESCYT");
                     return $this->render('create_student',
                         ['model' => $model]);
                 }
@@ -449,6 +496,7 @@ class AdldapController extends Controller
                 $adldapnewuser = \app\models\AdldapNewUsers::find()
                     ->where(['dni' => $model->dni])
                     ->andWhere(['fec_nacimiento' => $model->fec_nacimiento])
+                    //->orderBy('id DESC')
                     ->one();
 
                 if (isset($adldapnewuser)) {
@@ -462,7 +510,6 @@ class AdldapController extends Controller
                     $model->department = $adldapnewuser->carrera;
 
                     if ($adldapnewuser->status == 1) {
-
                         //Enviar email de verificación del correo personal
                         $dni = $model->dni;
                         $fullname = $model->commonname;
@@ -493,7 +540,7 @@ class AdldapController extends Controller
                             ['model' => $model]);
                     } elseif ($adldapnewuser->status == 3) {
 
-                        //OBTENER PRIMERA INICIAL DE CADA NOMBRE
+                        /*//OBTENER PRIMERA INICIAL DE CADA NOMBRE
                         $fn = explode(' ', $model->firstname);
                         $result_fn = '';
                         foreach($fn as $t) {
@@ -565,8 +612,9 @@ class AdldapController extends Controller
                                         "Error al identificar su usuario. Por favor notifique su inconveniente en la Mesa de Ayuda");
                                 }
                             }
-                        }
+                        }*/
 
+                        $checkuser = \Yii::$app->ad->search()->findBy(Yii::$app->params['dni'], $model->dni);
                         $model->samaccountname = $checkuser->getAttribute('samaccountname',0);
                         $model->mail = $checkuser->getEmail();
 
@@ -607,6 +655,7 @@ class AdldapController extends Controller
                 $adldapnewuser = \app\models\AdldapNewUsers::find()
                     ->where(['dni' => $model->dni])
                     ->andWhere(['fec_nacimiento' => $model->fec_nacimiento])
+                    //->orderBy('id DESC')
                     ->one();
 
                 if (isset($adldapnewuser)) {
@@ -654,7 +703,7 @@ class AdldapController extends Controller
                             ['model' => $model]);
                     } elseif ($adldapnewuser->status == 3) {
 
-                        //OBTENER PRIMERA INICIAL DE CADA NOMBRE
+                        /*//OBTENER PRIMERA INICIAL DE CADA NOMBRE
                         $fn = explode(' ', $model->firstname);
                         $result_fn = '';
                         foreach($fn as $t) {
@@ -726,8 +775,9 @@ class AdldapController extends Controller
                                         "Error al identificar su usuario. Por favor notifique su inconveniente en la Mesa de Ayuda");
                                 }
                             }
-                        }
+                        }*/
 
+                        $checkuser = \Yii::$app->ad->search()->findBy(Yii::$app->params['dni'], $model->dni);
                         $model->samaccountname = $checkuser->getAttribute('samaccountname',0);
                         $model->mail = $checkuser->getEmail();
 
@@ -768,6 +818,7 @@ class AdldapController extends Controller
                 $adldapnewuser = \app\models\AdldapNewUsers::find()
                     ->where(['dni' => $model->dni])
                     ->andWhere(['fec_nacimiento' => $model->fec_nacimiento])
+                    //->orderBy('id DESC')
                     ->one();
 
                 if (isset($adldapnewuser)) {
@@ -897,6 +948,13 @@ class AdldapController extends Controller
                             $dn->addOU($model->dn);
                             $dn->addOU('ESTUDIANTES');
                             $user->setDn($dn);
+                            //
+                            $user->setTitle($model->title);
+                            $security = new Security();
+                            $user->setPassword($security->generateRandomString(8));
+                            $user->setAttribute(Yii::$app->params['dni'],$model->dni);
+                            $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);
+                            $user->setEmail($model->mail);
 
                             // CREAR USUARIO
                             if ($user->save()) {
@@ -924,7 +982,7 @@ class AdldapController extends Controller
                         }
                     } elseif ($adldapnewuser->status == 3) {
 
-                        //OBTENER PRIMERA INICIAL DE CADA NOMBRE
+                        /*//OBTENER PRIMERA INICIAL DE CADA NOMBRE
                         $fn = explode(' ', $model->firstname);
                         $result_fn = '';
                         foreach($fn as $t) {
@@ -996,8 +1054,9 @@ class AdldapController extends Controller
                                         "Error al identificar su usuario. Por favor notifique su inconveniente en la Mesa de Ayuda");
                                 }
                             }
-                        }
+                        }*/
 
+                        $checkuser = \Yii::$app->ad->search()->findBy(Yii::$app->params['dni'], $model->dni);
                         $model->samaccountname = $checkuser->getAttribute('samaccountname',0);
                         $model->mail = $checkuser->getEmail();
 
@@ -1038,6 +1097,7 @@ class AdldapController extends Controller
                 $adldapnewuser = \app\models\AdldapNewUsers::find()
                     ->where(['dni' => $model->dni])
                     ->andWhere(['fec_nacimiento' => $model->fec_nacimiento])
+                    //->orderBy('id DESC')
                     ->one();
 
                 if (isset($adldapnewuser)) {
@@ -1144,12 +1204,12 @@ class AdldapController extends Controller
                                     if ($adldapnewuser->campus == 'PUYO') {
                                         $existGroup = '';
                                         foreach ($groupNames as $groupName) {
-                                            if ($groupName == 'ob1suke36w6hpyl') {
+                                            if ($groupName == 'pnnfxlrnu8mux5w') {
                                                 $existGroup = 'SI';
                                             }
                                         }
                                         if ($existGroup != 'SI') {
-                                            $groupObject = \Yii::$app->ad->search()->findBy('cn', 'ob1suke36w6hpyl');
+                                            $groupObject = \Yii::$app->ad->search()->findBy('cn', 'pnnfxlrnu8mux5w');
                                             $user->addGroup($groupObject);
                                         }
                                     }
@@ -1189,7 +1249,7 @@ class AdldapController extends Controller
                                     $groupObject = \Yii::$app->ad->search()->findBy('cn', '3gm4v0hkup5dx55');
                                     $user->addGroup($groupObject);
                                     if ($adldapnewuser->campus == 'PUYO') {
-                                        $groupObject = \Yii::$app->ad->search()->findBy('cn', 'ob1suke36w6hpyl');
+                                        $groupObject = \Yii::$app->ad->search()->findBy('cn', 'pnnfxlrnu8mux5w');
                                         $user->addGroup($groupObject);
                                     }
                                     if ($adldapnewuser->campus == 'LAGO AGRIO') {
@@ -1210,7 +1270,8 @@ class AdldapController extends Controller
 
                                 //Actualizar datos en SIAD Nivelacion
                                 $estudianteNivelacion = \app\models\EstudiantesNivelacion::find()
-                                    ->where(['cedula_pasaporte' => $model->dni])
+                                    ->where(['CIInfPer' => $model->dni])
+                                    ->orWhere(['cedula_pasaporte' => $model->dni])
                                     ->one();
                                 if (isset($estudianteNivelacion)) {
                                     $estudianteNivelacion->FechNacimPer = $model->fec_nacimiento;
@@ -1219,6 +1280,20 @@ class AdldapController extends Controller
                                     $estudianteNivelacion->mailInst = $model->mail;
                                     $estudianteNivelacion->statusper = 1;
                                     $estudianteNivelacion->save(false);
+                                }
+
+                                //Actualizar datos en SIAD Pregrado
+                                $estudiantePregrado = \app\models\Estudiantes::find()
+                                    ->where(['CIInfPer' => $model->dni])
+                                    ->orWhere(['cedula_pasaporte' => $model->dni])
+                                    ->one();
+                                if (isset($estudiantePregrado)) {
+                                    $estudiantePregrado->FechNacimPer = $model->fec_nacimiento;
+                                    $estudiantePregrado->CelularInfPer = $model->mobile;
+                                    $estudiantePregrado->mailPer = $model->personalmail;
+                                    $estudiantePregrado->mailInst = $model->mail;
+                                    $estudiantePregrado->statusper = 1;
+                                    $estudiantePregrado->save(false);
                                 }
 
                                 //Enviar usuario creado por email

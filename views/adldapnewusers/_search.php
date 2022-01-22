@@ -33,6 +33,8 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'celular') ?>
 
+    <?php // echo $form->field($model, 'proceso') ?>
+
     <?php // echo $form->field($model, 'status') ?>
 
     <div class="form-group">

@@ -47,6 +47,8 @@ use yii\bootstrap\ActiveForm;
 
     <?= $form->field($model, 'celular')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'proceso')->textInput(['maxlength' => true]) ?>
+
     <?= $form->field($model, 'status')->dropDownList([
         '1'=>'1 - Cuenta no creada',
         '2'=>'2 - Email Personal Verificado',

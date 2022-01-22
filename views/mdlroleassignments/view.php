@@ -4,14 +4,14 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\AdldapNewUsers */
+/* @var $model app\models\MdlRoleAssignments */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Adldap New Users', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Mdl Role Assignments', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
-<div class="adldap-new-users-view">
+<div class="mdl-role-assignments-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -30,16 +30,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'dni',
-            'nombres',
-            'apellidos',
-            'fec_nacimiento',
-            'campus',
-            'carrera',
-            'email_personal:email',
-            'celular',
-            'proceso',
-            'status',
+            'roleid',
+            'contextid',
+            'userid',
+            'timemodified:datetime',
+            'modifierid',
+            'component',
+            'itemid',
+            'sortorder',
         ],
     ]) ?>
 

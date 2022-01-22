@@ -74,4 +74,13 @@ return [
     'ga-code'         => 'ENTER CODE HERE',
     'ga-status'       => 'enable',
 
+    //Kartik Icons Framework
+    //https://fontawesome.com/icons?d=gallery
+    'icon-framework' => \kartik\icons\Icon::FAS,
+
+    //Moodle Sync
+    'moodle_host'     => '0.0.0.0',
+    'moodle_user'     => 'root',
+    'moodle_pass'     => '',
+
 ];

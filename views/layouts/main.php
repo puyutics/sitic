@@ -137,6 +137,17 @@ AppAsset::register($this);
                         ['label' => 'Registros del Sistema', 'url' => 'index.php?r=logs/index'],
                     ],
                 ],
+                [
+                    'label' => 'siad2eva',
+                    'items' => [
+                        //['label' => '..Reportes TI', 'url' => 'index.php?r=site/reports'],
+                        //'<li class="divider"></li>',
+                        ['label' => 'SIAD - Docente::Asignatura', 'url' => 'index.php?r=docenteasignatura/index&idper=37'],
+                        ['label' => 'SIAD - Estudiantes::Asignatura', 'url' => 'index.php?r=notasalumno/index&idper=37'],
+                        ['label' => 'EVA - Matriculas', 'url' => 'index.php?r=mdlroleassignments'],
+                        //['label' => 'Metodo nuevo', 'url' => 'index.php?r=mdlroleassignments/siad2eva'],
+                    ],
+                ],
                 //['label' => 'Acerca de', 'url' => ['/site/about']],
                 //['label' => 'Contacto', 'url' => ['/site/contact']],
             ],

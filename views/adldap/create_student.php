@@ -19,7 +19,7 @@ $this->title = Yii::t('app', 'Crear estudiante');
 //$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Usuarios'), 'url' => ['adldap/index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-if (strtotime(date("Y-m-d H:i:00",time())) > strtotime("2021-06-07 08:00:00")) {
+if (strtotime(date("Y-m-d H:i:s",time())) > strtotime("2021-12-13 08:00:00")) {
     $system_status = true;
 } else {
     $system_status = false;
@@ -39,10 +39,10 @@ if (isset($_GET['test'])) {
         'options' => ['autocomplete' => 'off'],
     ]); ?>
 
-    <div class="alert alert-info" align="center">
-        <h3 align="center">Crear cuenta institucional</h3>
+    <div align="center">
+        <?= Html::img('images/uea_createstudent.jpg',['height'=>60, 'width'=>700]);?>
     </div>
-
+    <br>
     <?php if ($model->step == 0) { ?>
 
         <div class="edit-form">
@@ -126,7 +126,7 @@ if (isset($_GET['test'])) {
                     <div class="panel-body">
 
                         <?php if (Yii::$app->session->hasFlash('errorNoBd')) { ?>
-                            <div class="alert alert-danger">
+                            <div class="alert alert-danger" align="center">
                                 <?= Yii::$app->session->getFlash('errorNoBd') ?>
                             </div>
                         <?php } ?>
@@ -492,6 +492,6 @@ if (isset($_GET['test'])) {
 
 <?php } else { ?>
     <div class="alert alert-info" align="center">
-        <h3 align="center">El sistema no se encuentra habilitado. A partir del próximo lunes 07 de junio de 2021 desde las 08h00, empezará el proceso de inscripción para todos los estudiantes que hayan aceptado el cupo para nuestra institución.</h3>
+        <h3 align="center">El sistema no se encuentra habilitado. A partir del próximo lunes 13 de diciembre de 2021 desde las 08h00, empezará el proceso de inscripción para todos los estudiantes que hayan aceptado el cupo para nuestra institución.</h3>
     </div>
 <?php } ?>

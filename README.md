@@ -122,14 +122,14 @@ Editar el archivo `config/web.php` y el archivo `config/console.php` con datos r
            'default' => [
                'autoconnect' => true,
                'config' => [
-                   'domain_controllers' => [
+                   'hosts' => [
                        'dominio.com',
                        'ipaddress',
                     ],
                     'account_suffix'    =>  '@dominio.com',
                     'base_dn'           =>  'dc=dominio,dc=com',
-                    'admin_username'    =>  'administrador',
-                    'admin_password'    =>  '',
+                    'username'          =>  'administrador@dominio.com',
+                    'password'          =>  '',
                     'port'              =>  636,
                     'use_ssl'           =>  true,
                     'use_tls'           =>  true,

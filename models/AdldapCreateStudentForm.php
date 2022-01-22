@@ -58,6 +58,9 @@ class AdldapCreateStudentForm extends Model
                 'digit'=>1,
                 'special'=>0
             ],
+            [['dni'], 'match',
+                'pattern' => '/^[0-9A-Z]+$/u',
+                'message'=>'Ingrese solo números y/o letras mayúsculas. {attribute} no puede contener caracteres especiales, ni espacios en blanco'],
         ];
     }
 

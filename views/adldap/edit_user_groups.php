@@ -26,9 +26,11 @@ if (isset($_GET['search'])) { ?>
 
                     <?php echo "<p></p>";
                     echo "<p><b>Grupo(s)</b></p>";
+                        $i=0;
                         foreach($model->groups as $group)
                         {
-                            echo $group->getName().", ";
+                            $i=$i+1;
+                            echo $i . '. ' . $group->getName()."<br>";
                         }
                     ?>
 

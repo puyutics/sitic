@@ -16,6 +16,7 @@ use Yii;
  * @property string $carrera CARRERA
  * @property string $email_personal EMAIL PERSONAL
  * @property string $celular CELULAR
+ * @property string $proceso PROCESO
  * @property int $status ESTADO
  */
 class AdldapNewUsers extends \yii\db\ActiveRecord
@@ -36,7 +37,7 @@ class AdldapNewUsers extends \yii\db\ActiveRecord
         return [
             [['fec_nacimiento'], 'safe'],
             [['status'], 'integer'],
-            [['dni', 'nombres', 'apellidos', 'campus', 'carrera', 'email_personal', 'celular'], 'string', 'max' => 255],
+            [['dni', 'nombres', 'apellidos', 'campus', 'carrera', 'email_personal', 'celular', 'proceso'], 'string', 'max' => 255],
             [['email_personal'], 'email'],
             [['dni'], 'match',
                 'pattern' => '/^[A-Z0-9]+$/u',
@@ -68,6 +69,7 @@ class AdldapNewUsers extends \yii\db\ActiveRecord
             'carrera' => 'CARRERA',
             'email_personal' => 'EMAIL PERSONAL',
             'celular' => 'CELULAR',
+            'proceso' => 'PROCESO',
             'status' => 'ESTADO',
         ];
     }

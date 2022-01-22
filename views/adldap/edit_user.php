@@ -71,7 +71,6 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
         </div>
     </div>
 
-
     <?php if (!isset($_GET['search'])) { ?>
         <div class="row"> <div class="alert alert-warning col-sm-offset-4 col-sm-4" align="center">
             <?= $form->field($model, 'search')->textInput(); ?>

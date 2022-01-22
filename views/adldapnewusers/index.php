@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\AdldapNewUsersSearch */
@@ -27,33 +28,76 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
 
-            'id',
-            'dni',
-            'nombres',
-            'apellidos',
+            //'id',
+            [
+                'attribute'=>'dni',
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>ArrayHelper::map(\app\models\AdldapNewUsers::find()
+                    ->all(), 'dni', 'dni'),
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>['allowClear'=>true],
+                ],
+                'filterInputOptions'=>['placeholder'=>'Seleccionar'],
+                'format'=>'raw',
+            ],
+            [
+                'attribute'=>'nombres',
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>ArrayHelper::map(\app\models\AdldapNewUsers::find()
+                    ->all(), 'nombres', 'nombres'),
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>['allowClear'=>true],
+                ],
+                'filterInputOptions'=>['placeholder'=>'Seleccionar'],
+                'format'=>'raw',
+            ],
+            [
+                'attribute'=>'apellidos',
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>ArrayHelper::map(\app\models\AdldapNewUsers::find()
+                    ->all(), 'apellidos', 'apellidos'),
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>['allowClear'=>true],
+                ],
+                'filterInputOptions'=>['placeholder'=>'Seleccionar'],
+                'format'=>'raw',
+            ],
             'fec_nacimiento',
             [
-                'attribute' => 'campus',
-                'filter'=>[
-                    'PUYO'=>'PUYO',
-                    'LAGO AGRIO'=>'LAGO AGRIO',
-                    'PANGUI'=>'PANGUI',
+                'attribute'=>'campus',
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>ArrayHelper::map(\app\models\AdldapNewUsers::find()
+                    ->all(), 'campus', 'campus'),
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>['allowClear'=>true],
                 ],
+                'filterInputOptions'=>['placeholder'=>'Seleccionar'],
+                'format'=>'raw',
             ],
             [
-                'attribute' => 'carrera',
-                'filter'=>[
-                    'AGROINDUSTRIAL'=>'AGROINDUSTRIAL',
-                    'AGROPECUARIA'=>'AGROPECUARIA',
-                    'AMBIENTAL'=>'AMBIENTAL',
-                    'BIOLOGIA'=>'BIOLOGIA',
-                    'COMUNICACION'=>'COMUNICACION',
-                    'FORESTAL'=>'FORESTAL',
-                    'TURISMO'=>'TURISMO',
+                'attribute'=>'carrera',
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>ArrayHelper::map(\app\models\AdldapNewUsers::find()
+                    ->all(), 'carrera', 'carrera'),
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>['allowClear'=>true],
                 ],
+                'filterInputOptions'=>['placeholder'=>'Seleccionar'],
+                'format'=>'raw',
             ],
             //'email_personal:email',
-            'celular',
+            //'celular',
+            [
+                'attribute'=>'proceso',
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>ArrayHelper::map(\app\models\AdldapNewUsers::find()
+                    ->all(), 'proceso', 'proceso'),
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>['allowClear'=>true],
+                ],
+                'filterInputOptions'=>['placeholder'=>'Seleccionar'],
+                'format'=>'raw',
+            ],
             [
                 'attribute' => 'status',
                 'value' => function($model) {

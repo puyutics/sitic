@@ -4,12 +4,12 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\AdldapNewUsers;
+use app\models\MdlRoleAssignments;
 
 /**
- * AdldapNewUsersSearch represents the model behind the search form of `app\models\AdldapNewUsers`.
+ * MdlRoleAssignmentsSearch represents the model behind the search form of `app\models\MdlRoleAssignments`.
  */
-class AdldapNewUsersSearch extends AdldapNewUsers
+class MdlRoleAssignmentsSearch extends MdlRoleAssignments
 {
     /**
      * {@inheritdoc}
@@ -17,8 +17,8 @@ class AdldapNewUsersSearch extends AdldapNewUsers
     public function rules()
     {
         return [
-            [['id', 'status'], 'integer'],
-            [['dni', 'nombres', 'apellidos', 'fec_nacimiento', 'campus', 'carrera', 'email_personal', 'celular', 'proceso'], 'safe'],
+            [['id', 'roleid', 'contextid', 'userid', 'timemodified', 'modifierid', 'itemid', 'sortorder'], 'integer'],
+            [['component'], 'safe'],
         ];
     }
 
@@ -40,7 +40,7 @@ class AdldapNewUsersSearch extends AdldapNewUsers
      */
     public function search($params)
     {
-        $query = AdldapNewUsers::find();
+        $query = MdlRoleAssignments::find();
 
         // add conditions that should always apply here
 
@@ -59,18 +59,16 @@ class AdldapNewUsersSearch extends AdldapNewUsers
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'fec_nacimiento' => $this->fec_nacimiento,
-            'status' => $this->status,
+            'roleid' => $this->roleid,
+            'contextid' => $this->contextid,
+            'userid' => $this->userid,
+            'timemodified' => $this->timemodified,
+            'modifierid' => $this->modifierid,
+            'itemid' => $this->itemid,
+            'sortorder' => $this->sortorder,
         ]);
 
-        $query->andFilterWhere(['like', 'dni', $this->dni])
-            ->andFilterWhere(['like', 'nombres', $this->nombres])
-            ->andFilterWhere(['like', 'apellidos', $this->apellidos])
-            ->andFilterWhere(['like', 'campus', $this->campus])
-            ->andFilterWhere(['like', 'carrera', $this->carrera])
-            ->andFilterWhere(['like', 'email_personal', $this->email_personal])
-            ->andFilterWhere(['like', 'celular', $this->celular])
-            ->andFilterWhere(['=', 'proceso', $this->proceso]);
+        $query->andFilterWhere(['like', 'component', $this->component]);
 
         return $dataProvider;
     }
