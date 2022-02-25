@@ -136,7 +136,6 @@ class AdldapController extends Controller
                     $dnBuilder = 'CN=' . $model->commonname . ',' . $model->dn;
                     $user->setDn($dnBuilder);
                     //
-                    $user->setTitle($model->title);
                     $security = new Security();
                     $user->setPassword($security->generateRandomString(8));
                     $user->setAttribute(Yii::$app->params['dni'],$model->dni);
@@ -1648,7 +1647,6 @@ class AdldapController extends Controller
                     }
 
                 } else {
-
                     if ((isset($users)) and (count($users)>1)) {
                         return $this->render('edit_user',
                             [
@@ -2366,7 +2364,7 @@ class AdldapController extends Controller
         $modelLogs->datetime    = date('Y-m-d H:i:s');
         $modelLogs->description = $description;
         ;
-        $modelLogs->ipaddress       = Yii::$app->request->userIP;
+        $modelLogs->ipaddress       = \app\models\User::obtenerip();
         $modelLogs->external_id     = $external_id;
         $modelLogs->external_type   = $external_type;
         $modelLogs->save(false);

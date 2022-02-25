@@ -57,7 +57,7 @@ $siad_estudiantes_command = $siad_connection->createCommand("
             AND ipe.CIInfPer = naa.CIInfPer
             AND ipe.mailInst LIKE '%@uea.edu.ec'
             AND m.idMatricula = naa.idMatricula
-            AND m.aceptado = 1
+            AND m.statusMatricula = 'APROBADA'
     ORDER BY
             siad_id ASC");
 $siad_estudiantes_matriculas = $siad_estudiantes_command->queryAll();

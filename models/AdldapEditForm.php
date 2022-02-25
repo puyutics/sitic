@@ -40,6 +40,7 @@ class AdldapEditForm extends Model
             [['department','title','addGroup','deleteGroup'],'string'],
             [['mobile','uac'],'number'],
             [['mail','personalmail'], 'email'],
+            [['search'], 'safe'],
         ];
     }
 

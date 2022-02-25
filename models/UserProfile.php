@@ -88,4 +88,10 @@ class UserProfile extends \yii\db\ActiveRecord
         }
         return new static($user);
     }
+
+
+    public function getDatosCompletos()
+    {
+        return $this->dni." : ".$this->lastname." ".$this->firstname;
+    }
 }

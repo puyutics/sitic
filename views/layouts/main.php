@@ -125,6 +125,7 @@ AppAsset::register($this);
                         //['label' => 'Buscar Beneficiario', 'url' => 'index.php?r=tabintformulario/beneficiarioadmin'],
                         //['label' => 'Tablets e Internet', 'url' => 'index.php?r=tabintformulario/index'],
                         ['label' => 'Comunicados', 'url' => 'index.php?r=sysemail/index'],
+                        ['label' => 'Roles de Pago', 'url' => 'index.php?r=roluser/index'],
                     ],
                 ],
                 [
@@ -193,7 +194,9 @@ AppAsset::register($this);
              -
             <a href="mailto:sitic@uea.edu.ec?subject=SITIC | Feedback"> Problemas y Sugerencias </a>
              -
-            IP: <?= Yii::$app->request->userIP; ?>
+            IP:
+            <?= \app\models\User::obtenerip(); ?>
+            <?php //echo Yii::$app->request->userIP; ?>
         </p>
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>

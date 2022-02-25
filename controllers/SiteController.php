@@ -244,7 +244,7 @@ class SiteController extends Controller
         $modelLogs->datetime    = date('Y-m-d H:i:s');
         $modelLogs->description = $description;
         ;
-        $modelLogs->ipaddress       = Yii::$app->request->userIP;
+        $modelLogs->ipaddress       = \app\models\User::obtenerip();
         $modelLogs->external_id     = $username;
         $modelLogs->external_type   = $external_type;
         $modelLogs->save(false);

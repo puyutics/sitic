@@ -297,7 +297,7 @@ class InvpurchaseitemController extends Controller
         $modelLogs->username    = $username;
         $modelLogs->datetime    = date('Y-m-d H:i:s');
         $modelLogs->description = $description;
-        $modelLogs->ipaddress       = Yii::$app->request->userIP;
+        $modelLogs->ipaddress       = \app\models\User::obtenerip();
         $modelLogs->external_id     = $external_id;
         $modelLogs->external_type   = $external_type;
         $modelLogs->save(false);

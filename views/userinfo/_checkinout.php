@@ -24,9 +24,7 @@ use kartik\grid\GridView;
         //'filterModel' => $searchModelCheckInOut,
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
-
             //'USERID',
-
             [
                 'label' => 'Día',
                 'attribute' => 'CHECKTIME',
@@ -82,7 +80,6 @@ use kartik\grid\GridView;
                 },
                 'width'=>'50px'
             ],
-
             //'SENSORID',
             //'Memoinfo',
             //'WorkCode',

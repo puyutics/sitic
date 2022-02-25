@@ -33,7 +33,7 @@ use yii\data\ActiveDataProvider;
                 'label'=>'DETALLE',
                 'attribute'=>'description',
             ],
-            [
+            /*[
                 'label'=>'USUARIO',
                 'attribute' => 'username',
                 'value'=>function($model){
@@ -44,7 +44,7 @@ use yii\data\ActiveDataProvider;
                         return "-";
                     }
                 },
-            ],
+            ],*/
         ],
         'pjax' => true,
         'bordered' => true,

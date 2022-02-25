@@ -172,7 +172,10 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                 "username" => $username
             ])
             ->one();
-        if (!count($user)) {
+        /*if (!count($user)) {
+            return null;
+        }*/
+        if (!isset($user)) {
             return null;
         }
         return new static($user);
@@ -235,5 +238,34 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function getUserProfile()
     {
         return $this->hasOne(UserProfile::className(), ['username' => 'username']);
+    }
+
+
+    public  function obtenerip()
+    {
+        if (isset($_SERVER["HTTP_CLIENT_IP"]))
+        {
+            return $_SERVER["HTTP_CLIENT_IP"];
+        }
+        elseif (isset($_SERVER["HTTP_X_FORWARDED_FOR"]))
+        {
+            return $_SERVER["HTTP_X_FORWARDED_FOR"];
+        }
+        elseif (isset($_SERVER["HTTP_X_FORWARDED"]))
+        {
+            return $_SERVER["HTTP_X_FORWARDED"];
+        }
+        elseif (isset($_SERVER["HTTP_FORWARDED_FOR"]))
+        {
+            return $_SERVER["HTTP_FORWARDED_FOR"];
+        }
+        elseif (isset($_SERVER["HTTP_FORWARDED"]))
+        {
+            return $_SERVER["HTTP_FORWARDED"];
+        }
+        else
+        {
+            return $_SERVER["REMOTE_ADDR"];
+        }
     }
 }

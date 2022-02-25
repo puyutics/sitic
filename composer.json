@@ -29,6 +29,7 @@
         "edvlerblog/yii2-adldap-module": "^6.0.0",
         "et-soft/yii2-widget-select-year": "*",
         "himiklab/yii2-recaptcha-widget" : "*",
+        "johnitvn/yii2-ajaxcrud": "*",
         "kartik-v/yii2-date-range": "dev-master",
         "kartik-v/yii2-detail-view": "*",
         "kartik-v/yii2-editable": "@dev",
@@ -68,6 +69,9 @@
         "process-timeout": 1800,
         "fxp-asset": {
             "enabled": false
+        },
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true
         }
     },
     "scripts": {

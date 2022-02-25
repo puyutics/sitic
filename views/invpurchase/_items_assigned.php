@@ -58,7 +58,17 @@ use yii\data\ActiveDataProvider;
             'description',
             'date_asigned',
             //'date_released',
-            'username',
+            //'username',
+            [
+                'label'=>'BENEFICIARIO',
+                'attribute'=>'username',
+                'value' =>function($model){
+                    $userProfile = \app\models\UserProfile::find()
+                        ->where(['username' => $model->username])
+                        ->one();
+                    return $userProfile->dni . ' : ' . $userProfile->lastname . ' ' . $userProfile->firstname;
+                },
+            ],
             /*[
                 'label'=>'USUARIO',
                 'attribute' => 'username',
@@ -76,6 +86,9 @@ use yii\data\ActiveDataProvider;
                     }
                     if ($model->status == 1) {
                         return 'ACTIVO';
+                    }
+                    if ($model->status == 2) {
+                        return 'DEVOLUCIÓN';
                     }
 
                 },

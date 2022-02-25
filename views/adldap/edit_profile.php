@@ -75,8 +75,17 @@ $diff = round(($today - $lastSetPassword)/86400);
                             </div>
                         </div>
 
+                        <div align="left">
+                            <p></p>
+                            <p><b>Último cambio de contraseña: </b>
+                                <?php
+                                echo $diff . ' días (' . $user->getPasswordLastSetDate() . ')';
+                                ?>
+                            </p>
+                        </div>
+
                         <?php echo "<p></p>";
-                        echo "<p><b>Estado</b></p>";
+                        echo "<b>Estado: </b>";
                         //NORMAL_ACCOUNT	0x0200	512
                         if ($model->uac == 512) { ?><span class="label label-success">CUENTA ACTIVA</span><?php }
                         //Disabled Account	0x0202	514
@@ -87,27 +96,21 @@ $diff = round(($today - $lastSetPassword)/86400);
                         if ($model->uac == 66050) { ?><span class="label label-danger">CUENTA DESACTIVA, CONTRASEÑA NUNCA EXPIRA</span><?php }
                         ?>
 
-                        <?php echo "<p></p>";
+                        <?php /*echo "<p></p>";
                         echo "<p><b>Grupo(s)</b></p>";
                         foreach($model->groups as $group)
                         {
                             echo $group->getName().", ";
                         }
-                        ?>
+                        */?>
 
-                        <?php echo "<p></p>";
+                        <?php /*echo "<p></p>";
                         echo "<p><b>Unidad Organizativa</b></p>";
                         echo $model->dn;
-                        ?>
+                        */?>
 
-                        <div align="center">
-                            <p></p>
-                            <p><b>Último cambio de contraseña: </b>
-                                <?php
-                                echo $diff . ' días (' . $user->getPasswordLastSetDate() . ')';
-                                ?>
-                            </p>
-                        </div>
+                        <br>
+                        <br>
 
                         <div align="center" class="form-group">
 

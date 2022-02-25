@@ -104,7 +104,7 @@ class DocumentsController extends Controller
                     'Nuevo documento subido por: ' . $model->username
                     . '. Detalle: ' . $model->description
                 ;
-                $modelLogs->ipaddress = Yii::$app->request->userIP;
+                $modelLogs->ipaddress = \app\models\User::obtenerip();
                 $modelLogs->external_id = $model->getPrimaryKey();
                 $modelLogs->external_type = 'documents';
                 $modelLogs->save(false);

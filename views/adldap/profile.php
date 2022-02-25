@@ -5,12 +5,12 @@
 
 use kartik\tabs\TabsX;
 
-$sAMAccountname = Yii::$app->user->identity->username;
+$username = Yii::$app->user->identity->username;
 $user = Yii::$app->ad->getProvider('default')->search()
-    ->findBy('sAMAccountname', $sAMAccountname);
+    ->findBy('sAMAccountname', $username);
 $dni = $user->getAttribute(Yii::$app->params['dni'],0);
 
-$this->title = Yii::t('app', 'Editar: {nameAttribute}', [
+$this->title = Yii::t('app', 'Mi Perfil: {nameAttribute}', [
     'nameAttribute' => Yii::$app->user->identity->username,
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Identidad'), 'url' => ['site/identity']];
@@ -32,9 +32,15 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
             ]),
         ],
         [
-            'label'=>'<i class="glyphicon glyphicon-list-alt"></i> Asistencia',
+            'label'=>'<i class="glyphicon glyphicon-list-alt"></i> Biométrico',
             'content' => $this->render('asistencia', [
                 'dni' => $dni
+            ]),
+        ],
+        [
+            'label'=>'<i class="glyphicon glyphicon-list-alt"></i> Roles de Pago',
+            'content' => $this->render('../roluser/_user', [
+                'username' => $username
             ]),
         ],
     ],
