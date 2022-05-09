@@ -10,24 +10,60 @@ Icon::map($this);
 /* @var $searchModel app\models\MdlRoleAssignmentsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'EVA Pregrado - Mdl Role Assignments';
+$this->title = 'Sincronizador: SIAD >> EVA Pregrado';
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 <div class="mdl-role-assignments-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1 align="center"><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?= Html::a('Todos', ['index'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('Profesores', ['index','role' => 'teacher'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('Estudiantes', ['index','role' => 'student'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('Depurar Cursos', ['mdlcoursepurge'], ['class' => 'btn btn-primary', 'target' => '_blank']) ?>
-        <?= Html::a('Depurar Matrículas', ['mdlenrolpurge'], ['class' => 'btn btn-danger', 'target' => '_blank']) ?>
+    <h4 align="center" class="alert alert-default">
+        Sincronizador diseñado para extraer, comparar y depurar información de las bases de datos del sistema académico SIAD y la plataforma EVA Pregrado, utilizando el método Flat File Enrolment (CSV) de Moodle
+    </h4>
+    <div class="row">
+        <div align="center" class="col-lg-6">
+            <h5 class="alert alert-info">
+                <b>Características</b><br>
+                <br>- Permite sincronizar los código de aulas: dpa_id (SIAD) >> idnumber (Moodle)
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+            </h5>
+            <?= Html::a('Sincronizar Aulas', ['mdlcoursepurge'], ['class' => 'btn btn-md btn-danger', 'target' => '_blank']) ?>
+        </div>
+        <div align="center" class="col-lg-6">
+            <h5 class="alert alert-info">
+                <b>Características</b><br>
+                <br>- Identifica aulas no creadas en Moodle
+                <br>- Identifica usuarios no creados en Moodle
+                <br>- Identifica matriculas duplicadas en Moodle
+                <br>- Sincronización de docentes matriculados / eliminados
+                <br>- Sincronización de estudiantes matriculados / eliminados
+                <br>- Generación <code>siad_pregrado.txt</code> y transferencia a <code>/enrol</code> servidor Moodle
+            </h5>
+            <?= Html::a('Sincronizar Matrículas', ['mdlenrolpurge'], ['class' => 'btn btn-md btn-danger', 'target' => '_blank']) ?>
+        </div>
+    </div>
+    <hr>
+    <h5 align="center" class="alert alert-default">
+        <code>Parámetros de configuración: config/params.php</code><br>
+        <br>- Período SIAD: <code><?= Yii::$app->params['siad_periodo']?></code>
+        <br>- Código cursos: <code><?= Yii::$app->params['course_code']?></code>
+        <br>- Moodle Host: <code><?= Yii::$app->params['moodle_host']?></code>
+        <br>- Moodle User: <code><?= Yii::$app->params['moodle_user']?></code>
+        <br>- Moodle Pass: <code><?= '****' ?></code>
+    </h5>
+    <p align="center">
+        <?php //echo Html::a('Todos', ['index'], ['class' => 'btn btn-success']) ?>
+        <?php //echo Html::a('Profesores', ['index','role' => 'teacher'], ['class' => 'btn btn-success']) ?>
+        <?php //echo Html::a('Estudiantes', ['index','role' => 'student'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?= GridView::widget([
+    <?php /*echo GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
@@ -105,7 +141,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     $codigo = explode('-', $mdl_course->shortname);
 
-                    if ($codigo[0] == 2122 and isset($codigo[4])) {
+                    if ($codigo[0] == Yii::$app->params['course_code'] and isset($codigo[4])) {
                         $userid = $model->userid;
                         $mdl_user = \app\models\MdlUser::find()
                             ->where(['id' => $userid])
@@ -122,7 +158,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             ->one();
 
                             $docenteAsignatura = \app\models\DocenteAsignatura::find()
-                                ->where(['idPer' => 37])
+                                ->where(['idPer' => Yii::$app->params['siad_periodo']])
                                 ->andWhere(['idAsig' => $codigo[1] . '-' . $codigo[2] . '-' . $codigo[3]])
                                 ->andWhere(['idParalelo' => $codigo[4]])
                                 ->one();
@@ -140,7 +176,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         } elseif ($mdl_role->shortname == 'teacher'
                                     or $mdl_role->shortname == 'editingteacher') {
                             $docenteAsignatura = \app\models\DocenteAsignatura::find()
-                                ->where(['idPer' => 37])
+                                ->where(['idPer' => Yii::$app->params['siad_periodo']])
                                 ->andWhere(['idAsig' => $codigo[1] . '-' . $codigo[2] . '-' . $codigo[3]])
                                 ->andWhere(['idParalelo' => $codigo[4]])
                                 ->one();
@@ -192,5 +228,5 @@ $this->params['breadcrumbs'][] = $this->title;
         'panel' => [
             'type' => GridView::TYPE_PRIMARY
         ],
-    ]); ?>
+    ]); */?>
 </div>

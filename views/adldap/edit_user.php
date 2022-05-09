@@ -51,6 +51,16 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
 <div class="search-form">
     <div class="row">
         <div>
+            <?php if (Yii::$app->session->hasFlash('successRandomPassword')) { ?>
+                &nbsp;
+                <div class="alert alert-success">
+                    Random Password generado satisfactoriamente.
+                </div>
+            <?php } ?>
+        </div>
+    </div>
+    <div class="row">
+        <div>
             <?php if (Yii::$app->session->hasFlash('successMail')) { ?>
                 &nbsp;
                 <div class="alert alert-success">

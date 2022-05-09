@@ -30,6 +30,7 @@ class AdldapCreateStudentForm extends Model
     public $token;
     public $newPassword;
     public $verifyNewPassword;
+    public $status;
 
     /**
      * @return array the validation rules.
@@ -61,6 +62,7 @@ class AdldapCreateStudentForm extends Model
             [['dni'], 'match',
                 'pattern' => '/^[0-9A-Z]+$/u',
                 'message'=>'Ingrese solo números y/o letras mayúsculas. {attribute} no puede contener caracteres especiales, ni espacios en blanco'],
+            [['status'],'safe'],
         ];
     }
 

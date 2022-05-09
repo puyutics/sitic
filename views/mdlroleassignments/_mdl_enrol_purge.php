@@ -25,6 +25,42 @@ $eva_command = $eva_connection->createCommand("
             mdl_ra.id ASC");
 $eva_matriculas = $eva_command->queryAll();
 
+//Verificar EVA Matriculas duplicadas
+$eva_duplicados=0;
+$eva_ra_command = $eva_connection->createCommand("
+    SELECT
+            COUNT(mdl_ra.id) as num,
+            mdl_role.shortname as mdl_role_shortname,
+            mdl_user.idnumber as mdl_user_idnumber,
+            mdl_course.idnumber as mdl_course_idnumber
+    FROM
+            mdl_role_assignments mdl_ra,
+            mdl_context,
+            mdl_course,
+            mdl_user,
+            mdl_role
+    WHERE
+            mdl_context.id = mdl_ra.contextid
+            AND	mdl_course.id = mdl_context.instanceid
+            AND mdl_user.id = mdl_ra.userid
+            AND mdl_role.id = mdl_ra.roleid
+            AND mdl_course.idnumber <> ''
+    GROUP BY
+			mdl_ra.roleid,
+			mdl_ra.contextid,
+			mdl_ra.userid
+	HAVING 
+		    num > 1
+");
+$eva_ra_duplicates = $eva_ra_command->queryAll();
+foreach ($eva_ra_duplicates as $eva_ra_duplicate) {
+    $eva_duplicados=$eva_duplicados+1;
+    $eva_ri_shortname = $eva_ra_duplicate['mdl_role_shortname'];
+    $eva_mu_idnumber = $eva_ra_duplicate['mdl_user_idnumber'];
+    $eva_mc_idnumber = $eva_ra_duplicate['mdl_course_idnumber'];
+    echo 'Error: EVA Matrícula duplicada: ' . $eva_ri_shortname . ', ' . $eva_mu_idnumber . ', ' . $eva_mc_idnumber . '<br>';
+}
+
 //BD SIAD Pregrado
 $siad_connection = Yii::$app->get('db_siad');
 $siad_docentes_command = $siad_connection->createCommand("
@@ -36,7 +72,7 @@ $siad_docentes_command = $siad_connection->createCommand("
             docenteperasig dpa,
             informacionpersonal_d ipd
     WHERE
-            dpa.idPer = 37
+            dpa.idPer = ".Yii::$app->params['siad_periodo']."
             AND ipd.CIInfPer = dpa.CIInfPer
             AND ipd.mailInst LIKE '%@uea.edu.ec'
     ORDER BY
@@ -53,7 +89,8 @@ $siad_estudiantes_command = $siad_connection->createCommand("
             informacionpersonal ipe,
             matricula m
     WHERE
-            naa.idPer = 37
+            naa.idPer = ".Yii::$app->params['siad_periodo']."
+            AND naa.dpa_id <> 0
             AND ipe.CIInfPer = naa.CIInfPer
             AND ipe.mailInst LIKE '%@uea.edu.ec'
             AND m.idMatricula = naa.idMatricula
@@ -139,8 +176,8 @@ foreach ($eva_matriculas as $eva_matricula) {
             }
             if ($comprobar == 'del') {
                 $siad_docentes_del = $siad_docentes_del + 1;
-                //echo $comprobar . ', ' . $eva_ri_shortname . ', ' . $eva_mu_idnumber . ', ' . $eva_mc_idnumber . '<br>';
-                //fwrite($myfile, $comprobar . ', ' . $eva_ri_shortname . ', ' . $eva_mu_idnumber . ', ' . $eva_mc_idnumber . PHP_EOL);
+                echo $comprobar . ', ' . $eva_ri_shortname . ', ' . $eva_mu_idnumber . ', ' . $eva_mc_idnumber . '<br>';
+                fwrite($myfile, $comprobar . ', ' . $eva_ri_shortname . ', ' . $eva_mu_idnumber . ', ' . $eva_mc_idnumber . PHP_EOL);
             }
         }
     }
@@ -199,6 +236,7 @@ foreach ($siad_docentes_matriculas as $siad_docentes_matricula) {
 foreach ($siad_estudiantes_matriculas as $siad_estudiantes_matricula) {
     $siad_mu_idnumber = $siad_estudiantes_matricula['mdl_user_idnumber'];
     $siad_mc_idnumber = $siad_estudiantes_matricula['mdl_course_idnumber'];
+    $comprobar = '0';
 
     //Comprobar si el curso en Moodle existe
     foreach ($eva_courses as $eva_course) {
@@ -216,17 +254,21 @@ foreach ($siad_estudiantes_matriculas as $siad_estudiantes_matricula) {
                     }
                 }
             }
+
             if ($comprobar == 'add') {
                 if ($siad_mc_idnumber != 0) {
                     $siad_estudiantes_add = $siad_estudiantes_add + 1;
                     echo $comprobar . ', student, ' . $siad_mu_idnumber . ', ' . $siad_mc_idnumber . '<br>';
                     fwrite($myfile, $comprobar . ', student, ' . $siad_mu_idnumber . ', ' . $siad_mc_idnumber . PHP_EOL);
                 } else {
-                    echo 'error, student, ' . $siad_mu_idnumber . ', ' . $siad_mc_idnumber . '<br>';
+                    echo 'Error: Estudiante no matriculado: ' . $siad_mu_idnumber . ', ' . $siad_mc_idnumber . '<br>';
                 }
             }
             break;
         }
+    }
+    if ($comprobar == '0') {
+        echo 'Error: Estudiante no matriculado: ' . $siad_mu_idnumber . ', ' . $siad_mc_idnumber . '<br>';
     }
 }
 fclose($myfile);
@@ -241,6 +283,9 @@ $tiempoEjecucion = round($tiempoFinal - $tiempoInicial,2) . ' segundos';
     </div>
     <div style="font-size: 9pt; text-align: left;">
         <b>Total registros EVA: <?= count($eva_matriculas) - $eva_coordinadores ?></b>
+    </div>
+    <div style="font-size: 9pt; text-align: left;">
+        <b>Total registros EVA duplicados: <?= $eva_duplicados ?></b>
     </div>
     <br>
     <div style="font-size: 9pt; text-align: left;">
@@ -313,22 +358,24 @@ $tiempoEjecucion = round($tiempoFinal - $tiempoInicial,2) . ' segundos';
     </div>
     <br>
     <div style="font-size: 9pt; text-align: left;">
-        <b>Tiempo: <?= $tiempoEjecucion ?></b>
+        <b>Tiempo: </b><?= $tiempoEjecucion ?>
+        <br>
+        <b>Fecha y hora: </b><?= date('Y-m-d h:i:s') ?>
     </div>
 
 <?php function copyFileRemoteServer() {
     $srcFile = '/var/www/web_apps/sitic.uea.edu.ec/web/enrol/siad_pregrado.txt';
-    $dstFile = '/var/www/web_apps/eva2122.uea.edu.ec/enrol/siad_pregrado.txt';
+    $dstFile = '/var/www/web_apps/eva'.Yii::$app->params['course_code'].'.uea.edu.ec/enrol/siad_pregrado.txt';
     $bckFile = '/var/www/web_apps/sitic.uea.edu.ec/web/enrol/siad_pregrado_' . date('YmdHis') . '.txt';
 
     if (filesize($srcFile) > 0) {
-        // Create connection the the remote host
+        // Create connection to remote host
         $connection = ssh2_connect(Yii::$app->params['moodle_host'], 22);
-        ssh2_auth_password($connection, Yii::$app->params['moodle_user'], Yii::$app->params['moodle_pass']);
-
-        ssh2_scp_send($connection, $srcFile, $dstFile, 0644);
-        ssh2_exec($connection, 'chown apache:apache ' . $dstFile);
-        rename($srcFile, $bckFile);
+        if (ssh2_auth_password($connection, Yii::$app->params['moodle_user'], Yii::$app->params['moodle_pass'])) {
+            ssh2_scp_send($connection, $srcFile, $dstFile, 0644);
+            ssh2_exec($connection, 'chown apache:apache ' . $dstFile);
+            rename($srcFile, $bckFile);
+        }
     }
 } ?>
 

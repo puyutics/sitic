@@ -58,6 +58,15 @@ use yii\helpers\Html;
 
             <p align="center"><a class="btn btn-success" href="index.php?r=adldap/viewgroups"> Ver Grupos &raquo;</a></p>
         </div>
+        <div class="col-lg-3">
+            <h2 align="center">Depurar</h2>
+
+            <div align="center">
+                <a href="index.php?r=adldap/clearstudents"><?= Html::img('images/user_search.png');?></a>
+            </div>
+
+            <p align="center"><a class="btn btn-success" href="index.php?r=adldap/clearstudents"> Depurar Estudiantes &raquo;</a></p>
+        </div>
     </div>
 
 </div>

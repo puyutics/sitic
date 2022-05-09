@@ -24,9 +24,9 @@ $mdl_courses = \app\models\MdlCourse::find()
         foreach ($mdl_courses as $mdl_course) { ?>
             <?php $i = $i+1 ?>
             <?php $codigo = explode('-', $mdl_course->shortname);
-            if ($codigo[0] == 2122 and isset($codigo[4])) {
+            if ($codigo[0] == Yii::$app->params['course_code'] and isset($codigo[4])) {
                 $docenteAsignatura = \app\models\DocenteAsignatura::find()
-                    ->where(['idPer' => 37])
+                    ->where(['idPer' => Yii::$app->params['siad_periodo']])
                     ->andWhere(['idAsig' => $codigo[1] . '-' . $codigo[2] . '-' . $codigo[3]])
                     ->andWhere(['idParalelo' => $codigo[4]])
                     ->one();

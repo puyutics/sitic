@@ -11,6 +11,8 @@ use kartik\select2\Select2;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
+use kartik\icons\Icon;
+Icon::map($this);
 
 if (isset($_GET['search'])) { ?>
     <div class="edit-form">
@@ -117,17 +119,30 @@ if (isset($_GET['search'])) { ?>
                             ?>
                         </p>
                     </div>
-
-                    <div class="form-group" align="center">
+                    <div align="center">
                         <?= Html::submitButton('Guardar',['class' => 'btn btn-success',
                             'value'=>'submit', 'name'=>'submit',
                             'onClick'=>'buttonClicked']) ?>
-                        <?= Html::submitButton('Cuenta nueva',['class' => 'btn btn-primary',
-                            'value'=>'sendActivate', 'name'=>'sendActivate',
-                            'onClick'=>'buttonClicked']) ?>
-                        <?= Html::submitButton('Enviar TOKEN',['class' => 'btn btn-danger',
-                            'value'=>'sendToken', 'name'=>'sendToken',
-                            'onClick'=>'buttonClicked']) ?>
+                    </div>
+                    <hr>
+                    <div class="alert alert-warning">
+                        <h3 align="center">Acciones Especiales</h3>
+                        <br>
+                        <div class="form-group" align="center">
+                            <?= Html::submitButton(Icon::show('envelope') . 'Cuenta nueva',['class' => 'btn btn-default',
+                                'value'=>'sendActivate', 'name'=>'sendActivate',
+                                'onClick'=>'buttonClicked']) ?>
+                            <?= Html::submitButton(Icon::show('envelope') . 'Enviar TOKEN',['class' => 'btn btn-default',
+                                'value'=>'sendToken', 'name'=>'sendToken',
+                                'onClick'=>'buttonClicked']) ?>
+                            <?= Html::submitButton(Icon::show('key') . 'Random PASS',['class' => 'btn btn-default',
+                                'value'=>'randomPassword', 'name'=>'randomPassword',
+                                'onClick'=>'buttonClicked']) ?>
+                            <?= Html::a(Icon::show('folder') . 'Cambiar OU',
+                                ['adldap/oumove', 'samaccountname'=>$model->samaccountname],
+                                ['class' => 'btn btn-default']
+                            ); ?>
+                        </div>
                     </div>
                 </div>
             </div>

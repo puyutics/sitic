@@ -462,24 +462,24 @@ if (isset($_GET['test'])) {
                             <?php } ?>
 
                             <div class="alert alert-success" align="center">
-                                <h4>Etapa 2: Inscribirse</h4>
-                                <?php echo Html::a('SIAD Nivelación', 'https://www.uea.edu.ec/siad2nv', [
+                                <h4>Etapa 2: Matricularse</h4>
+                                <?php echo Html::a('SIAD Pregrado', 'https://www.uea.edu.ec/siad2', [
                                     'class'=>'btn btn-primary',
                                     'target'=>'_blank',
                                     'data-toggle'=>'tooltip',
-                                    'title'=>'Matricúlate - SIAD Nivelación'
+                                    'title'=>'Matricúlate - SIAD Pregrado'
                                 ]); ?>
                             </div>
 
-                            <div class="alert alert-success" align="center">
+                            <!--<div class="alert alert-success" align="center">
                                 <h4>Etapa 3: Accede a los Cursos de Inducción</h4>
-                                <?php echo Html::a('EVA Nivelación', 'https://eva.uea.edu.ec/evanv2020/web', [
+                                <?php /*echo Html::a('EVA Nivelación', 'https://eva.uea.edu.ec/evanv2020/web', [
                                     'class'=>'btn btn-primary',
                                     'target'=>'_blank',
                                     'data-toggle'=>'tooltip',
                                     'title'=>'Capacítate - EVA Nivelación'
-                                ]); ?>
-                            </div>
+                                ]); */?>
+                            </div>-->
                         </div>
 
                     </div>

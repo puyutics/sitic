@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\EstudiantesMalla;
 use Yii;
 use Yii\base\Security;
 use yii\filters\AccessControl;
@@ -18,6 +19,7 @@ use app\models\AdldapCreateForm;
 use app\models\AdldapCreateStudentForm;
 use app\models\AdldapEditForm;
 use app\models\AdldapGroupForm;
+use app\models\AdldapOuMoveForm;
 
 class AdldapController extends Controller
 {
@@ -31,12 +33,14 @@ class AdldapController extends Controller
                 'class' => AccessControl::className(),
                 'only' => ['create','index','profile','edituser','viewuser','forgetpass',
                     'forgetuser','password','reset','saveLog','sendToken','sendNewUser',
-                    'viewgroups','createstudent','editemail'],
+                    'viewgroups','createstudent','editemail','renewstudent','clearstudents',
+                    'oumove'],
                 'rules' => [
                     [
                         'actions' => ['index','profile','edituser',
                             'forgetpass','forgetuser','password','reset','saveLog',
-                            'sendToken','sendNewUser','viewgroups','create','createstudent'],
+                            'sendToken','sendNewUser','viewgroups','create','createstudent',
+                            'renewstudent','clearstudents','oumove'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
@@ -52,7 +56,7 @@ class AdldapController extends Controller
                     ],
                     [
                         'actions' => ['index','forgetpass','forgetuser','password','reset',
-                                        'saveLog','createstudent','editemail'],
+                            'saveLog','createstudent','editemail','renewstudent'],
                         'allow' => true,
                     ],
                     [
@@ -90,6 +94,62 @@ class AdldapController extends Controller
     public function actionIndex()
     {
         return $this->render('index');
+    }
+
+
+    public function actionClearstudents()
+    {
+        return $this->render('clear_students');
+    }
+
+
+    public function actionOumove($samaccountname)
+    {
+        $model = new AdldapOuMoveForm();
+
+        if ($model->load(Yii::$app->request->post())) {
+            $user = \Yii::$app->ad->search()->findBy('samaccountname', $samaccountname);
+            $dn = $user->getDn();
+            $dn_new = $model->dn_new;
+            //Mover de contenedor
+            if (isset($dn_new)) {
+                try {
+                    $user->move($dn_new);
+                    //Crear Registro de Log en la base de datos
+                    $log = '';
+                    $log = $log . $dn . ' -> ' . $dn_new;
+                    $description =
+                        'Cambiar de Unidad Organizativa: ' . $log
+                    ;
+                    $username = Yii::$app->user->identity->username;
+                    $this->saveLog('adldapOuMove', $username, $description, $samaccountname,'adldap');
+
+                    Yii::$app->session->setFlash('success',
+                        'Cambio realizado correctamente');
+
+                    $model->dn_new = NULL;
+
+                    return $this->render('ou_move', [
+                        'model' => $model,
+                        'samaccountname' => $samaccountname
+                    ]);
+                } catch (Exception $e) {
+                    Yii::$app->session->setFlash('error',
+                        'Error: '.$e->getMessage());
+
+                    return $this->render('ou_move', [
+                        'model' => $model,
+                        'samaccountname' => $samaccountname
+                    ]);
+                }
+            }
+
+        }
+
+        return $this->render('ou_move', [
+            'model' => $model,
+            'samaccountname' => $samaccountname
+        ]);
     }
 
 
@@ -200,52 +260,53 @@ class AdldapController extends Controller
                             ['model'=>$model]);
                     }
                 } else {
-                    Yii::$app->session->setFlash('error', "Ya existe el usuario");
+                    if ($model->dni == $checkuser->getAttribute(Yii::$app->params['dni'],0)) {
+                        $user = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
+                        $security = new Security();
+                        $user->setPassword($security->generateRandomString(8));
+                        $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
+                        $user->setUserAccountControl($model->uac);
+                        $user->setDepartment($model->department);
+                        $user->setTitle($model->title);
 
-                    $user = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
-                    $security = new Security();
-                    $user->setPassword($security->generateRandomString(8));
-                    $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
-                    $user->setUserAccountControl($model->uac);
-                    $user->setDepartment($model->department);
-                    $user->setTitle($model->title);
+                        $log = '';
+                        $log = $log . 'Usuario: ' . $model->samaccountname . '. ';
+                        $log = $log . 'Nombre completo: ' . $model->displayname . '. ';
+                        $log = $log . 'Nombres: ' . $model->firstname . '. ';
+                        $log = $log . 'Apellidos: ' . $model->lastname . '. ';
+                        $log = $log . 'Correo: ' . $model->mail . '. ';
+                        $log = $log . 'Cédula: ' . $model->dni . '. ';
+                        $log = $log . 'Correo personal: ' . $model->personalmail . '. ';
+                        $log = $log . 'Celular: ' . $model->mobile . '. ';
+                        $log = $log . 'Departamento: ' . $model->department . '. ';
+                        $log = $log . 'Titulo: ' . $model->title . '.';
 
-                    $log = '';
-                    $log = $log . 'Usuario: ' . $model->samaccountname . '. ';
-                    $log = $log . 'Nombre completo: ' . $model->displayname . '. ';
-                    $log = $log . 'Nombres: ' . $model->firstname . '. ';
-                    $log = $log . 'Apellidos: ' . $model->lastname . '. ';
-                    $log = $log . 'Correo: ' . $model->mail . '. ';
-                    $log = $log . 'Cédula: ' . $model->dni . '. ';
-                    $log = $log . 'Correo personal: ' . $model->personalmail . '. ';
-                    $log = $log . 'Celular: ' . $model->mobile . '. ';
-                    $log = $log . 'Departamento: ' . $model->department . '. ';
-                    $log = $log . 'Titulo: ' . $model->title . '.';
+                        if ($user->update()) {
+                            Yii::$app->session->setFlash('success', "Usuario creado correctamente");
+                            $username = Yii::$app->user->identity->username;
 
-                    if ($user->update()) {
-                        Yii::$app->session->setFlash('success', "Usuario creado correctamente");
-                        $username = Yii::$app->user->identity->username;
+                            //Enviar usuario creado por email
+                            $dni = $model->dni;
+                            $fullname = $model->commonname;
+                            $mail = $model->mail;
+                            $personalmail = $model->personalmail;
 
-                        //Enviar usuario creado por email
-                        $dni = $model->dni;
-                        $fullname = $model->commonname;
-                        $mail = $model->mail;
-                        $personalmail = $model->personalmail;
+                            $this->sendNewUser($dni,$fullname,$mail,$personalmail);
 
-                        $this->sendNewUser($dni,$fullname,$mail,$personalmail);
+                            //Crear Registro de Log en la base de datos
+                            $description =
+                                'Usuario creado. ' . $log
+                            ;
+                            $this->saveLog('adldapCreateUser', $username, $description, $model->samaccountname,'adldap');
+                            return $this->redirect(['edituser', 'search' => $model->samaccountname]);
+                            //return $this->render('edituser',['model'=>$model]);
 
-                        //Crear Registro de Log en la base de datos
-                        $description =
-                            'Usuario creado. ' . $log
-                        ;
-                        $this->saveLog('adldapCreateUser', $username, $description, $model->samaccountname,'adldap');
-                        return $this->redirect(['edituser', 'search' => $model->samaccountname]);
-                        //return $this->render('edituser',['model'=>$model]);
-
+                        }
                     }
 
-                    //return $this->render('create',['model'=>$model]);
-                    return $this->redirect(['edituser', 'search' => $model->samaccountname]);
+                    Yii::$app->session->setFlash('error', "Ya existe el usuario");
+                    return $this->render('create',
+                        ['model'=>$model]);
                 }
 
             } else {
@@ -255,6 +316,318 @@ class AdldapController extends Controller
         }
         return $this->render('create',
             ['model'=>$model]);
+    }
+
+
+    public function actionRenewstudent()
+    {
+        $model = new AdldapCreateStudentForm();
+
+        if ($model->load(Yii::$app->request->post())) {
+            //Buscar usuario en Active Directory
+            $user = \Yii::$app->ad->search()->findBy(Yii::$app->params['dni'], $model->dni);
+            if (isset($user)) {
+                $estudiante = \app\models\Estudiantes::find()
+                    ->where(['CIInfPer' => $model->dni])
+                    ->orWhere(['cedula_pasaporte' => $model->dni])
+                    ->one();
+                if ($estudiante->statusper == 0 or $estudiante->statusper == 1) {
+                    if ($model->step == 1) {
+                        if (isset($estudiante)) {
+                            if ($estudiante->FechNacimPer == $model->fec_nacimiento) {
+                                $model->step = 2;
+                                return $this->render('renew_student',
+                                    [
+                                        'model' => $model,
+                                        'estudiante' => $estudiante
+                                    ]
+                                );
+                            } else {
+                                Yii::$app->session->setFlash('errorNoBd',
+                                    "Es posible que sus datos sean incorrectos.<br>Comuníquese con Secretaría General: Campus Puyo, Bloque D, Planta Baja o al 032-892-118 Ext. 16103 / 16118");
+                                return $this->render('renew_student',
+                                    ['model' => $model]);
+                            }
+                        } else {
+                            Yii::$app->session->setFlash('errorNoBd',
+                                "Es posible que sus datos sean incorrectos.<br>Comuníquese con Secretaría General: Campus Puyo, Bloque D, Planta Baja o al 032-892-118 Ext. 16103 / 16118");
+                            return $this->render('renew_student',
+                                ['model' => $model]);
+                        }
+                    }
+                    elseif ($model->step == 2) {
+                        $estudiante_malla_actual = \app\models\EstudiantesMalla::find()
+                            ->where(['CIInfPer' => $model->dni])
+                            ->orderBy('anio_mallacurricular DESC')
+                            ->one();
+
+                        $campus = '';
+                        if ($estudiante_malla_actual->idcarr == 'AGI' or
+                            $estudiante_malla_actual->idcarr == 'AGR' or
+                            $estudiante_malla_actual->idcarr == 'AMB' or
+                            $estudiante_malla_actual->idcarr == 'BLG' or
+                            $estudiante_malla_actual->idcarr == 'COM' or
+                            $estudiante_malla_actual->idcarr == 'FRT' or
+                            $estudiante_malla_actual->idcarr == 'LTUR' or
+                            $estudiante_malla_actual->idcarr == 'TUR'
+                        ) {
+                            $campus = 'PUYO';
+                        } elseif ($estudiante_malla_actual->idcarr == 'BLGEL' or
+                            $estudiante_malla_actual->idcarr == 'LTUREL'
+                        ) {
+                            $campus = 'LAGO AGRIO';
+                        } elseif ($estudiante_malla_actual->idcarr == 'BLGEP' or
+                            $estudiante_malla_actual->idcarr == 'LTUREP'
+                        ) {
+                            $campus = 'PANGUI';
+                        }
+
+                        $carrera = '';
+                        if ($estudiante_malla_actual->idcarr == 'AGI') $carrera = 'AGROINDUSTRIA';
+                        elseif ($estudiante_malla_actual->idcarr == 'AGR') $carrera = 'AGROPECUARIA';
+                        elseif ($estudiante_malla_actual->idcarr == 'AMB') $carrera = 'AMBIENTAL';
+                        elseif ($estudiante_malla_actual->idcarr == 'BLG') $carrera = 'BIOLOGÍA';
+                        elseif ($estudiante_malla_actual->idcarr == 'BLGEL') $carrera = 'BIOLOGÍA';
+                        elseif ($estudiante_malla_actual->idcarr == 'BLGEP') $carrera = 'BIOLOGÍA';
+                        elseif ($estudiante_malla_actual->idcarr == 'COM') $carrera = 'COMUNICACIÓN';
+                        elseif ($estudiante_malla_actual->idcarr == 'FRT') $carrera = 'FORESTAL';
+                        elseif ($estudiante_malla_actual->idcarr == 'LTUR') $carrera = 'TURISMO';
+                        elseif ($estudiante_malla_actual->idcarr == 'LTUREL') $carrera = 'TURISMO';
+                        elseif ($estudiante_malla_actual->idcarr == 'LTUREP') $carrera = 'TURISMO';
+                        elseif ($estudiante_malla_actual->idcarr == 'TUR') $carrera = 'TURISMO';
+
+                        //Crear nueva Registro de Malla Curricular
+                        if ($estudiante_malla_actual->anio_mallacurricular != '2021') {
+                            $estudiante_malla_actual->estado_orgmalla = 0;
+                            if ($estudiante_malla_actual->save()) {
+                                $estudiante_malla_nueva = new EstudiantesMalla();
+                                $estudiante_malla_nueva->CIInfPer = $estudiante_malla_actual->CIInfPer;
+                                $estudiante_malla_nueva->tipo_orgmalla = 'CR';
+                                $estudiante_malla_nueva->estado_orgmalla = 1;
+                                $estudiante_malla_nueva->anio_mallacurricular = '2021';
+                                $estudiante_malla_nueva->regimen_academico = $estudiante_malla_actual->regimen_academico;
+                                $estudiante_malla_nueva->idcarr = $estudiante_malla_actual->idcarr;
+                                $estudiante_malla_nueva->idcarr_relacionada = $estudiante_malla_actual->idcarr_relacionada;
+                                $estudiante_malla_nueva->save();
+                            }
+                        }
+
+                        //Activar y actualizar cuenta SIAD
+                        $estudiante->statusper = 1;
+                        $estudiante->mailInst = $user->getEmail();
+                        $estudiante->save();
+
+                        //Activar cuenta Active Directory
+                        $user->setUserAccountControl(512);
+                        $user->save();
+
+                        // Agregar licencias para estudiantes
+                        $groupNames = $user->getGroupNames($recursive = true);
+                        if (count($groupNames)>1) {
+                            $existGroup = '';
+                            foreach ($groupNames as $groupName) {
+                                if ($groupName == 'Microsoft 365 Apps para Estudiantes') {
+                                    $existGroup = 'SI';
+                                }
+                            }
+                            if ($existGroup != 'SI') {
+                                $groupObject = \Yii::$app->ad->search()->findBy('cn', 'Microsoft 365 Apps para Estudiantes');
+                                $user->addGroup($groupObject);
+                            }
+                            $existGroup = '';
+                            foreach ($groupNames as $groupName) {
+                                if ($groupName == 'Power BI (free)') {
+                                    $existGroup = 'SI';
+                                }
+                            }
+                            if ($existGroup != 'SI') {
+                                $groupObject = \Yii::$app->ad->search()->findBy('cn', 'Power BI (free)');
+                                $user->addGroup($groupObject);
+                            }
+                            $existGroup = '';
+                            foreach ($groupNames as $groupName) {
+                                if ($groupName == 'Office 365 A1 para Estudiantes') {
+                                    $existGroup = 'SI';
+                                }
+                            }
+                            if ($existGroup != 'SI') {
+                                $groupObject = \Yii::$app->ad->search()->findBy('cn', 'Office 365 A1 para Estudiantes');
+                                $user->addGroup($groupObject);
+                            }
+                            $existGroup = '';
+                            foreach ($groupNames as $groupName) {
+                                if ($groupName == 'estudiantes') {
+                                    $existGroup = 'SI';
+                                }
+                            }
+                            if ($existGroup != 'SI') {
+                                $groupObject = \Yii::$app->ad->search()->findBy('cn', 'estudiantes');
+                                $user->addGroup($groupObject);
+                            }
+                            $existGroup = '';
+                            foreach ($groupNames as $groupName) {
+                                if ($groupName == '3gm4v0hkup5dx55') {
+                                    $existGroup = 'SI';
+                                }
+                            }
+                            if ($existGroup != 'SI') {
+                                $groupObject = \Yii::$app->ad->search()->findBy('cn', '3gm4v0hkup5dx55');
+                                $user->addGroup($groupObject);
+                            }
+                            if ($campus == 'PUYO') {
+                                $existGroup = '';
+                                foreach ($groupNames as $groupName) {
+                                    if ($groupName == 'pnnfxlrnu8mux5w') {
+                                        $existGroup = 'SI';
+                                    }
+                                }
+                                if ($existGroup != 'SI') {
+                                    $groupObject = \Yii::$app->ad->search()->findBy('cn', 'pnnfxlrnu8mux5w');
+                                    $user->addGroup($groupObject);
+                                }
+                            }
+                            if ($campus == 'LAGO AGRIO') {
+                                $existGroup = '';
+                                foreach ($groupNames as $groupName) {
+                                    if ($groupName == 'djga0oexs3jesqu') {
+                                        $existGroup = 'SI';
+                                    }
+                                }
+                                if ($existGroup != 'SI') {
+                                    $groupObject = \Yii::$app->ad->search()->findBy('cn', 'djga0oexs3jesqu');
+                                    $user->addGroup($groupObject);
+                                }
+                            }
+                            if ($campus == 'PANGUI') {
+                                $existGroup = '';
+                                foreach ($groupNames as $groupName) {
+                                    if ($groupName == 'ohgs7tioixj8dr4') {
+                                        $existGroup = 'SI';
+                                    }
+                                }
+                                if ($existGroup != 'SI') {
+                                    $groupObject = \Yii::$app->ad->search()->findBy('cn', 'ohgs7tioixj8dr4');
+                                    $user->addGroup($groupObject);
+                                }
+                            }
+                        }
+                        else {
+                            $groupObject = \Yii::$app->ad->search()->findBy('cn', 'Microsoft 365 Apps para Estudiantes');
+                            $user->addGroup($groupObject);
+                            $groupObject = \Yii::$app->ad->search()->findBy('cn', 'Power BI (free)');
+                            $user->addGroup($groupObject);
+                            $groupObject = \Yii::$app->ad->search()->findBy('cn', 'Office 365 A1 para Estudiantes');
+                            $user->addGroup($groupObject);
+                            $groupObject = \Yii::$app->ad->search()->findBy('cn', 'estudiantes');
+                            $user->addGroup($groupObject);
+                            $groupObject = \Yii::$app->ad->search()->findBy('cn', '3gm4v0hkup5dx55');
+                            $user->addGroup($groupObject);
+                            if ($campus == 'PUYO') {
+                                $groupObject = \Yii::$app->ad->search()->findBy('cn', 'pnnfxlrnu8mux5w');
+                                $user->addGroup($groupObject);
+                            }
+                            if ($campus == 'LAGO AGRIO') {
+                                $groupObject = \Yii::$app->ad->search()->findBy('cn', 'djga0oexs3jesqu');
+                                $user->addGroup($groupObject);
+                            }
+                            if ($campus == 'PANGUI') {
+                                $groupObject = \Yii::$app->ad->search()->findBy('cn', 'ohgs7tioixj8dr4');
+                                $user->addGroup($groupObject);
+                            }
+                        }
+
+                        //Mover de contenedor
+                        $dn = $user->getDn();
+                        if ($campus == 'PUYO') {
+                            $dn_new = 'OU=PUYO,OU=PREGRADO,OU=ESTUDIANTES,DC=uea,DC=edu,DC=ec';
+                        }
+                        if ($campus == 'LAGO AGRIO') {
+                            $dn_new = 'OU=LAGO AGRIO,OU=PREGRADO,OU=ESTUDIANTES,DC=uea,DC=edu,DC=ec';
+                        }
+                        if ($campus == 'PANGUI') {
+                            $dn_new = 'OU=PANGUI,OU=PREGRADO,OU=ESTUDIANTES,DC=uea,DC=edu,DC=ec';
+                        }
+                        if (isset($dn_new)) {
+                            try {
+                                $user->move($dn_new);
+                            } catch (Exception $e) {
+                                echo 'Error Container: '.$estudiante->cedula_pasaporte.' '.$e->getMessage();
+                                echo '<br>';
+                            }
+                        }
+
+                        //Enviar email con el registro de reingreso aprobado
+                        $dni = $model->dni;
+                        $fullname = $estudiante->ApellInfPer . ' ' . $estudiante->ApellMatInfPer . ' ' . $estudiante->NombInfPer;
+                        $mail = $user->getEmail();
+                        $personalmail = $user->getAttribute(Yii::$app->params['personalmail'],0);
+                        $this->sendRenewstudent($dni,$fullname,$mail,$personalmail,$campus,$carrera);
+
+                        //Crear Registro de Log en la base de datos
+                        $log = '';
+                        $log = $log . 'Cédula: ' . $dni . '. ';
+                        $log = $log . 'Nombre completo: ' . $fullname . '. ';
+                        $log = $log . 'Correo: ' . $mail . '. ';
+                        $log = $log . 'Correo personal: ' . $personalmail . '. ';
+                        $log = $log . 'Campus: ' . $campus . '. ';
+                        $log = $log . 'Carrera: ' . $carrera . '. ';
+                        $description =
+                            'Reingreso de estudiante. ' . $log
+                        ;
+                        $username = $user->getAttribute('samaccountname',0);
+                        $this->saveLog('adldapRenewStudent', $username, $description, $username,'adldap');
+
+                        $model->step = 3;
+                        return $this->render('renew_student',
+                            ['model' => $model]);
+                    }
+                }
+                elseif ($estudiante->statusper == 3) {
+                    Yii::$app->session->setFlash('errorNoBd',
+                        "<b><code>No cumple con los requisitos para reactivar su cuenta automáticamente.</code></b><br>Comuníquese con Secretaría General: Campus Puyo, Bloque D, Planta Baja o al 032-892-118 Ext. 16103 / 16118");
+                    return $this->render('renew_student',
+                        ['model' => $model]);
+                }
+            } else {
+                Yii::$app->session->setFlash('errorNoBd',
+                    "<b><code>No tiene una cuenta institucional creada.</code></b>
+                           <br>Cree su cuenta institucional <a href='https://www.uea.edu.ec/sitic/index.php?r=adldap/createstudent' target='_blank'>aquí</a>
+                           <br>O Comuníquese con la Dirección de Tecnologías: Campus Puyo, Bloque D, 3er Piso o al 032-892-118 Ext. 16110");
+                return $this->render('renew_student',
+                    ['model' => $model]);
+            }
+        }
+        $model->step = 1;
+        return $this->render('renew_student',
+            ['model'=>$model]
+        );
+    }
+
+
+    public function sendRenewstudent($dni,$fullname,$mail,$personalmail,$campus,$carrera)
+    {
+        $body =
+            "Estimado estudiante," . "\n\n" .
+            "Se ha procesado su reingreso a la " . Yii::$app->params['company'] . " de forma automática\n\n" .
+            "Cédula/Pasaporte: " . $dni . "\n" .
+            "Apellidos/Nombres: " . $fullname . "\n" .
+            "Cuenta institucional: " . $mail . "\n" .
+            "Campus: " . $campus . "\n" .
+            "Carrera: " . $carrera . "\n\n" .
+            "--------------------------------------------------------------------------------------" . "\n" .
+            "Correo enviado automáticamente por el sistema SITIC. NO RESPONDA ESTE CORREO"
+        ;
+
+        Yii::$app->mailerSitic->compose()
+            //->setTo(['gfernandez@uea.edu.ec','gusfersa@gmail.com'])
+            ->setTo($mail)
+            ->setCc(['secretariaacademica@uea.edu.ec', $personalmail])
+            ->setBcc(['gfernandez@uea.edu.ec', 'pochoa@uea.edu.ec'])
+            ->setFrom('sitic@uea.edu.ec')
+            ->setSubject('UEA | ' . $fullname . ' - Reingreso aprobado')
+            ->setTextBody($body)
+            ->send();
+        return true;
     }
 
 
@@ -491,7 +864,8 @@ class AdldapController extends Controller
                     return $this->render('create_student',
                         ['model' => $model]);
                 }
-            } elseif ($model->step == 2) {
+            }
+            elseif ($model->step == 2) {
                 $adldapnewuser = \app\models\AdldapNewUsers::find()
                     ->where(['dni' => $model->dni])
                     ->andWhere(['fec_nacimiento' => $model->fec_nacimiento])
@@ -650,7 +1024,8 @@ class AdldapController extends Controller
                             ['model' => $model]);
                     }
                 }
-            } elseif ($model->step == 3) {
+            }
+            elseif ($model->step == 3) {
                 $adldapnewuser = \app\models\AdldapNewUsers::find()
                     ->where(['dni' => $model->dni])
                     ->andWhere(['fec_nacimiento' => $model->fec_nacimiento])
@@ -813,7 +1188,8 @@ class AdldapController extends Controller
                             ['model' => $model]);
                     }
                 }
-            } elseif ($model->step == 4) {
+            }
+            elseif ($model->step == 4) {
                 $adldapnewuser = \app\models\AdldapNewUsers::find()
                     ->where(['dni' => $model->dni])
                     ->andWhere(['fec_nacimiento' => $model->fec_nacimiento])
@@ -945,6 +1321,7 @@ class AdldapController extends Controller
                             $dn = $user->getDnBuilder();
                             $dn->addCn($user->getCommonName());
                             $dn->addOU($model->dn);
+                            $dn->addOU('PREGRADO');
                             $dn->addOU('ESTUDIANTES');
                             $user->setDn($dn);
                             //
@@ -1092,7 +1469,8 @@ class AdldapController extends Controller
                             ['model' => $model]);
                     }
                 }
-            } elseif ($model->step == 5) {
+            }
+            elseif ($model->step == 5) {
                 $adldapnewuser = \app\models\AdldapNewUsers::find()
                     ->where(['dni' => $model->dni])
                     ->andWhere(['fec_nacimiento' => $model->fec_nacimiento])
@@ -1354,7 +1732,8 @@ class AdldapController extends Controller
 
         $model->step = 1;
         return $this->render('create_student',
-            ['model'=>$model]);
+            ['model'=>$model]
+        );
     }
 
 
@@ -1434,6 +1813,25 @@ class AdldapController extends Controller
 
                         //Mensaje de email enviado
                         Yii::$app->session->setFlash('successMail', $model->personalmail);
+
+                        return $this->render('edit_user',
+                            ['model'=>$model]);
+                    }
+
+                    if (Yii::$app->request->post('randomPassword')==='randomPassword') {
+                        //Generar Random Password
+                        $security = new Security();
+                        $user->setPassword($security->generateRandomString(8));
+                        $user->save();
+
+                        //Crear Registro de Log en la base de datos
+                        $description =
+                            'Random Password Generado: ' . $sAMAccountname
+                        ;
+                        $this->saveLog('adldapRandomPassword', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
+
+                        //Mensaje de email enviado
+                        Yii::$app->session->setFlash('successRandomPassword');
 
                         return $this->render('edit_user',
                             ['model'=>$model]);
@@ -2157,8 +2555,8 @@ class AdldapController extends Controller
         $model->personalmail = 'test@uea.edu.ec';
         $model->step = 1;
         return $this->render('edit_email', [
-                'model' => $model,
-            ]);
+            'model' => $model,
+        ]);
     }
 
 
@@ -2296,53 +2694,53 @@ class AdldapController extends Controller
         $model = new AdldapPasswordForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 
-                $post_form = Yii::$app->request->post('AdldapPasswordForm');
-                $post_mail = $post_form['mail'];
-                $post_oldPassword = $post_form['oldPassword'];
-                $post_newPassword = $post_form['newPassword'];
-                $post_verifyNewPassword = $post_form['verifyNewPassword'];
-                $post_sAMAccountname = explode("@", $post_mail);
-                $sAMAccountname = $post_sAMAccountname[0];
+            $post_form = Yii::$app->request->post('AdldapPasswordForm');
+            $post_mail = $post_form['mail'];
+            $post_oldPassword = $post_form['oldPassword'];
+            $post_newPassword = $post_form['newPassword'];
+            $post_verifyNewPassword = $post_form['verifyNewPassword'];
+            $post_sAMAccountname = explode("@", $post_mail);
+            $sAMAccountname = $post_sAMAccountname[0];
 
-                $user = Yii::$app->ad->getProvider('default')->search()
-                    ->findBy('sAMAccountname', $sAMAccountname);
+            $user = Yii::$app->ad->getProvider('default')->search()
+                ->findBy('sAMAccountname', $sAMAccountname);
 
-                if (isset($user)) {
-                    $mail = $user->getAttribute('mail',0);
-                    $dni = $user->getAttribute(Yii::$app->params['dni'],0);
-                    if (Yii::$app->ad->getProvider('default')->auth()->attempt($sAMAccountname, $post_oldPassword)) {
-                        if ($post_newPassword == $post_verifyNewPassword) {
+            if (isset($user)) {
+                $mail = $user->getAttribute('mail',0);
+                $dni = $user->getAttribute(Yii::$app->params['dni'],0);
+                if (Yii::$app->ad->getProvider('default')->auth()->attempt($sAMAccountname, $post_oldPassword)) {
+                    if ($post_newPassword == $post_verifyNewPassword) {
 
-                            $user->setPassword($post_newPassword);
-                            $user->save();
+                        $user->setPassword($post_newPassword);
+                        $user->save();
 
 
-                            //Crear Registro de Log en la base de datos
-                            $description =
-                                'Cambio correcto de contraseña del usuario: ' . $sAMAccountname
-                            ;
-                            $this->saveLog('resetPassword', $sAMAccountname, $description, $sAMAccountname,'adldap');
+                        //Crear Registro de Log en la base de datos
+                        $description =
+                            'Cambio correcto de contraseña del usuario: ' . $sAMAccountname
+                        ;
+                        $this->saveLog('resetPassword', $sAMAccountname, $description, $sAMAccountname,'adldap');
 
-                            Yii::$app->session->setFlash('successPassword');
-                            return $this->render('password', ['model' => $model]); //Contraseña cambiada con éxito
+                        Yii::$app->session->setFlash('successPassword');
+                        return $this->render('password', ['model' => $model]); //Contraseña cambiada con éxito
 
-                        } else {
-                            Yii::$app->session->setFlash('error','La verificación de la nueva contraseña es incorrecta');
-
-                            return $this->render('password',
-                                ['model' => $model]); //Nueva Contraseña incorrecta
-                        }
                     } else {
-                        Yii::$app->session->setFlash('error','Contraseña actual incorrecta');
-                        return $this->render('password',
-                            ['model' => $model]); //Contraseña Actual incorrecta
-                    }
+                        Yii::$app->session->setFlash('error','La verificación de la nueva contraseña es incorrecta');
 
+                        return $this->render('password',
+                            ['model' => $model]); //Nueva Contraseña incorrecta
+                    }
                 } else {
-                    Yii::$app->session->setFlash('error','Correo institucional incorrecto');
+                    Yii::$app->session->setFlash('error','Contraseña actual incorrecta');
                     return $this->render('password',
-                        ['model'=>$model]); //Email incorrecto
+                        ['model' => $model]); //Contraseña Actual incorrecta
                 }
+
+            } else {
+                Yii::$app->session->setFlash('error','Correo institucional incorrecto');
+                return $this->render('password',
+                    ['model'=>$model]); //Email incorrecto
+            }
         } else {
             Yii::$app->session->setFlash('recommendation',
                 'Su nueva contraseña debe contener al menos 8 dígitos
@@ -2373,133 +2771,133 @@ class AdldapController extends Controller
 
     public function sendToken($dni,$fullname,$mail,$personalmail,$resetToken)
     {
-            $body =
-                "Estimado usuario," . "\n" .
-                "Se ha solicitado reiniciar la contraseña de la cuenta institucional de " . Yii::$app->params['company'] . "\n\n" .
-                "Céd/Pasaporte/Código: " . $dni . "\n" .
-                "Nombres/Apellidos:       " . $fullname . "\n" .
-                "Cuenta institucional:     " . $mail . "\n\n" .
-                "--------------------------------------------------------------------------------------" . "\n" .
-                "Haga clic en el siguiente enlace para restaurar su contraseña:" . "\n\n" .
-                Yii::$app->params['appURL'] . "index.php?r=adldap/reset&mail=" . $mail . "&resetToken=" . $resetToken . "\n\n" .
-                "--------------------------------------------------------------------------------------" . "\n" .
-                "NOTA: TOKEN válido SOLO el ". date('d-m-Y') . " (dd-mm-AA) desde las 00:00 hasta las 23:59" . "\n\n" .
-                "---> Correo enviado por el sistema automático de Gestión de identidad. NO RESPONDA ESTE CORREO <---"
-            ;
+        $body =
+            "Estimado usuario," . "\n" .
+            "Se ha solicitado reiniciar la contraseña de la cuenta institucional de " . Yii::$app->params['company'] . "\n\n" .
+            "Céd/Pasaporte/Código: " . $dni . "\n" .
+            "Nombres/Apellidos:       " . $fullname . "\n" .
+            "Cuenta institucional:     " . $mail . "\n\n" .
+            "--------------------------------------------------------------------------------------" . "\n" .
+            "Haga clic en el siguiente enlace para restaurar su contraseña:" . "\n\n" .
+            Yii::$app->params['appURL'] . "index.php?r=adldap/reset&mail=" . $mail . "&resetToken=" . $resetToken . "\n\n" .
+            "--------------------------------------------------------------------------------------" . "\n" .
+            "NOTA: TOKEN válido SOLO el ". date('d-m-Y') . " (dd-mm-AA) desde las 00:00 hasta las 23:59" . "\n\n" .
+            "---> Correo enviado por el sistema automático de Gestión de identidad. NO RESPONDA ESTE CORREO <---"
+        ;
 
-            Yii::$app->mailer->compose()
-                ->setTo($personalmail)
-                ->setFrom(Yii::$app->params['from'], Yii::$app->params['fromName'])
-                ->setCc(Yii::$app->params['cc'])
-                ->setSubject(Yii::$app->params['subject'])
-                ->setTextBody($body)
-                ->send();
-            return true;
+        Yii::$app->mailer->compose()
+            ->setTo($personalmail)
+            ->setFrom(Yii::$app->params['from'], Yii::$app->params['fromName'])
+            ->setCc(Yii::$app->params['cc'])
+            ->setSubject(Yii::$app->params['subject'])
+            ->setTextBody($body)
+            ->send();
+        return true;
     }
 
 
     public function sendTokenEmail($dni,$fullname,$mail,$personalmail,$resetToken)
     {
-            $body =
-                "Estimado usuario," . "\n" .
-                "Se ha solicitado cambiar el correo personal de su cuenta institucional en la " . Yii::$app->params['company'] . "\n\n" .
-                "Céd/Pasaporte:            " . $dni . "\n" .
-                "Nombres/Apellidos:      " . $fullname . "\n" .
-                "Cuenta institucional:     " . $mail . "\n\n" .
-                "--------------------------------------------------------------------------------------" . "\n" .
-                "Utilice el siguiente TOKEN para validar su cuenta personal:" . "\n\n" .
-                $resetToken . "\n\n" .
-                "--------------------------------------------------------------------------------------" . "\n" .
-                "NOTA: TOKEN válido SOLO el ". date('d-m-Y') . " (dd-mm-AA) desde las 00:00 hasta las 23:59" . "\n\n" .
-                "---> Correo enviado por el sistema automático de Gestión de identidad. NO RESPONDA ESTE CORREO <---"
-            ;
+        $body =
+            "Estimado usuario," . "\n" .
+            "Se ha solicitado cambiar el correo personal de su cuenta institucional en la " . Yii::$app->params['company'] . "\n\n" .
+            "Céd/Pasaporte:            " . $dni . "\n" .
+            "Nombres/Apellidos:      " . $fullname . "\n" .
+            "Cuenta institucional:     " . $mail . "\n\n" .
+            "--------------------------------------------------------------------------------------" . "\n" .
+            "Utilice el siguiente TOKEN para validar su cuenta personal:" . "\n\n" .
+            $resetToken . "\n\n" .
+            "--------------------------------------------------------------------------------------" . "\n" .
+            "NOTA: TOKEN válido SOLO el ". date('d-m-Y') . " (dd-mm-AA) desde las 00:00 hasta las 23:59" . "\n\n" .
+            "---> Correo enviado por el sistema automático de Gestión de identidad. NO RESPONDA ESTE CORREO <---"
+        ;
 
-            Yii::$app->mailer->compose()
-                ->setTo($personalmail)
-                ->setFrom(Yii::$app->params['from'], Yii::$app->params['fromName'])
-                ->setCc(Yii::$app->params['cc'])
-                ->setSubject('Validar correo personal')
-                ->setTextBody($body)
-                ->send();
-            return true;
+        Yii::$app->mailer->compose()
+            ->setTo($personalmail)
+            ->setFrom(Yii::$app->params['from'], Yii::$app->params['fromName'])
+            ->setCc(Yii::$app->params['cc'])
+            ->setSubject('Validar correo personal')
+            ->setTextBody($body)
+            ->send();
+        return true;
     }
 
 
     public function sendNewUser($dni,$fullname,$mail,$personalmail)
     {
-            $body =
-                "Estimado usuario," . "\n" .
-                "Se ha creado una cuenta institucional en " . Yii::$app->params['company'] . "\n\n" .
-                "Céd/Pasaporte/Código: " . $dni . "\n" .
-                "Nombres/Apellidos:       " . $fullname . "\n" .
-                "Cuenta institucional:     " . $mail . "\n\n" .
-                "--------------------------------------------------------------------------------------" . "\n" .
-                "Haga clic en el siguiente enlace para activar su cuenta:" . "\n\n" .
-                "https://password.uea.edu.ec" . "\n\n" .
-                "--------------------------------------------------------------------------------------" . "\n" .
-                "---> Correo enviado por el sistema automático de Gestión de identidad. NO RESPONDA ESTE CORREO <---"
-            ;
+        $body =
+            "Estimado usuario," . "\n" .
+            "Se ha creado una cuenta institucional en " . Yii::$app->params['company'] . "\n\n" .
+            "Céd/Pasaporte/Código: " . $dni . "\n" .
+            "Nombres/Apellidos:       " . $fullname . "\n" .
+            "Cuenta institucional:     " . $mail . "\n\n" .
+            "--------------------------------------------------------------------------------------" . "\n" .
+            "Haga clic en el siguiente enlace para activar su cuenta:" . "\n\n" .
+            "https://password.uea.edu.ec" . "\n\n" .
+            "--------------------------------------------------------------------------------------" . "\n" .
+            "---> Correo enviado por el sistema automático de Gestión de identidad. NO RESPONDA ESTE CORREO <---"
+        ;
 
-            Yii::$app->mailer->compose()
-                ->setTo($personalmail)
-                ->setFrom(Yii::$app->params['from'], Yii::$app->params['fromName'])
-                ->setCc(Yii::$app->params['cc'])
-                ->setSubject(Yii::$app->params['subjectNew'])
-                ->setTextBody($body)
-                ->send();
-            return true;
+        Yii::$app->mailer->compose()
+            ->setTo($personalmail)
+            ->setFrom(Yii::$app->params['from'], Yii::$app->params['fromName'])
+            ->setCc(Yii::$app->params['cc'])
+            ->setSubject(Yii::$app->params['subjectNew'])
+            ->setTextBody($body)
+            ->send();
+        return true;
     }
 
 
     public function sendNewStudent($dni,$fullname,$mail,$personalmail)
     {
-            $body =
-                "Estimado usuario," . "\n" .
-                "Se ha creado una cuenta institucional en la " . Yii::$app->params['company'] . "\n\n" .
-                "Céd/Pasaporte/Código: " . $dni . "\n" .
-                "Nombres/Apellidos:       " . $fullname . "\n" .
-                "Cuenta institucional:     " . $mail . "\n\n" .
-                "--------------------------------------------------------------------------------------" . "\n" .
-                "Guarde estos datos. Si olvidó su contraseña ingrese en el siguiente enlace:" . "\n" .
-                "https://password.uea.edu.ec" . "\n" .
-                "--------------------------------------------------------------------------------------" . "\n" .
-                "---> Correo enviado por el sistema automático de Gestión de identidad. NO RESPONDA ESTE CORREO <---"
-            ;
+        $body =
+            "Estimado usuario," . "\n" .
+            "Se ha creado una cuenta institucional en la " . Yii::$app->params['company'] . "\n\n" .
+            "Céd/Pasaporte/Código: " . $dni . "\n" .
+            "Nombres/Apellidos:       " . $fullname . "\n" .
+            "Cuenta institucional:     " . $mail . "\n\n" .
+            "--------------------------------------------------------------------------------------" . "\n" .
+            "Guarde estos datos. Si olvidó su contraseña ingrese en el siguiente enlace:" . "\n" .
+            "https://password.uea.edu.ec" . "\n" .
+            "--------------------------------------------------------------------------------------" . "\n" .
+            "---> Correo enviado por el sistema automático de Gestión de identidad. NO RESPONDA ESTE CORREO <---"
+        ;
 
-            Yii::$app->mailer->compose()
-                ->setTo($personalmail)
-                ->setFrom(Yii::$app->params['from'], Yii::$app->params['fromName'])
-                ->setCc(Yii::$app->params['cc'])
-                ->setSubject('UEA | Datos de su cuenta institucional')
-                ->setTextBody($body)
-                ->send();
-            return true;
+        Yii::$app->mailer->compose()
+            ->setTo($personalmail)
+            ->setFrom(Yii::$app->params['from'], Yii::$app->params['fromName'])
+            ->setCc(Yii::$app->params['cc'])
+            ->setSubject('UEA | Datos de su cuenta institucional')
+            ->setTextBody($body)
+            ->send();
+        return true;
     }
 
 
     public function sendNewStudentToken($dni,$fullname,$personalmail,$resetToken)
     {
-            $body =
-                "Estimado/a estudiante," . "\n" .
-                "Correo de validación para obtener su cuenta institucional en la " . Yii::$app->params['company'] . "\n\n" .
-                "Céd/Pasaporte/Código: " . $dni . "\n" .
-                "Nombres/Apellidos:       " . $fullname . "\n\n" .
-                "--------------------------------------------------------------------------------------" . "\n" .
-                "TOKEN: " . "\n" .
-                $resetToken . "\n" .
-                "--------------------------------------------------------------------------------------" . "\n" .
-                "RECUERDE: El TOKEN es valido solo hasta hoy " . date('d-m-Y') .  "  23h59" . "\n" .
-                "---> Correo enviado por el sistema automático de Gestión de identidad. NO RESPONDA ESTE CORREO <---"
-            ;
+        $body =
+            "Estimado/a estudiante," . "\n" .
+            "Correo de validación para obtener su cuenta institucional en la " . Yii::$app->params['company'] . "\n\n" .
+            "Céd/Pasaporte/Código: " . $dni . "\n" .
+            "Nombres/Apellidos:       " . $fullname . "\n\n" .
+            "--------------------------------------------------------------------------------------" . "\n" .
+            "TOKEN: " . "\n" .
+            $resetToken . "\n" .
+            "--------------------------------------------------------------------------------------" . "\n" .
+            "RECUERDE: El TOKEN es valido solo hasta hoy " . date('d-m-Y') .  "  23h59" . "\n" .
+            "---> Correo enviado por el sistema automático de Gestión de identidad. NO RESPONDA ESTE CORREO <---"
+        ;
 
-            Yii::$app->mailer->compose()
-                ->setTo($personalmail)
-                ->setFrom(Yii::$app->params['from'], Yii::$app->params['fromName'])
-                ->setCc(Yii::$app->params['cc'])
-                ->setSubject('UEA | Bienvenido a la Universidad Estatal Amazónica')
-                ->setTextBody($body)
-                ->send();
-            return true;
+        Yii::$app->mailer->compose()
+            ->setTo($personalmail)
+            ->setFrom(Yii::$app->params['from'], Yii::$app->params['fromName'])
+            ->setCc(Yii::$app->params['cc'])
+            ->setSubject('UEA | Bienvenido a la Universidad Estatal Amazónica')
+            ->setTextBody($body)
+            ->send();
+        return true;
     }
 
 }
