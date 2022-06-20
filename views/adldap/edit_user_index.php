@@ -14,6 +14,10 @@ use yii\helpers\Url;
 use kartik\icons\Icon;
 Icon::map($this);
 
+/* @var $this yii\web\View */
+/* @var $model app\controllers\AdldapController */
+/* @var $form app\controllers\AdldapController */
+
 if (isset($_GET['search'])) { ?>
     <div class="edit-form">
 

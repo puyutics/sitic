@@ -81,8 +81,24 @@ class TabintformularioController extends Controller
     {
         $searchModel = new TabIntFormularioSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $countDataProvider = $dataProvider->getTotalCount();
+        $dataProvider->pagination = ['pageSize' => $countDataProvider];
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionIndexcge()
+    {
+        $searchModel = new TabIntFormularioSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $countDataProvider = $dataProvider->getTotalCount();
+        $dataProvider->pagination = ['pageSize' => $countDataProvider];
+        $dataProvider->sort->defaultOrder = ['apellidos' => SORT_ASC , 'nombres' => SORT_ASC];
+
+        return $this->render('indexcge', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);

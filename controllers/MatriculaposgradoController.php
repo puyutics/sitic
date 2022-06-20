@@ -3,17 +3,17 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\EstudiantesNivelacion;
-use app\models\EstudiantesNivelacionSearch;
+use app\models\MatriculaPosgrado;
+use app\models\MatriculaPosgradoSearch;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * EstudiantesnivelacionController implements the CRUD actions for EstudiantesNivelacion model.
+ * MatriculaposgradoController implements the CRUD actions for MatriculaPosgrado model.
  */
-class EstudiantesnivelacionController extends Controller
+class MatriculaposgradoController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -50,12 +50,12 @@ class EstudiantesnivelacionController extends Controller
     }
 
     /**
-     * Lists all EstudiantesNivelacion models.
+     * Lists all MatriculaPosgrado models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new EstudiantesNivelacionSearch();
+        $searchModel = new MatriculaPosgradoSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -65,7 +65,7 @@ class EstudiantesnivelacionController extends Controller
     }
 
     /**
-     * Displays a single EstudiantesNivelacion model.
+     * Displays a single MatriculaPosgrado model.
      * @param string $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -78,16 +78,16 @@ class EstudiantesnivelacionController extends Controller
     }
 
     /**
-     * Creates a new EstudiantesNivelacion model.
+     * Creates a new MatriculaPosgrado model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new EstudiantesNivelacion();
+        $model = new MatriculaPosgrado();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->CIInfPer]);
+            return $this->redirect(['view', 'id' => $model->idMatricula]);
         }
 
         return $this->render('create', [
@@ -96,7 +96,7 @@ class EstudiantesnivelacionController extends Controller
     }
 
     /**
-     * Updates an existing EstudiantesNivelacion model.
+     * Updates an existing MatriculaPosgrado model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
@@ -104,58 +104,10 @@ class EstudiantesnivelacionController extends Controller
      */
     public function actionUpdate($id)
     {
-
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post())) {
-
-            $dominio= explode("@", $model->mailInst);
-            $dominio = $dominio[1];
-            $modelEstudiante = $this->findModel($id);
-            $log = '';
-            if (($modelEstudiante->mailInst != $model->mailInst) and ($dominio == 'uea.edu.ec')) {
-                $log = $log . '(SIAD Nivelación) Correo Institucional: ' . $modelEstudiante->mailInst
-                    . ' -> ' . $model->mailInst;
-
-                if ($modelEstudiante->statusper != $model->statusper) {
-                    $log = $log . '. (SIAD Nivelación) Estado: ' . $modelEstudiante->statusper
-                        . ' -> ' . $model->statusper;
-                }
-
-                //Crear Registro de Log en la base de datos
-                $description =
-                    'Información actualizada del usuario: ' . $model->CIInfPer
-                    . '. ' . $log
-                ;
-
-                $username = Yii::$app->user->identity->username;
-                $external_id = explode("@", $model->mailInst);
-                $external_id = $external_id[0];
-
-                if ($model->save()) {
-                    $this->saveLog('siadNivelacionEmail', $username, $description, $external_id,'adldap');
-                    return $this->redirect(['adldap/edituser', 'search' => $model->cedula_pasaporte]);
-                }
-            }
-
-            if ($modelEstudiante->statusper != $model->statusper) {
-                $log = $log . '(SIAD Nivelación) Estado: ' . $modelEstudiante->statusper
-                    . ' -> ' . $model->statusper;
-
-                //Crear Registro de Log en la base de datos
-                $description =
-                    'Información actualizada del usuario: ' . $model->CIInfPer
-                    . '. ' . $log
-                ;
-                $username = Yii::$app->user->identity->username;
-                $external_id = explode("@", $model->mailInst);
-                $external_id = $external_id[0];
-
-                if ($model->save(false)) {
-                    $this->saveLog('siadNivelacionStatus', $username, $description, $external_id,'adldap');
-                    return $this->redirect(['adldap/edituser', 'search' => $model->cedula_pasaporte]);
-                }
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->idMatricula]);
         }
 
         return $this->render('update', [
@@ -164,7 +116,7 @@ class EstudiantesnivelacionController extends Controller
     }
 
     /**
-     * Deletes an existing EstudiantesNivelacion model.
+     * Deletes an existing MatriculaPosgrado model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id
      * @return mixed
@@ -178,15 +130,15 @@ class EstudiantesnivelacionController extends Controller
     }
 
     /**
-     * Finds the EstudiantesNivelacion model based on its primary key value.
+     * Finds the MatriculaPosgrado model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
-     * @return EstudiantesNivelacion the loaded model
+     * @return MatriculaPosgrado the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = EstudiantesNivelacion::findOne($id)) !== null) {
+        if (($model = MatriculaPosgrado::findOne($id)) !== null) {
             return $model;
         }
 

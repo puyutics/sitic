@@ -2,6 +2,13 @@
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
+$db_biometrico = require __DIR__ . '/db_biometrico.php';
+$db_bservicios = require __DIR__ . '/db_bservicios.php';
+$db_sisges = require __DIR__ . '/db_sisges.php';
+$db_siad = require __DIR__ . '/db_siad.php';
+$db_siad_nivelacion = require __DIR__ . '/db_siad_nivelacion.php';
+$db_siad_posgrado = require __DIR__ . '/db_siad_posgrado.php';
+$db_eva_pregrado = require __DIR__ . '/db_eva_pregrado.php';
 use kartik\mpdf\Pdf;
 
 $config = [
@@ -64,7 +71,7 @@ $config = [
                 'encryption' => 'tls',
             ],
         ],
-        'mailer-sitic' => [
+        'mailerSitic' => [
             'class'          => 'yii\swiftmailer\Mailer',
             // send all mails to a file by default. You have to set
             // 'useFileTransport' to false and configure a transport
@@ -74,6 +81,51 @@ $config = [
                 'class'      => 'Swift_SmtpTransport',
                 'host'       => 'smtp.dominio.com',
                 'username'   => 'sitic@dominio.com',
+                'password'   => '',
+                'port'       => '587',
+                'encryption' => 'tls',
+            ],
+        ],
+        'mailerListas' => [
+            'class'          => 'yii\swiftmailer\Mailer',
+            // send all mails to a file by default. You have to set
+            // 'useFileTransport' to false and configure a transport
+            // for the mailer to send real emails.
+            //'useFileTransport' => true,
+            'transport'      => [
+                'class'      => 'Swift_SmtpTransport',
+                'host'       => 'smtp.dominio.com',
+                'username'   => 'listas@dominio.com',
+                'password'   => '',
+                'port'       => '587',
+                'encryption' => 'tls',
+            ],
+        ],
+        'mailerComunicados' => [
+            'class'          => 'yii\swiftmailer\Mailer',
+            // send all mails to a file by default. You have to set
+            // 'useFileTransport' to false and configure a transport
+            // for the mailer to send real emails.
+            //'useFileTransport' => true,
+            'transport'      => [
+                'class'      => 'Swift_SmtpTransport',
+                'host'       => 'smtp.dominio.com',
+                'username'   => 'comunicados@dominio.com',
+                'password'   => '',
+                'port'       => '587',
+                'encryption' => 'tls',
+            ],
+        ],
+        'mailerRoles' => [
+            'class'          => 'yii\swiftmailer\Mailer',
+            // send all mails to a file by default. You have to set
+            // 'useFileTransport' to false and configure a transport
+            // for the mailer to send real emails.
+            //'useFileTransport' => true,
+            'transport'      => [
+                'class'      => 'Swift_SmtpTransport',
+                'host'       => 'smtp.dominio.com',
+                'username'   => 'roles@dominio.com',
                 'password'   => '',
                 'port'       => '587',
                 'encryption' => 'tls',
@@ -89,6 +141,13 @@ $config = [
             ],
         ],
         'db' => $db,
+        'db_biometrico' => $db_biometrico,
+        'db_bservicios' => $db_bservicios,
+        'db_sisges' => $db_sisges,
+        'db_siad' => $db_siad,
+        'db_siad_nivelacion' => $db_siad_nivelacion,
+        'db_siad_posgrado' => $db_siad_posgrado,
+        'db_eva_pregrado' => $db_eva_pregrado,
         /*
         'urlManager' => [
             'enablePrettyUrl' => true,

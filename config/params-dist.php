@@ -79,8 +79,11 @@ return [
     'icon-framework' => \kartik\icons\Icon::FAS,
 
     //Moodle Sync
+    //Revisar la configuración db_eva_pregrado.php
     'moodle_host'     => '0.0.0.0',
     'moodle_user'     => 'root',
     'moodle_pass'     => '',
+    'course_code'     => 0,
+    'siad_periodo'    => 0,
 
 ];

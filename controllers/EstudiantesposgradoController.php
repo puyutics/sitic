@@ -3,17 +3,17 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\EstudiantesNivelacion;
-use app\models\EstudiantesNivelacionSearch;
+use app\models\EstudiantesPosgrado;
+use app\models\EstudiantesPosgradoSearch;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * EstudiantesnivelacionController implements the CRUD actions for EstudiantesNivelacion model.
+ * EstudiantesposgradoController implements the CRUD actions for EstudiantesPosgrado model.
  */
-class EstudiantesnivelacionController extends Controller
+class EstudiantesposgradoController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -50,12 +50,12 @@ class EstudiantesnivelacionController extends Controller
     }
 
     /**
-     * Lists all EstudiantesNivelacion models.
+     * Lists all EstudiantesPosgrado models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new EstudiantesNivelacionSearch();
+        $searchModel = new EstudiantesPosgradoSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -65,7 +65,7 @@ class EstudiantesnivelacionController extends Controller
     }
 
     /**
-     * Displays a single EstudiantesNivelacion model.
+     * Displays a single EstudiantesPosgrado model.
      * @param string $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -78,13 +78,13 @@ class EstudiantesnivelacionController extends Controller
     }
 
     /**
-     * Creates a new EstudiantesNivelacion model.
+     * Creates a new EstudiantesPosgrado model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new EstudiantesNivelacion();
+        $model = new EstudiantesPosgrado();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->CIInfPer]);
@@ -96,7 +96,7 @@ class EstudiantesnivelacionController extends Controller
     }
 
     /**
-     * Updates an existing EstudiantesNivelacion model.
+     * Updates an existing EstudiantesPosgrado model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
@@ -114,11 +114,11 @@ class EstudiantesnivelacionController extends Controller
             $modelEstudiante = $this->findModel($id);
             $log = '';
             if (($modelEstudiante->mailInst != $model->mailInst) and ($dominio == 'uea.edu.ec')) {
-                $log = $log . '(SIAD Nivelación) Correo Institucional: ' . $modelEstudiante->mailInst
+                $log = $log . '(SIAD Posgrado) Correo Institucional: ' . $modelEstudiante->mailInst
                     . ' -> ' . $model->mailInst;
 
                 if ($modelEstudiante->statusper != $model->statusper) {
-                    $log = $log . '. (SIAD Nivelación) Estado: ' . $modelEstudiante->statusper
+                    $log = $log . '. (SIAD Posgrado) Estado: ' . $modelEstudiante->statusper
                         . ' -> ' . $model->statusper;
                 }
 
@@ -133,13 +133,13 @@ class EstudiantesnivelacionController extends Controller
                 $external_id = $external_id[0];
 
                 if ($model->save()) {
-                    $this->saveLog('siadNivelacionEmail', $username, $description, $external_id,'adldap');
+                    $this->saveLog('siadPosgradoEmail', $username, $description, $external_id,'adldap');
                     return $this->redirect(['adldap/edituser', 'search' => $model->cedula_pasaporte]);
                 }
             }
 
             if ($modelEstudiante->statusper != $model->statusper) {
-                $log = $log . '(SIAD Nivelación) Estado: ' . $modelEstudiante->statusper
+                $log = $log . '(SIAD Posgrado) Estado: ' . $modelEstudiante->statusper
                     . ' -> ' . $model->statusper;
 
                 //Crear Registro de Log en la base de datos
@@ -152,7 +152,7 @@ class EstudiantesnivelacionController extends Controller
                 $external_id = $external_id[0];
 
                 if ($model->save(false)) {
-                    $this->saveLog('siadNivelacionStatus', $username, $description, $external_id,'adldap');
+                    $this->saveLog('siadPosgradoStatus', $username, $description, $external_id,'adldap');
                     return $this->redirect(['adldap/edituser', 'search' => $model->cedula_pasaporte]);
                 }
             }
@@ -164,7 +164,7 @@ class EstudiantesnivelacionController extends Controller
     }
 
     /**
-     * Deletes an existing EstudiantesNivelacion model.
+     * Deletes an existing EstudiantesPosgrado model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id
      * @return mixed
@@ -178,15 +178,15 @@ class EstudiantesnivelacionController extends Controller
     }
 
     /**
-     * Finds the EstudiantesNivelacion model based on its primary key value.
+     * Finds the EstudiantesPosgrado model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
-     * @return EstudiantesNivelacion the loaded model
+     * @return EstudiantesPosgrado the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = EstudiantesNivelacion::findOne($id)) !== null) {
+        if (($model = EstudiantesPosgrado::findOne($id)) !== null) {
             return $model;
         }
 

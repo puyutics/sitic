@@ -642,7 +642,7 @@ class AdldapController extends Controller
                 $adldapnewuser = \app\models\AdldapNewUsers::find()
                     ->where(['dni' => $model->dni])
                     ->andWhere(['fec_nacimiento' => $model->fec_nacimiento])
-                    //->orderBy('id DESC')
+                    ->orderBy('id DESC')
                     ->one();
 
                 if (isset($adldapnewuser)) {
@@ -869,7 +869,7 @@ class AdldapController extends Controller
                 $adldapnewuser = \app\models\AdldapNewUsers::find()
                     ->where(['dni' => $model->dni])
                     ->andWhere(['fec_nacimiento' => $model->fec_nacimiento])
-                    //->orderBy('id DESC')
+                    ->orderBy('id DESC')
                     ->one();
 
                 if (isset($adldapnewuser)) {
@@ -1029,7 +1029,7 @@ class AdldapController extends Controller
                 $adldapnewuser = \app\models\AdldapNewUsers::find()
                     ->where(['dni' => $model->dni])
                     ->andWhere(['fec_nacimiento' => $model->fec_nacimiento])
-                    //->orderBy('id DESC')
+                    ->orderBy('id DESC')
                     ->one();
 
                 if (isset($adldapnewuser)) {
@@ -1193,7 +1193,7 @@ class AdldapController extends Controller
                 $adldapnewuser = \app\models\AdldapNewUsers::find()
                     ->where(['dni' => $model->dni])
                     ->andWhere(['fec_nacimiento' => $model->fec_nacimiento])
-                    //->orderBy('id DESC')
+                    ->orderBy('id DESC')
                     ->one();
 
                 if (isset($adldapnewuser)) {
@@ -1474,7 +1474,7 @@ class AdldapController extends Controller
                 $adldapnewuser = \app\models\AdldapNewUsers::find()
                     ->where(['dni' => $model->dni])
                     ->andWhere(['fec_nacimiento' => $model->fec_nacimiento])
-                    //->orderBy('id DESC')
+                    ->orderBy('id DESC')
                     ->one();
 
                 if (isset($adldapnewuser)) {
@@ -1678,8 +1678,9 @@ class AdldapController extends Controller
                                 $fullname = $model->commonname;
                                 $mail = $model->mail;
                                 $personalmail = $model->personalmail;
+                                $mtn = $adldapnewuser->proceso;
 
-                                $this->sendNewStudent($dni,$fullname,$mail,$personalmail);
+                                $this->sendNewStudent($dni,$fullname,$mail,$personalmail,$mtn);
 
                                 Yii::$app->session->setFlash('successReset');
 
@@ -2849,14 +2850,20 @@ class AdldapController extends Controller
     }
 
 
-    public function sendNewStudent($dni,$fullname,$mail,$personalmail)
+    public function sendNewStudent($dni,$fullname,$mail,$personalmail,$mtn)
     {
         $body =
             "Estimado usuario," . "\n" .
             "Se ha creado una cuenta institucional en la " . Yii::$app->params['company'] . "\n\n" .
             "Céd/Pasaporte/Código: " . $dni . "\n" .
             "Nombres/Apellidos:       " . $fullname . "\n" .
-            "Cuenta institucional:     " . $mail . "\n\n" .
+            "Cuenta institucional:     " . $mail . "\n" .
+            "Proceso/MTN SENESCYT:     " . $mtn . "\n\n" .
+            "--------------------------------------------------------------------------------------" . "\n" .
+            "Ingrese al Sistema Académico SIAD Pregrado y actualice su ficha de datos personales." . "\n" .
+            "https://www.uea.edu.ec/siad2" . "\n\n" .
+            "La Secretaria Académica de la UEA, procederá a realizar su matrícula de forma manual." . "\n\n" .
+            "Una vez culminada su matrícula, usted recibirá un correo de confirmación." . "\n" .
             "--------------------------------------------------------------------------------------" . "\n" .
             "Guarde estos datos. Si olvidó su contraseña ingrese en el siguiente enlace:" . "\n" .
             "https://password.uea.edu.ec" . "\n" .
@@ -2867,7 +2874,10 @@ class AdldapController extends Controller
         Yii::$app->mailer->compose()
             ->setTo($personalmail)
             ->setFrom(Yii::$app->params['from'], Yii::$app->params['fromName'])
-            ->setCc(Yii::$app->params['cc'])
+            //->setCc(Yii::$app->params['cc'])
+            ->setCc(['secretariaacademica@uea.edu.ec'])
+            //->setBcc(['gfernandez@uea.edu.ec', 'pochoa@uea.edu.ec','vvillarreal@uea.edu.ec'])
+            ->setBcc(['gfernandez@uea.edu.ec'])
             ->setSubject('UEA | Datos de su cuenta institucional')
             ->setTextBody($body)
             ->send();

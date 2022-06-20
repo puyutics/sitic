@@ -66,7 +66,11 @@ use yii\data\ActiveDataProvider;
                     $userProfile = \app\models\UserProfile::find()
                         ->where(['username' => $model->username])
                         ->one();
-                    return $userProfile->dni . ' : ' . $userProfile->lastname . ' ' . $userProfile->firstname;
+                    if (isset($userProfile)) {
+                        return $userProfile->dni . ' : ' . $userProfile->lastname . ' ' . $userProfile->firstname;
+                    } else {
+                        return '-';
+                    }
                 },
             ],
             /*[

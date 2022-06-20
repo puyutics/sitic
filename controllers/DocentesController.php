@@ -3,17 +3,17 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\EstudiantesNivelacion;
-use app\models\EstudiantesNivelacionSearch;
+use app\models\Docentes;
+use app\models\DocentesSearch;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * EstudiantesnivelacionController implements the CRUD actions for EstudiantesNivelacion model.
+ * DocentesController implements the CRUD actions for Docentes model.
  */
-class EstudiantesnivelacionController extends Controller
+class DocentesController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -50,12 +50,12 @@ class EstudiantesnivelacionController extends Controller
     }
 
     /**
-     * Lists all EstudiantesNivelacion models.
+     * Lists all Docentes models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new EstudiantesNivelacionSearch();
+        $searchModel = new DocentesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -65,7 +65,7 @@ class EstudiantesnivelacionController extends Controller
     }
 
     /**
-     * Displays a single EstudiantesNivelacion model.
+     * Displays a single Docentes model.
      * @param string $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -78,13 +78,13 @@ class EstudiantesnivelacionController extends Controller
     }
 
     /**
-     * Creates a new EstudiantesNivelacion model.
+     * Creates a new Docentes model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new EstudiantesNivelacion();
+        $model = new Docentes();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->CIInfPer]);
@@ -96,7 +96,7 @@ class EstudiantesnivelacionController extends Controller
     }
 
     /**
-     * Updates an existing EstudiantesNivelacion model.
+     * Updates an existing Docentes model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
@@ -104,22 +104,21 @@ class EstudiantesnivelacionController extends Controller
      */
     public function actionUpdate($id)
     {
-
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post())) {
 
             $dominio= explode("@", $model->mailInst);
             $dominio = $dominio[1];
-            $modelEstudiante = $this->findModel($id);
+            $modelDocente = $this->findModel($id);
             $log = '';
-            if (($modelEstudiante->mailInst != $model->mailInst) and ($dominio == 'uea.edu.ec')) {
-                $log = $log . '(SIAD Nivelación) Correo Institucional: ' . $modelEstudiante->mailInst
+            if (($modelDocente->mailInst != $model->mailInst) and ($dominio == 'uea.edu.ec')) {
+                $log = $log . '(SIAD Docente) Correo Institucional: ' . $modelDocente->mailInst
                     . ' -> ' . $model->mailInst;
 
-                if ($modelEstudiante->statusper != $model->statusper) {
-                    $log = $log . '. (SIAD Nivelación) Estado: ' . $modelEstudiante->statusper
-                        . ' -> ' . $model->statusper;
+                if ($modelDocente->StatusPer != $model->StatusPer) {
+                    $log = $log . '. (SIAD Docente) Estado: ' . $modelDocente->StatusPer
+                        . ' -> ' . $model->StatusPer;
                 }
 
                 //Crear Registro de Log en la base de datos
@@ -133,14 +132,14 @@ class EstudiantesnivelacionController extends Controller
                 $external_id = $external_id[0];
 
                 if ($model->save()) {
-                    $this->saveLog('siadNivelacionEmail', $username, $description, $external_id,'adldap');
+                    $this->saveLog('siadDoceneteEmail', $username, $description, $external_id,'adldap');
                     return $this->redirect(['adldap/edituser', 'search' => $model->cedula_pasaporte]);
                 }
             }
 
-            if ($modelEstudiante->statusper != $model->statusper) {
-                $log = $log . '(SIAD Nivelación) Estado: ' . $modelEstudiante->statusper
-                    . ' -> ' . $model->statusper;
+            if ($modelDocente->StatusPer != $model->StatusPer) {
+                $log = $log . '(SIAD Docente) Estado: ' . $modelDocente->StatusPer
+                    . ' -> ' . $model->StatusPer;
 
                 //Crear Registro de Log en la base de datos
                 $description =
@@ -152,7 +151,7 @@ class EstudiantesnivelacionController extends Controller
                 $external_id = $external_id[0];
 
                 if ($model->save(false)) {
-                    $this->saveLog('siadNivelacionStatus', $username, $description, $external_id,'adldap');
+                    $this->saveLog('siadDoceneteStatus', $username, $description, $external_id,'adldap');
                     return $this->redirect(['adldap/edituser', 'search' => $model->cedula_pasaporte]);
                 }
             }
@@ -164,7 +163,7 @@ class EstudiantesnivelacionController extends Controller
     }
 
     /**
-     * Deletes an existing EstudiantesNivelacion model.
+     * Deletes an existing Docentes model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id
      * @return mixed
@@ -178,15 +177,15 @@ class EstudiantesnivelacionController extends Controller
     }
 
     /**
-     * Finds the EstudiantesNivelacion model based on its primary key value.
+     * Finds the Docentes model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
-     * @return EstudiantesNivelacion the loaded model
+     * @return Docentes the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = EstudiantesNivelacion::findOne($id)) !== null) {
+        if (($model = Docentes::findOne($id)) !== null) {
             return $model;
         }
 

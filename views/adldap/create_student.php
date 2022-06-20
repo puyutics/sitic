@@ -19,7 +19,8 @@ $this->title = Yii::t('app', 'Crear estudiante');
 //$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Usuarios'), 'url' => ['adldap/index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-if (strtotime(date("Y-m-d H:i:s",time())) > strtotime("2021-12-13 08:00:00")) {
+$fecha_inicio = ('2022-06-01 08:00:00');
+if (strtotime(date("Y-m-d H:i:s",time())) > strtotime($fecha_inicio)) {
     $system_status = true;
 } else {
     $system_status = false;
@@ -52,7 +53,6 @@ if (isset($_GET['test'])) {
                         <h3 class="panel-title">PASO 1: Validar datos del usuario</h3>
                     </div>
                     <div class="panel-body">
-
                         <div class="alert alert-danger" align="center">
                             <h3>Usted ya tiene una cuenta institucional creada anteriormente</h3>
                         </div>
@@ -132,7 +132,7 @@ if (isset($_GET['test'])) {
                         <?php } ?>
 
                         <div class="alert alert-success" align="center">
-                            <h4>Bienvenid@ a la Universidad Estatal Amazónica. En 6 pasos vamos a crear su nueva cuenta institucional. Es necesario que ingrese los siguientes datos:</h4>
+                            <h4>Bienvenido a la Universidad Estatal Amazónica. En 6 pasos vamos a crear su nueva cuenta institucional. Es necesario que ingrese los siguientes datos:</h4>
                         </div>
 
                         <?= $form->field($model, 'step')->hiddenInput()->label(false) ?>
@@ -463,6 +463,7 @@ if (isset($_GET['test'])) {
 
                             <div class="alert alert-success" align="center">
                                 <h4>Etapa 2: Matricularse</h4>
+                                <h5>Ingrese al Sistema Académico SIAD Pregrado y actualice su ficha de datos personales. La Secretaria Académica de la UEA, procederá a realizar su matrícula de forma manual.</h5>
                                 <?php echo Html::a('SIAD Pregrado', 'https://www.uea.edu.ec/siad2', [
                                     'class'=>'btn btn-primary',
                                     'target'=>'_blank',
@@ -492,6 +493,6 @@ if (isset($_GET['test'])) {
 
 <?php } else { ?>
     <div class="alert alert-info" align="center">
-        <h3 align="center">El sistema no se encuentra habilitado. A partir del próximo lunes 13 de diciembre de 2021 desde las 08h00, empezará el proceso de inscripción para todos los estudiantes que hayan aceptado el cupo para nuestra institución.</h3>
+        <h3 align="center">El sistema no se encuentra habilitado. A partir del próximo <?= $fecha_inicio ?>, empezará el proceso de inscripción para todos los estudiantes que hayan aceptado un cupo para nuestra institución.</h3>
     </div>
 <?php } ?>

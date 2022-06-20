@@ -16,9 +16,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="mdl-role-assignments-index">
 
-    <h1 align="center"><?= Html::encode($this->title) ?></h1>
+    <h1 align="center" class="alert alert-primary"><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-    <h4 align="center" class="alert alert-default">
+    <h4 align="center" class="alert alert-warning">
         Sincronizador diseñado para extraer, comparar y depurar información de las bases de datos del sistema académico SIAD y la plataforma EVA Pregrado, utilizando el método Flat File Enrolment (CSV) de Moodle
     </h4>
     <div class="row">

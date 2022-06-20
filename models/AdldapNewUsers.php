@@ -73,4 +73,9 @@ class AdldapNewUsers extends \yii\db\ActiveRecord
             'status' => 'ESTADO',
         ];
     }
+
+    public function getDatosCompletos()
+    {
+        return $this->dni.": ".$this->apellidos." ".$this->nombres;
+    }
 }

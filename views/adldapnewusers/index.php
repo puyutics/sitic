@@ -30,6 +30,22 @@ $this->params['breadcrumbs'][] = $this->title;
 
             //'id',
             [
+                'attribute' => 'dni',
+                'value' => 'DatosCompletos',
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>ArrayHelper::map(\app\models\AdldapNewUsers::find()
+                    ->orderBy('apellidos ASC, nombres ASC')
+                    ->all(),
+                    'dni',
+                    'DatosCompletos'
+                ),
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>['allowClear'=>true],
+                ],
+                'filterInputOptions'=>['placeholder'=>'Seleccionar'],
+                'format'=>'raw',
+            ],
+            /*[
                 'attribute'=>'dni',
                 'filterType'=>GridView::FILTER_SELECT2,
                 'filter'=>ArrayHelper::map(\app\models\AdldapNewUsers::find()
@@ -39,8 +55,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'filterInputOptions'=>['placeholder'=>'Seleccionar'],
                 'format'=>'raw',
-            ],
-            [
+            ],*/
+            /*[
                 'attribute'=>'nombres',
                 'filterType'=>GridView::FILTER_SELECT2,
                 'filter'=>ArrayHelper::map(\app\models\AdldapNewUsers::find()
@@ -50,8 +66,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'filterInputOptions'=>['placeholder'=>'Seleccionar'],
                 'format'=>'raw',
-            ],
-            [
+            ],*/
+            /*[
                 'attribute'=>'apellidos',
                 'filterType'=>GridView::FILTER_SELECT2,
                 'filter'=>ArrayHelper::map(\app\models\AdldapNewUsers::find()
@@ -61,7 +77,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'filterInputOptions'=>['placeholder'=>'Seleccionar'],
                 'format'=>'raw',
-            ],
+            ],*/
             'fec_nacimiento',
             [
                 'attribute'=>'campus',
@@ -78,6 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'carrera',
                 'filterType'=>GridView::FILTER_SELECT2,
                 'filter'=>ArrayHelper::map(\app\models\AdldapNewUsers::find()
+                    ->orderBy('carrera ASC')
                     ->all(), 'carrera', 'carrera'),
                 'filterWidgetOptions'=>[
                     'pluginOptions'=>['allowClear'=>true],
@@ -85,8 +102,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterInputOptions'=>['placeholder'=>'Seleccionar'],
                 'format'=>'raw',
             ],
-            //'email_personal:email',
-            //'celular',
+            [
+                'label' => 'Email institucional',
+                'value' => function($model) {
+                    $estudiante = \app\models\Estudiantes::find()
+                        ->select('mailInst')
+                        ->where(['CIInfPer' => $model->dni])
+                        ->orWhere((['cedula_pasaporte' => $model->dni]))
+                        ->one();
+                    if (isset($estudiante)) {
+                        return $estudiante->mailInst;
+                    } else {
+                        return '-';
+                    }
+                },
+            ],
+            'email_personal:email',
+            'celular',
             [
                 'attribute'=>'proceso',
                 'filterType'=>GridView::FILTER_SELECT2,

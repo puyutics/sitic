@@ -101,6 +101,35 @@ $this->params['breadcrumbs'][] = $this->title;
                         . $tabintformulario->nombres;
                 }
             ],
+            [
+                'label' => 'Bien',
+                'value' => function ($model) {
+                    $dni = $model->cedula;
+                    $user_profile = \app\models\UserProfile::find()
+                        ->where(['dni' => $dni])
+                        ->one();
+                    if (isset($user_profile)) {
+                        $username = $user_profile->username;
+                        $inv_item_user = \app\models\InvItemUser::find()
+                            ->andWhere(['username' => $username])
+                            ->andWhere(['>=','inv_purchase_item_id',1451])
+                            ->andWhere(['<=','inv_purchase_item_id',1950])
+                            ->one();
+
+                        if (isset($inv_item_user)) {
+                            $inv_purchase_item = \app\models\InvPurchaseItem::find()
+                                ->where(['id' => $inv_item_user->inv_purchase_item_id])
+                                ->one();
+                            return $inv_purchase_item->description;
+                        } else {
+                            return '-';
+                        }
+                    } else {
+                        return 'Sin perfil de usuario';
+                    }
+
+                }
+            ],
             /*[
                 'attribute'=>'cedula',
                 'filterType'=>GridView::FILTER_SELECT2,

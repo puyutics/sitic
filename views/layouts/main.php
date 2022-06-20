@@ -123,7 +123,7 @@ AppAsset::register($this);
                         //['label' => 'Encuestas UEA', 'url' => 'index.php?r=tabintencuestas/index'],
                         //['label' => 'Encuestas SENESCYT', 'url' => 'index.php?r=tabintsenescyt/index'],
                         //['label' => 'Buscar Beneficiario', 'url' => 'index.php?r=tabintformulario/beneficiarioadmin'],
-                        //['label' => 'Tablets e Internet', 'url' => 'index.php?r=tabintformulario/index'],
+                        ['label' => 'Tablets e Internet', 'url' => 'index.php?r=tabintformulario/index'],
                         ['label' => 'Comunicados', 'url' => 'index.php?r=sysemail/index'],
                         ['label' => 'Roles de Pago', 'url' => 'index.php?r=roluser/index'],
                     ],

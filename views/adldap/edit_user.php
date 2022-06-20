@@ -171,8 +171,15 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
 
                 ],
                 [
-                    'label'=>'<i class="glyphicon glyphicon-list-alt"></i> SIAD (Estudiantes)',
+                    'label'=>'<i class="glyphicon glyphicon-list-alt"></i> SIAD',
                     'content' => $this->render('edit_user_siad', [
+                        'model' => $model,
+                    ])
+
+                ],
+                [
+                    'label'=>'<i class="glyphicon glyphicon-list-alt"></i> EVA',
+                    'content' => $this->render('edit_user_moodle', [
                         'model' => $model,
                     ])
 
