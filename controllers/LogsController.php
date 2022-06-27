@@ -55,6 +55,7 @@ class LogsController extends Controller
     {
         $searchModel = new LogsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->setTotalCount(1000);
         $dataProvider->sort->defaultOrder = [
             'datetime' => SORT_DESC,
         ];

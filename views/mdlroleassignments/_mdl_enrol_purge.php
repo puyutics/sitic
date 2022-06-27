@@ -360,7 +360,7 @@ $tiempoEjecucion = round($tiempoFinal - $tiempoInicial,2) . ' segundos';
     <div style="font-size: 9pt; text-align: left;">
         <b>Tiempo: </b><?= $tiempoEjecucion ?>
         <br>
-        <b>Fecha y hora: </b><?= date('Y-m-d h:i:s') ?>
+        <b>Fecha y hora: </b><?= date('Y-m-d H:i:s') ?>
     </div>
 
 <?php function copyFileRemoteServer() {

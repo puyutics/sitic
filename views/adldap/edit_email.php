@@ -23,8 +23,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="alert alert-info" align="center">
         <h3 align="center"><?= $this->title ?></h3>
-        <h4><code>Este proceso es exclusivo para estudiantes de Pregrado y Nivelación.</code></h4>
-        <h4><code>Para estudiantes de Posgrado, personal Docente o Administrativo, deben crear un ticket</code> <a target="_blank" href="https://www.uea.edu.ec/soporte">aquí</a></h4>
+        <h4><code>Este proceso es exclusivo para estudiantes (Pregrado/Posgrado)</code></h4>
+        <h4><a target="_blank" href="https://www.uea.edu.ec/soporte">Para personal Docente o Administrativo, deben crear un ticket aquí</a></h4>
     </div>
 
     <?php if ($model->step == 1) { ?>
@@ -95,7 +95,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <?php } ?>
 
                         <div class="form-group" align="center">
-                            <?= Html::submitButton('Enviar Correo', ['class' => 'btn btn-success']) ?>
+                            <?= Html::submitButton('Validar correo personal', ['class' => 'btn btn-danger']) ?>
                         </div>
                     </div>
                 </div>

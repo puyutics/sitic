@@ -2427,17 +2427,30 @@ class AdldapController extends Controller
 
                 if (isset($user)) {
                     $estudiante_nivelacion = \app\models\EstudiantesNivelacion::find()
-                        ->where(['cedula_pasaporte' => $post_dni])
+                        ->where(['CIInfPer' => $post_dni])
+                        ->orWhere(['cedula_pasaporte' => $post_dni])
                         ->one();
+
                     if (isset($estudiante_nivelacion)) {
                         $fec_nacimiento = $estudiante_nivelacion->FechNacimPer;
                     }
 
                     $estudiante_pregrado = \app\models\Estudiantes::find()
-                        ->where(['cedula_pasaporte' => $post_dni])
+                        ->where(['CIInfPer' => $post_dni])
+                        ->orWhere(['cedula_pasaporte' => $post_dni])
                         ->one();
+
                     if (isset($estudiante_pregrado)) {
                         $fec_nacimiento = $estudiante_pregrado->FechNacimPer;
+                    }
+
+                    $estudiante_posgrado = \app\models\EstudiantesPosgrado::find()
+                        ->where(['CIInfPer' => $post_dni])
+                        ->orWhere(['cedula_pasaporte' => $post_dni])
+                        ->one();
+
+                    if (isset($estudiante_posgrado)) {
+                        $fec_nacimiento = $estudiante_posgrado->FechNacimPer;
                     }
 
                     if (isset($fec_nacimiento)) {
@@ -2450,7 +2463,7 @@ class AdldapController extends Controller
                         }
                     }
 
-                    Yii::$app->session->setFlash('errorFecha','Fecha de nacimiento incorrecta o usted no consta en las bases de datos de estudiantes de Pregrado o Nivelación');
+                    Yii::$app->session->setFlash('errorFecha','Fecha de nacimiento incorrecta o usted no consta en las bases de datos de estudiantes de Pregrado/Posgrado');
                     $model->step = 1;
                     return $this->render('edit_email', [
                         'model' => $model,

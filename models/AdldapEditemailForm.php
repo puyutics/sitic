@@ -44,7 +44,7 @@ class AdldapEditemailForm extends Model
         return [
             'dni' => 'Cédula/Pasaporte',
             'mail' => 'Correo institucional',
-            'personalmail' => 'Nuevo Correo personal',
+            'personalmail' => 'Nuevo correo personal',
             'commonname' => 'Nombre completo',
             'fec_nacimiento' => 'Fecha nacimiento',
             'token' => 'TOKEN',

@@ -27,7 +27,7 @@ class AuthassignmentController extends Controller
                 'only' => ['create','delete','index','update', 'view'],
                 'rules' => [
                     [
-                        'actions' => ['create','update','index','view'],
+                        'actions' => ['create','delete','update','index','view'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
@@ -178,7 +178,26 @@ class AuthassignmentController extends Controller
      */
     public function actionDelete($item_name, $user_id)
     {
-        $this->findModel($item_name, $user_id)->delete();
+        $model = $this->findModel($item_name, $user_id);
+
+        if ($this->findModel($item_name, $user_id)->delete()) {
+            $auth_item_child = \app\models\AuthItemChild::find()
+                ->where(["parent" => $model->item_name])
+                ->one();
+
+            $user = \app\models\User::find()
+                ->where(["id" => $model->user_id])
+                ->one();
+
+            //Crear Registro de Log en la base de datos
+            $description =
+                'Rol de Usuario eliminado: '
+                . $auth_item_child->child
+                . '. Usuario: '
+                . $user->username;
+            $username = Yii::$app->user->identity->username;
+            $this->saveLog('authAssignmentDelete', $username, $description, $model->item_name.'@'.$model->user_id,'authassignment');
+        }
 
         return $this->redirect(['index']);
     }

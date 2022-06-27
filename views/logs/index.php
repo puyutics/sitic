@@ -106,6 +106,19 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'target'=>'_blank',
                                     'data-pjax'=>"0",
                                 ]);
+                        } else if ($model->external_type == 'carnetizacion') {
+                            return Html::a(
+                                '<span class="btn btn-danger center-block">
+                                        <i class="fa fa-fw fa-folder"></i>
+                                         Carnet</span>',
+
+                                Url::to(['carnetizacion/view', 'id' => base64_encode($model->external_id)]),
+
+                                [
+                                    'title' => Yii::t('yii', 'Ver Carnet Digital'),
+                                    'target'=>'_blank',
+                                    'data-pjax'=>"0",
+                                ]);
                         } else {
                             return Html::a(
                                 '<span class="btn btn-success center-block">

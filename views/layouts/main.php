@@ -65,6 +65,7 @@ AppAsset::register($this);
                 'label' => 'Cuenta Institucional',
                 'items' => [
                     ['label' => 'Crear cuenta', 'url' => 'index.php?r=adldap/createstudent'],
+                    ['label' => 'Carnet Digital', 'url' => 'index.php?r=carnetizacion/create'],
                     //['label' => 'Cambiar Contraseña', 'url' => 'index.php?r=adldap/forgetpass'],
                     ['label' => 'Mi cuenta', 'url' => 'index.php?r=adldap/profile'],
                     '<li class="divider"></li>',

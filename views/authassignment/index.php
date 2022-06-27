@@ -53,8 +53,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
             ],
 
-
-
             ['class' => 'kartik\grid\ActionColumn',
                 'template'=>'{update}',
                 'buttons'=>[
@@ -70,6 +68,21 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                 ]
             ],
+            //['class' => 'yii\grid\ActionColumn'],
+
+            ['class' => 'yii\grid\ActionColumn',
+                'template' => '{delete}',
+                'buttons'=>[
+                    'delete' => function ($url) {
+                        return Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', $url, [
+                            'title' => Yii::t('app', 'Delete'),
+                            'data-confirm' => Yii::t('yii', '¿Está seguro de eliminar este elemento?'),
+                            'data-method' => 'post', 'data-pjax' => '0',
+                        ]);
+                    }
+                ],
+            ],
+
         ],
         'containerOptions' => ['style'=>'overflow: auto'],
         'toolbar' =>  [

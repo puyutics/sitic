@@ -108,7 +108,12 @@ class Carrera extends \yii\db\ActiveRecord
 
     public function getFullname()
     {
-        return $this->NombCarr." ".$this->info_adicional;
+        return $this->info_adicional." - ".$this->NombCarr;
+    }
+
+    public function getDatosCompletos()
+    {
+        return $this->idCarr.": ".$this->NombCarr." ".$this->info_adicional;
     }
 }
 

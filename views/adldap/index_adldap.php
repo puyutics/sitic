@@ -67,6 +67,15 @@ use yii\helpers\Html;
 
             <p align="center"><a class="btn btn-success" href="index.php?r=adldap/clearstudents"> Depurar Estudiantes &raquo;</a></p>
         </div>
+        <div class="col-lg-3">
+            <h2 align="center">Carnets</h2>
+
+            <div align="center">
+                <a href="index.php?r=carnetizacion/index"><?= Html::img('images/userprofile.png',['height'=>200,'width'=>200]);?></a>
+            </div>
+
+            <p align="center"><a class="btn btn-success" href="index.php?r=carnetizacion/index"> Carnets Digitales &raquo;</a></p>
+        </div>
     </div>
 
 </div>

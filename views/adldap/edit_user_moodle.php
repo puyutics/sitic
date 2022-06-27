@@ -192,11 +192,11 @@ $dataProviderMdlRA->query->Where(['userid' => $mdl_user_id]);
                                 $notasAlumno = \app\models\NotasAlumno::find()
                                     ->where(['CIInfPer' => $estudiante->CIInfPer])
                                     ->andWhere(['dpa_id' => $docenteAsignatura->dpa_id])
-                                    ->all();
+                                    ->one();
 
-                                if (count($notasAlumno) == 1) {
+                                if (isset($notasAlumno)) {
                                     return "Correcto. ($notasAlumno->dpa_id)";
-                                } elseif (count($notasAlumno) == 0) {
+                                } else {
                                     return 'del, student, '.$estudiante->mailInst.', '.$docenteAsignatura->dpa_id;
                                 }
                             } elseif ($mdl_role->shortname == 'teacher'

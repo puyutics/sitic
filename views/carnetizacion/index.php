@@ -1,0 +1,148 @@
+<?php
+
+use yii\helpers\Html;
+use kartik\grid\GridView;
+use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
+use kartik\icons\Icon;
+Icon::map($this);
+
+/* @var $this yii\web\View */
+/* @var $searchModel app\models\CarnetizacionSearch */
+/* @var $dataProvider yii\data\ActiveDataProvider */
+
+$this->title = 'Carnets Digitales';
+$this->params['breadcrumbs'][] = $this->title;
+?>
+<div class="carnetizacion-index">
+
+    <div class="alert alert-info" align="center">
+        <h3 align="center"><?= Html::encode($this->title) ?></h3>
+    </div>
+
+    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+
+    <p>
+        <?php //echo Html::a('Create Carnetizacion', ['create'], ['class' => 'btn btn-success']) ?>
+    </p>
+
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+
+            //'id',
+            //'username',
+            //'CIInfPer',
+            [
+                'attribute' => 'cedula_pasaporte',
+                'value' => 'DatosCompletos',
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>ArrayHelper::map(\app\models\Carnetizacion::find()
+                    ->orderBy('ApellInfPer ASC, ApellMatInfPer ASC, NombInfPer ASC')
+                    ->all(),
+                    'cedula_pasaporte',
+                    'DatosCompletos'
+                ),
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>['allowClear'=>true],
+                ],
+                'filterInputOptions'=>['placeholder'=>'Seleccionar'],
+                'format'=>'raw',
+            ],
+            //'cedula_pasaporte',
+            //'TipoDocInfPer',
+            //'ApellInfPer',
+            //'ApellMatInfPer',
+            //'NombInfPer',
+            //'FechNacimPer',
+            [
+                'attribute' => 'mailInst',
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>ArrayHelper::map(\app\models\Carnetizacion::find()
+                    ->select('mailInst')
+                    ->all(),
+                    'mailInst',
+                    'mailInst'
+                ),
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>['allowClear'=>true],
+                ],
+                'filterInputOptions'=>['placeholder'=>'Seleccionar'],
+                'format'=>'raw',
+            ],
+            //'fotografia',
+            'idMatricula',
+            [
+                'attribute' => 'idCarr',
+                'value'=>function($model){
+                    return \app\models\Carrera::findOne($model->idCarr)->Fullname;
+                },
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>ArrayHelper::map(\app\models\Carrera::find()
+                    ->all(),
+                    'idCarr',
+                    'datosCompletos'
+                ),
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>['allowClear'=>true],
+                ],
+                'filterInputOptions'=>['placeholder'=>'Seleccionar'],
+                'format'=>'raw',
+            ],
+            [
+                'attribute' => 'idPer',
+                'value'=>function($model){
+                    return \app\models\Periodo::Periododescriptivo($model->idPer);
+                },
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>ArrayHelper::map(\app\models\Periodo::find()
+                    ->where('idper >= 39')
+                    ->orderBy('idper DESC')
+                    ->all(),
+                    'idper',
+                    'PeriodoDetalle'
+                ),
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>['allowClear'=>true],
+                ],
+                'filterInputOptions'=>['placeholder'=>'Seleccionar'],
+                'format'=>'raw',
+            ],
+            'fechfinalperlec',
+            //'filefolder',
+            //'filename',
+            //'filetype',
+            'fec_registro',
+            //'status',
+
+            //['class' => 'yii\grid\ActionColumn'],
+
+            ['class' => 'kartik\grid\ActionColumn',
+                'template'=>'{view}',
+                'buttons'=>[
+                    'view' => function ($url, $model) {
+                        return Html::a('<span class="btn btn-danger center-block">' . Icon::show('file-pdf') . '</span>',
+                            Url::to(['carnetizacion/view', 'id' => base64_encode($model->id)]),
+                            [
+                                'title' => Yii::t('yii', 'PDF'),
+                                'target'=>'_blank',
+                                'data-pjax'=>"0",
+                            ]);
+                    },
+                ]
+            ],
+
+        ],
+        'pjax' => true,
+        'bordered' => true,
+        'striped' => false,
+        'condensed' => false,
+        'responsive' => true,
+        'hover' => true,
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY
+        ],
+    ]); ?>
+</div>
