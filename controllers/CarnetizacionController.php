@@ -25,10 +25,12 @@ class CarnetizacionController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','delete','index','update','view'],
+                'only' => ['create','delete','index','update','view',
+                    'fixcarnet','reportegrafico'],
                 'rules' => [
                     [
-                        'actions' => ['create','index','update','view'],
+                        'actions' => ['create','index','update','view',
+                            'fixcarnet','reportegrafico'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
@@ -196,6 +198,25 @@ class CarnetizacionController extends Controller
         return $this->render('create', [
             'model' => $model,
         ]);
+    }
+
+    public function actionFixcarnet($id)
+    {
+        $id = base64_decode($id);
+        $model = \app\models\Carnetizacion::findOne($id);
+
+        //Generar el carnet en PDF
+        $this->generarCarnet($model);
+
+        //Enviar carnet digital por email
+        $this->enviarCarnet($model);
+
+        return $this->redirect(['view', 'id' => base64_encode($model->id)]);
+    }
+
+    public function actionReportegrafico()
+    {
+        return $this->render('_reportegrafico');
     }
 
     public function generarCarnet($model)

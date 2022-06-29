@@ -10,6 +10,7 @@ use yii\helpers\Url;
 $dni = $model->dni;
 $CIInfPer = $dni;
 $estudiante_nivelacion = \app\models\Estudiantes::find()
+    ->select('CIInfPer, cedula_pasaporte, ApellInfPer, ApellMatInfPer, NombInfPer, FechNacimPer, StatusPer, mailInst')
     ->where(['CIInfPer' => $dni])
     ->orWhere(['cedula_pasaporte' => $dni])
     ->one();
@@ -17,6 +18,7 @@ if (isset($estudiante_nivelacion)) {
     $CIInfPer = $estudiante_nivelacion->CIInfPer;
 }
 $estudiante_pregrado = \app\models\Estudiantes::find()
+    ->select('CIInfPer, cedula_pasaporte, ApellInfPer, ApellMatInfPer, NombInfPer, FechNacimPer, StatusPer, mailInst')
     ->where(['CIInfPer' => $dni])
     ->orWhere(['cedula_pasaporte' => $dni])
     ->one();
@@ -24,6 +26,7 @@ if (isset($estudiante_nivelacion)) {
     $CIInfPer = $estudiante_pregrado->CIInfPer;
 }
 $estudiante_posgrado = \app\models\EstudiantesPosgrado::find()
+    ->select('CIInfPer, cedula_pasaporte, ApellInfPer, ApellMatInfPer, NombInfPer, FechNacimPer, StatusPer, mailInst')
     ->where(['CIInfPer' => $dni])
     ->orWhere(['cedula_pasaporte' => $dni])
     ->one();
@@ -31,6 +34,7 @@ if (isset($estudiante_posgrado)) {
     $CIInfPer = $estudiante_posgrado->CIInfPer;
 }
 $docente_pregrado = \app\models\Docentes::find()
+    ->select('CIInfPer, cedula_pasaporte, ApellInfPer, ApellMatInfPer, NombInfPer, FechNacimPer, StatusPer, mailInst')
     ->where(['CIInfPer' => $dni])
     ->orWhere(['cedula_pasaporte' => $dni])
     ->one();

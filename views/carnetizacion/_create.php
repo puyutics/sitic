@@ -8,6 +8,11 @@ use kartik\detail\DetailView;
 /* @var $model app\models\Carnetizacion */
 /* @var $form yii\widgets\ActiveForm */
 
+$finfo    = new finfo(FILEINFO_MIME);
+$mimeType = $finfo->buffer($model->fotografia);
+$mimeType = explode('; ',$mimeType);
+$mimeType = $mimeType[0];
+
 ?>
 
 <?php if ($model->CIInfPer != NULL) { ?>
@@ -37,13 +42,16 @@ use kartik\detail\DetailView;
             <?= DetailView::widget([
                 'model' => $model,
                 'attributes' => [
-                    //'id',
                     //'username',
                     [
                         'attribute' => 'fotografia',
-                        'value' => 'data:image/jpeg;base64,' . base64_encode($model->fotografia),
+                        'value' => 'data:'.$mimeType.';base64,'.base64_encode($model->fotografia),
                         'format' => ['image', ['height' => '140']],
                         'options'=>['class'=>'text-left',],
+                    ],
+                    [
+                        'label' => 'MIME Type',
+                        'value' => $mimeType,
                     ],
                     //'CIInfPer',
                     'cedula_pasaporte',
@@ -116,6 +124,7 @@ use kartik\detail\DetailView;
                     'type'=>DetailView::TYPE_PRIMARY,
                 ],
             ]) ?>
+
             <div class="alert alert-success" align="center">
                 <?php echo $form->field($model, 'status')->checkBox([
                     'checked' => false,

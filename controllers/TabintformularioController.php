@@ -30,12 +30,13 @@ class TabintformularioController extends Controller
                 'class' => AccessControl::className(),
                 'only' => ['create','delete','index','update','view',
                     'admin','beneficiario','beneficiarioadmin','contrato',
-                    'reporte','reportegrafico','estatus'],
+                    'reporte','reportegrafico','estatus','indexcge'],
                 'rules' => [
                     [
                         'actions' => ['create','index','view',
                             'admin','beneficiario','beneficiarioadmin',
-                            'contrato','reporte','reportegrafico','estatus'],
+                            'contrato','reporte','reportegrafico','estatus',
+                            'indexcge'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],

@@ -26,6 +26,15 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php //echo Html::a('Create Carnetizacion', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
+    <div class="alert alert-primary" align="center">
+        <?= Html::a('<span class="btn btn-lg btn btn-primary">Reporte Gráfico</span>',
+            Url::to(['/carnetizacion/reportegrafico']), [
+                'title' => Yii::t('yii', 'Imprimir Reporte'),
+                'target'=>'_blank',
+                'data-pjax'=>"0",
+            ]); ?>
+    </div>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -110,7 +119,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterInputOptions'=>['placeholder'=>'Seleccionar'],
                 'format'=>'raw',
             ],
-            'fechfinalperlec',
+            //'fechfinalperlec',
             //'filefolder',
             //'filename',
             //'filetype',
@@ -134,8 +143,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]
             ],
 
+            ['class' => 'kartik\grid\ActionColumn',
+                'template'=>'{fix}',
+                'buttons'=>[
+                    'fix' => function ($url, $model) {
+                        return Html::a('<span class="btn btn-info center-block">' . Icon::show('tools') . '</span>',
+                            Url::to('index.php?r=carnetizacion/fixcarnet&id=' . base64_encode($model->id)), [
+                                'title' => Yii::t('yii', 'Fix Carnet'), 'target' => '_blank',
+                            ]);
+                    },
+                ]
+            ],
         ],
-        'pjax' => true,
+        'pjax' => false,
         'bordered' => true,
         'striped' => false,
         'condensed' => false,

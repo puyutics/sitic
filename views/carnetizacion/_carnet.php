@@ -38,6 +38,11 @@ $periodoDescriptivo = \app\models\Periodo::Periododescriptivo($model->idPer);
 
 //Crear URL para el código QR
 $url = Url::to('@web/index.php?r=carnetizacion/view&id='.base64_encode($model->id), 'https');
+
+$finfo    = new finfo(FILEINFO_MIME);
+$mimeType = $finfo->buffer($model->fotografia);
+$mimeType = explode('; ',$mimeType);
+$mimeType = $mimeType[0];
 ?>
 
 
@@ -51,18 +56,17 @@ $url = Url::to('@web/index.php?r=carnetizacion/view&id='.base64_encode($model->i
 
 <table width=100% border="0" style="font-size: 9pt; border-collapse:collapse">
     <tr align="center">
+        <th height="128px" colspan="2" style="text-align: center">
+            <br>
+        </th>
+    </tr>
+    <tr align="center">
+        <th height="135px" colspan="2" style="text-align: center">
+            <?= '<img style="border:1px solid black;" height="138" src="data:'.$mimeType.';base64,'.base64_encode($model->fotografia).'"/>' ?>
+        </th>
+    </tr>
+    <tr align="center">
         <th colspan="2" style="text-align: center">
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <?= '<img style="border:1px solid black;" height="138" src="data:image/jpeg;base64,'.base64_encode($model->fotografia).'"/>' ?>
-            <br>
             <br>
             <h4><?= $model->cedula_pasaporte?></h4>
             <h4><?= $model->ApellInfPer . ' ' . $model->ApellMatInfPer ?></h4>

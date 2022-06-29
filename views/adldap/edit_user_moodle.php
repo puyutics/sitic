@@ -51,10 +51,12 @@ $dataProviderMdlRA->query->Where(['userid' => $mdl_user_id]);
                     'value' => function ($model) {
                         $contextid = $model->contextid;
                         $mdl_context = \app\models\MdlContext::find()
+                            ->select('instanceid')
                             ->where(['id' => $contextid])
                             ->one();
 
                         $mdl_course = \app\models\MdlCourse::find()
+                            ->select('id')
                             ->where(['id' => $mdl_context->instanceid])
                             ->one();
 
@@ -68,10 +70,12 @@ $dataProviderMdlRA->query->Where(['userid' => $mdl_user_id]);
                     'value' => function ($model) {
                         $contextid = $model->contextid;
                         $mdl_context = \app\models\MdlContext::find()
+                            ->select('instanceid')
                             ->where(['id' => $contextid])
                             ->one();
 
                         $mdl_course = \app\models\MdlCourse::find()
+                            ->select('id, idnumber')
                             ->where(['id' => $mdl_context->instanceid])
                             ->one();
 
@@ -89,10 +93,12 @@ $dataProviderMdlRA->query->Where(['userid' => $mdl_user_id]);
                     'value' => function ($model) {
                         $contextid = $model->contextid;
                         $mdl_context = \app\models\MdlContext::find()
+                            ->select('instanceid')
                             ->where(['id' => $contextid])
                             ->one();
 
                         $mdl_course = \app\models\MdlCourse::find()
+                            ->select('id, shortname')
                             ->where(['id' => $mdl_context->instanceid])
                             ->one();
 
@@ -106,10 +112,12 @@ $dataProviderMdlRA->query->Where(['userid' => $mdl_user_id]);
                     'value' => function ($model) {
                         $contextid = $model->contextid;
                         $mdl_context = \app\models\MdlContext::find()
+                            ->select('instanceid')
                             ->where(['id' => $contextid])
                             ->one();
 
                         $mdl_course = \app\models\MdlCourse::find()
+                            ->select('id, fullname')
                             ->where(['id' => $mdl_context->instanceid])
                             ->one();
 
@@ -135,6 +143,7 @@ $dataProviderMdlRA->query->Where(['userid' => $mdl_user_id]);
                     'value' => function ($model) {
                         $roleid = $model->roleid;
                         $mdl_role = \app\models\MdlRole::find()
+                            ->select('shortname')
                             ->where(['id' => $roleid])
                             ->one();
 
@@ -147,6 +156,7 @@ $dataProviderMdlRA->query->Where(['userid' => $mdl_user_id]);
                     'value' => function ($model) {
                         $contextid = $model->contextid;
                         $mdl_context = \app\models\MdlRoleAssignments::find()
+                            ->select('id')
                             ->where(['contextid' => $contextid])
                             ->all();
 
@@ -158,10 +168,12 @@ $dataProviderMdlRA->query->Where(['userid' => $mdl_user_id]);
                     'value' => function ($model) {
                         $contextid = $model->contextid;
                         $mdl_context = \app\models\MdlContext::find()
+                            ->select('instanceid')
                             ->where(['id' => $contextid])
                             ->one();
 
                         $mdl_course = \app\models\MdlCourse::find()
+                            ->select('shortname, idnumber')
                             ->where(['id' => $mdl_context->instanceid])
                             ->one();
 
@@ -170,26 +182,31 @@ $dataProviderMdlRA->query->Where(['userid' => $mdl_user_id]);
                         if ($codigo[0] == Yii::$app->params['course_code'] and isset($codigo[4])) {
                             $userid = $model->userid;
                             $mdl_user = \app\models\MdlUser::find()
+                                ->select('idnumber, username')
                                 ->where(['id' => $userid])
                                 ->one();
 
                             $roleid = $model->roleid;
                             $mdl_role = \app\models\MdlRole::find()
+                                ->select('shortname')
                                 ->where(['id' => $roleid])
                                 ->one();
 
                             if ($mdl_role->shortname == 'student') {
                                 $estudiante = \app\models\Estudiantes::find()
+                                    ->select('CIInfPer, mailInst')
                                     ->where(['mailInst' => $mdl_user->username])
                                     ->one();
 
                                 $docenteAsignatura = \app\models\DocenteAsignatura::find()
+                                    ->select('dpa_id')
                                     ->where(['idPer' => Yii::$app->params['siad_periodo']])
                                     ->andWhere(['idAsig' => $codigo[1] . '-' . $codigo[2] . '-' . $codigo[3]])
                                     ->andWhere(['idParalelo' => $codigo[4]])
                                     ->one();
 
                                 $notasAlumno = \app\models\NotasAlumno::find()
+                                    ->select('dpa_id')
                                     ->where(['CIInfPer' => $estudiante->CIInfPer])
                                     ->andWhere(['dpa_id' => $docenteAsignatura->dpa_id])
                                     ->one();
@@ -202,12 +219,14 @@ $dataProviderMdlRA->query->Where(['userid' => $mdl_user_id]);
                             } elseif ($mdl_role->shortname == 'teacher'
                                 or $mdl_role->shortname == 'editingteacher') {
                                 $docenteAsignatura = \app\models\DocenteAsignatura::find()
+                                    ->select('CIInfPer, dpa_id')
                                     ->where(['idPer' => Yii::$app->params['siad_periodo']])
                                     ->andWhere(['idAsig' => $codigo[1] . '-' . $codigo[2] . '-' . $codigo[3]])
                                     ->andWhere(['idParalelo' => $codigo[4]])
                                     ->one();
 
                                 $docente = \app\models\Docentes::find()
+                                    ->select('mailInst')
                                     ->where(['CIInfPer' => $docenteAsignatura->CIInfPer])
                                     ->one();
 
