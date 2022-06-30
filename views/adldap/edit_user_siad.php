@@ -42,7 +42,7 @@ if (isset($docente_pregrado)) {
     $CIInfPer = $docente_pregrado->CIInfPer;
 }
 
-////////SIAD NIVELACION//////////
+////////SIAD ESTUDIANTE NIVELACION//////////
 $searchModelNivelacion = new \app\models\EstudiantesNivelacionSearch();
 $dataProviderNivelacion = $searchModelNivelacion->search(Yii::$app->request->queryParams);
 $dataProviderNivelacion->query
@@ -56,7 +56,7 @@ $dataProviderMatriculaNivelacion->sort->defaultOrder = [
     'idsemestre' => SORT_DESC,
 ];
 
-////////SIAD PREGRADO//////////
+////////SIAD ESTUDIANTE PREGRADO//////////
 $searchModelPregrado = new app\models\EstudiantesSearch();
 $dataProviderPregrado = $searchModelPregrado->search(Yii::$app->request->queryParams);
 $dataProviderPregrado->query
@@ -70,7 +70,7 @@ $dataProviderMatriculaPregrado->sort->defaultOrder = [
     'idsemestre' => SORT_DESC,
 ];
 
-////////SIAD POSGRADO//////////
+////////SIAD ESTUDIANTE POSGRADO//////////
 $searchModelPosgrado = new app\models\EstudiantesPosgradoSearch();
 $dataProviderPosgrado = $searchModelPosgrado->search(Yii::$app->request->queryParams);
 $dataProviderPosgrado->query
@@ -90,12 +90,22 @@ $dataProviderDocentePregrado = $searchModelDocentePregrado->search(Yii::$app->re
 $dataProviderDocentePregrado->query
     ->Where('CIInfPer = "' . $CIInfPer .'"');
 
+$searchModelAsignaturasDocentePregrado = new \app\models\DocenteAsignaturaSearch();
+$searchModelAsignaturasDocentePregrado->CIInfPer = $CIInfPer;
+$dataProviderAsignaturasDocentePregrado = $searchModelAsignaturasDocentePregrado->search(Yii::$app->request->queryParams);
+$dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
+    'idPer' => SORT_DESC,
+    'idAsig' => SORT_ASC,
+    'idParalelo' => SORT_ASC,
+];
 ?>
 
 <?php if($dataProviderNivelacion->getTotalCount() == 0
          and $dataProviderPregrado->getTotalCount() == 0
          and $dataProviderPosgrado->getTotalCount() == 0
-         and $dataProviderDocentePregrado->getTotalCount() == 0) { ?>
+         and $dataProviderDocentePregrado->getTotalCount() == 0
+         and $dataProviderAsignaturasDocentePregrado->getTotalCount() == 0
+) { ?>
     <div class="alert alert-info" align="center">
         <h3 align="center">No existe información</h3>
     </div>
@@ -196,6 +206,104 @@ $dataProviderDocentePregrado->query
             ],
         ]); ?>
     </div>
+
+    <div class="alert alert-danger" align="center">
+        <h3 align="center"> SIAD PREGRADO - Docente Asignaturas </h3>
+    </div>
+
+    <?= GridView::widget([
+        'dataProvider' => $dataProviderAsignaturasDocentePregrado,
+        //'filterModel' => $searchModelAsignaturasDocentePregrado,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+
+            //'dpa_id',
+            [
+                'label' => 'Período',
+                'attribute' => 'idPer',
+                'value' => function ($model) {
+                    $periodo = $model->idPer;
+                    return \app\models\Periodo::Periododescriptivo($periodo) . ' ('.$periodo.')';
+                },
+                'group' => true,  // enable grouping
+            ],
+            //'CIInfPer',
+            [
+                'label' => 'Código',
+                'attribute' => 'idAsig',
+            ],
+            [
+                'label' => 'Asignatura',
+                'attribute' => 'idAsig',
+                'value' => function ($model) {
+                    $idAsig = $model->idAsig;
+                    $asignatura = \app\models\Asignatura::find()
+                        ->select('nombAsig')
+                        ->where(['idAsig' => $idAsig])
+                        ->one();
+
+                    return $asignatura->nombAsig;
+                }
+            ],
+            'idParalelo',
+            [
+                'label' => 'Carrera',
+                'attribute' => 'idCarr',
+                'value' => function ($model) {
+                    $idCarr = $model->idCarr;
+                    return \app\models\Carrera::Carreradescriptivo($idCarr);
+                }
+            ],
+            //'idAnio',
+            [
+                'label' => 'Nivel',
+                'value' => function ($model) {
+                    $idSemestre = $model->idSemestre;
+                    $bloque = $model->bloque;
+                    if ($idSemestre != NULL) {
+                        return $idSemestre;
+                    } elseif ($bloque != NULL) {
+                        return $bloque;
+                    } else {
+                        return '-';
+                    }
+                }
+            ],
+            //'idSemestre',
+            //'bloque',
+            //'status',
+            //'idMc',
+            //'tipo_orgmalla',
+            //'id_actdist',
+            //'id_contdoc',
+            //'transf_asistencia',
+            //'transf_frecuente',
+            //'transf_parcial',
+            //'transf_final',
+            //'transf_supletorio',
+            //'transf_cursointensivo',
+            //'transf_recuperacion',
+            //'arrastre',
+            //'extra',
+            //'compensar_horas',
+            //'compensar_tipo',
+            //'regimen_academico',
+            //'tutor',
+            'cupo',
+
+            //['class' => 'yii\grid\ActionColumn'],
+        ],
+        'containerOptions' => ['style'=>'overflow: auto'],
+        'pjax' => true,
+        'bordered' => true,
+        'striped' => false,
+        'condensed' => false,
+        'responsive' => true,
+        'hover' => true,
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY
+        ],
+    ]); ?>
 <?php } ?>
 
 <?php if($dataProviderPosgrado->getTotalCount() > 0) { ?>

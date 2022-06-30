@@ -77,11 +77,11 @@ class DocenteAsignatura extends \yii\db\ActiveRecord
     {
         return [
             'dpa_id' => 'Dpa ID',
-            'CIInfPer' => 'CÃ©dula/DNI',
+            'CIInfPer' => 'Cédula/DNI',
             'idPer' => 'Periodo',
             'idAsig' => 'Asignatura',
             'idCarr' => 'Carrera',
-            'idAnio' => 'AÃ±o',
+            'idAnio' => 'Año',
             'idSemestre' => 'Semestre',
             'idParalelo' => 'Paralelo',
             'status' => 'Status',

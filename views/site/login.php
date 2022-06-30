@@ -42,8 +42,8 @@ $this->title = 'Iniciar Sesión';
 
                     <?= $form->field($model, 'authtype')->dropDownList(
                             [
-                                'adldap' => 'Active Directory / LDAP',
-                                'local' => 'Base de datos interna de SITIC',
+                                'adldap' => 'Cuenta institucional',
+                                //'local' => 'Base de datos interna de SITIC',
                             ]); ?>
 
                     <h5><a href="https://www.uea.edu.ec/ayuda">¿ Olvidaste tu usuario y contraseña ?</a></h5>

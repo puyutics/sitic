@@ -115,5 +115,14 @@ class Carrera extends \yii\db\ActiveRecord
     {
         return $this->idCarr.": ".$this->NombCarr." ".$this->info_adicional;
     }
+
+    public static function Carreradescriptivo($idCarr){
+        $carrera = \app\models\Carrera::findOne($idCarr);
+        if (isset($carrera)) {
+            return $carrera->idCarr.": ".$carrera->NombCarr." ".$carrera->info_adicional;
+        } else {
+            return '-';
+        }
+    }
 }
 
