@@ -36,6 +36,12 @@ class InvmodelsController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
+                        'actions' => ['create','index','update',
+                            'einvmanufacturersid','emodel','econsumables'],
+                        'allow' => true,
+                        'roles' => ['rolTecnicos'],
+                    ],
+                    [
                         'actions' => ['delete','view'],
                         'allow' => false,
                     ],

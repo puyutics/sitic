@@ -25,18 +25,18 @@ use yii\helpers\ArrayHelper;
             function ($model) {
                 $username = $model->username;
                 $user = \app\models\User::find()
+                    ->select('id')
                     ->where(["username" => $username])
                     ->one();
-
                 return $user->id;
             },
             function ($model) {
                 $username = $model->username;
                 $user_profile = \app\models\UserProfile::find()
+                    ->select('dni, username, commonname')
                     ->where(["username" => $username])
                     ->one();
-
-                return $user_profile->username . ' -- ' . $user_profile->commonname;
+                return $user_profile->dni . ' -- ' . $user_profile->username . ' -- ' . $user_profile->commonname;
             }),
         'options' => ['placeholder' => 'Seleccionar usuario'],
         'pluginOptions' => [
@@ -46,10 +46,13 @@ use yii\helpers\ArrayHelper;
 
     <?= $form->field($model, 'item_name')->widget(Select2::classname(), [
         'data' =>ArrayHelper::map(\app\models\AuthItem::find()
-            ->where('type=1')->all(), 'name',
+            ->select('name')
+            ->where('type=1')
+            ->all(), 'name',
             function ($model) {
                 $name = $model->name;
                 $auth_item_child = \app\models\AuthItemChild::find()
+                    ->select('child')
                     ->where(["parent" => $name])
                     ->one();
 

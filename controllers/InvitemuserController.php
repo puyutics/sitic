@@ -38,7 +38,9 @@ class InvitemuserController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
-                        'actions' => ['update'],
+                        'actions' => ['assigned','create','index','update','view',
+                            'eusername','einvpurchaseitemid','edateasigned',
+                            'edatereleased','edescription','estatus'],
                         'allow' => true,
                         'roles' => ['rolTecnicos'],
                     ],

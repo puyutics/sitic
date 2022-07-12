@@ -38,7 +38,7 @@ class InvpurchaseController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
-                        'actions' => ['admin','index',],
+                        'actions' => ['admin','index','create','update'],
                         'allow' => true,
                         'roles' => ['rolTecnicos'],
                     ],

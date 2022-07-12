@@ -34,6 +34,11 @@ class InvmanufacturersController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
+                        'actions' => ['create','index', 'emanufacturer'],
+                        'allow' => true,
+                        'roles' => ['rolTecnicos'],
+                    ],
+                    [
                         'actions' => ['delete','update','view'],
                         'allow' => false,
                     ],

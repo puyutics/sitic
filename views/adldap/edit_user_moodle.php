@@ -3,7 +3,7 @@
 use app\models\MdlRoleAssignmentsSearch;
 use yii\helpers\Html;
 use kartik\grid\GridView;
-use yii\helpers\Url;
+use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model yii\web\View */
@@ -15,6 +15,7 @@ $mail = $model->mail;
 $mdl_user = \app\models\MdlUser::find()
     ->where(['username' => $mail])
     ->one();
+
 
 if (isset($mdl_user)) {
     $mdl_user_id = $mdl_user->id;
@@ -28,11 +29,38 @@ $dataProviderMdlRA->query->Where(['userid' => $mdl_user_id]);
 
 ?>
 
+<?php if (isset($mdl_user)) { ?>
+
+    <div class="alert alert-info" align="center">
+        <h3 align="center">EVA PREGRADO - Perfil de Usuario</h3>
+    </div>
+
+    <?= DetailView::widget([
+        'model' => $mdl_user,
+        'attributes' => [
+            //'id',
+            'auth',
+            'username',
+            //'idnumber',
+            //'firstname',
+            //'lastname',
+            //'email',
+            //'firstaccess',
+            //'lastaccess',
+            //'lastlogin',
+            //'currentlogin',
+            //'lastip',
+            //'picture',
+            //'timecreated',
+            //'timemodified',
+        ],
+    ]) ?>
+
+<?php } ?>
+
 <?php if($dataProviderMdlRA->getTotalCount() > 0) { ?>
 
     <div class="estudiantes-pregrado-index">
-
-        <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
         <div class="alert alert-info" align="center">
             <h3 align="center">EVA PREGRADO - Cursos</h3>
