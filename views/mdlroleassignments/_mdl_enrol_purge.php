@@ -149,7 +149,18 @@ foreach ($eva_matriculas as $eva_matricula) {
             or $eva_mu_idnumber == 'forestal@uea.edu.ec'
             or $eva_mu_idnumber == 'turismo@uea.edu.ec'
             or $eva_mu_idnumber == 'turismo.lago@uea.edu.ec'
-            or $eva_mu_idnumber == 'turismo.pangui@uea.edu.ec') {
+            or $eva_mu_idnumber == 'turismo.pangui@uea.edu.ec'
+            or $eva_mu_idnumber == 'cdt.agroindustria@uea.edu.ec'
+            or $eva_mu_idnumber == 'cdt.agropecuaria@uea.edu.ec'
+            or $eva_mu_idnumber == 'cdt.ambiental@uea.edu.ec'
+            or $eva_mu_idnumber == 'cdt.biologia@uea.edu.ec'
+            or $eva_mu_idnumber == 'cdt.biologialago@uea.edu.ec'
+            or $eva_mu_idnumber == 'cdt.biologiapangui@uea.edu.ec'
+            or $eva_mu_idnumber == 'cdt.foresta@uea.edu.ecl'
+            or $eva_mu_idnumber == 'cdt.turismo@uea.edu.ec'
+            or $eva_mu_idnumber == 'cdt.turismolago@uea.edu.ec'
+            or $eva_mu_idnumber == 'cdt.turismopangui@uea.edu.ec'
+        ) {
             $eva_coordinadores = $eva_coordinadores +1;
             if ($eva_mu_idnumber == 'agroindustrias@uea.edu.ec') $coordinacion_agi = $coordinacion_agi + 1;
             if ($eva_mu_idnumber == 'agropecuaria@uea.edu.ec') $coordinacion_agp = $coordinacion_agp + 1;

@@ -49,6 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => 'DatosCompletos',
                 'filterType'=>GridView::FILTER_SELECT2,
                 'filter'=>ArrayHelper::map(\app\models\Carnetizacion::find()
+                    ->select('cedula_pasaporte, ApellInfPer, ApellMatInfPer, NombInfPer')
                     ->orderBy('ApellInfPer ASC, ApellMatInfPer ASC, NombInfPer ASC')
                     ->all(),
                     'cedula_pasaporte',

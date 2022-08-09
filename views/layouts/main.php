@@ -188,9 +188,10 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left"><a href="https://github.com/puyutics/sitic" target="_blank">
-                Puyutics / Sitic</a> &copy;
-            <?= date('Y') ?>. GNU GPLv3
+        <!--<p class="pull-left"><a href="https://github.com/puyutics/sitic" target="_blank">Sitic</a> &copy;-->
+        <p class="pull-left"><a href="https://www.uea.edu.ec/sitic" target="_blank">Sitic</a> &copy;
+            <?= date('Y') ?>
+            <!--. GNU GPLv3-->
              -
             <a href="mailto:sitic@uea.edu.ec?subject=SITIC | Feedback"> Problemas y Sugerencias </a>
              -
