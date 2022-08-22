@@ -47,13 +47,11 @@ use yii\data\ActiveDataProvider;
                 'label'=>'SERIE',
                 'attribute'=>'inv_purchase_item_id',
                 'value' => 'invPurchaseItem.serial_number',
-                'filterType'=>GridView::FILTER_SELECT2,
-                'filter'=>ArrayHelper::map(\app\models\InvPurchaseItem::find()->all(), 'id', 'serial_number'),
-                'filterWidgetOptions'=>[
-                    'pluginOptions'=>['allowClear'=>true],
-                ],
-                'filterInputOptions'=>['placeholder'=>'Seleccionar bien'],
-                'format'=>'raw',
+            ],
+            [
+                'label'=>'No. Control',
+                'attribute'=>'inv_purchase_item_id',
+                'value' => 'invPurchaseItem.control_code',
             ],
             'description',
             'date_asigned',
@@ -96,7 +94,7 @@ use yii\data\ActiveDataProvider;
                     }
 
                 },
-                'filter'=>['0'=>'INACTIVO','1'=>'ACTIVO'],
+                'filter'=>['0'=>'INACTIVO','1'=>'ACTIVO','2'=>'DEVOLUCIÓN'],
             ],
 
             //['class' => 'yii\grid\ActionColumn'],
