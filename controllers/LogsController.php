@@ -33,6 +33,11 @@ class LogsController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['rolTecnicos'],
+                    ],
+                    [
                         'actions' => ['create','delete','update','view'],
                         'allow' => false,
                     ],

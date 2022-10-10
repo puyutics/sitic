@@ -18,7 +18,7 @@ use kartik\password\PasswordInput;
 $this->title = Yii::t('app', 'Reingreso de estudiantes');
 $this->params['breadcrumbs'][] = $this->title;
 
-if (strtotime(date("Y-m-d H:i:s",time())) > strtotime("2022-09-01 08:00:00")) {
+if (strtotime(date("Y-m-d H:i:s",time())) > strtotime("2022-09-05 08:00:00")) {
     $system_status = true;
 } else {
     $system_status = false;
@@ -155,7 +155,7 @@ if (isset($_GET['test'])) {
                                 <th colspan="2" style="text-align: center">
                                     <?php if ($estudiante_malla_inicial->anio_mallacurricular == '2013' or $estudiante_malla_inicial->anio_mallacurricular == '0') { ?>
                                         <br><div class="alert alert-danger" align="center">
-                                            <b><code>No cumple con los requisitos para reactivar su cuenta automáticamente.</code></b><br>Comuníquese con Secretaría General: Campus Puyo, Bloque D, Planta Baja o al 032-892-118 Ext. 16103 / 16118
+                                            <b><code>No cumple con los requisitos para reactivar su cuenta automáticamente.</code></b><br>Comuníquese con Secretaría Académica: Campus Puyo, Bloque D, Planta Baja o al 032-892-118 Ext. 16103 / 16118
                                         </div>
                                     <?php } elseif (($estudiante_malla_actual->anio_mallacurricular == '2021') and ($estudiante->statusper == 1)) { ?>
                                         <br><div class="alert alert-warning" align="center">
@@ -182,7 +182,7 @@ if (isset($_GET['test'])) {
             </div>
         <?php } else { ?>
             <div class="alert alert-danger" align="center">
-                Debe realizar su trámite de reingreso debe forma personal en la Secretaría General. Acérquese al Campus Puyo, Bloque D, Planta Baja o comuníquese al 032-892-118 Ext. 16103 / 16118
+                Debe realizar su trámite de reingreso debe forma personal en la Secretaría Académica. Acérquese al Campus Puyo, Bloque D, Planta Baja o comuníquese al 032-892-118 Ext. 16103 / 16118
             </div>
         <?php } ?>
         <?= $form->field($model, 'step')->hiddenInput()->label(false) ?>
@@ -202,6 +202,6 @@ if (isset($_GET['test'])) {
 
 <?php } else { ?>
     <div class="alert alert-info" align="center">
-        <h3 align="center">El sistema no se encuentra habilitado. Debe realizar su trámite de reingreso debe forma personal en la Secretaría General. Acérquese al Campus Puyo, Bloque D, Planta Baja o comuníquese al 032-892-118 Ext. 16103 / 16118.</h3>
+        <h3 align="center">El sistema no se encuentra habilitado. Debe realizar su trámite de reingreso debe forma personal en la Secretaría Académica. Acérquese al Campus Puyo, Bloque D, Planta Baja o comuníquese al 032-892-118 Ext. 16103 / 16118.</h3>
     </div>
 <?php } ?>

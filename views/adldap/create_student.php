@@ -41,7 +41,7 @@ if (isset($_GET['test'])) {
     ]); ?>
 
     <div align="center">
-        <?= Html::img('images/uea_createstudent.jpg',['height'=>60, 'width'=>700]);?>
+        <?= Html::img('images/uea_createstudent.png',['height'=>60, 'width'=>700]);?>
     </div>
     <br>
     <?php if ($model->step == 0) { ?>

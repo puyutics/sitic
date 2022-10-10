@@ -50,6 +50,11 @@ class AdldapController extends Controller
                         'roles' => ['rolDirector'],
                     ],
                     [
+                        'actions' => ['edituser','viewgroups','sendToken'],
+                        'allow' => true,
+                        'roles' => ['rolTecnicos'],
+                    ],
+                    [
                         'actions' => ['profile','viewuser','sendToken'],
                         'allow' => true,
                         'roles' => ['@'],

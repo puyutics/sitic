@@ -54,7 +54,7 @@ use yii\data\ActiveDataProvider;
                 'format'=>'raw',
             ],
             'serial_number',
-            'control_code',
+            //'control_code',
             [
                 'label'=>'CODIGO CONTROL',
                 'attribute'=>'control_code',

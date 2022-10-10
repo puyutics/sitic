@@ -9,7 +9,7 @@ $this->title = 'SITIC - Sistema Integrado para la Gestión de Tecnologías de la
 <div class="site-index">
 
     <div align="center">
-        <?= Html::img('images/uea_banner.png');?>
+        <?= Html::img('images/uea_banner.png', ['width' => '500px']);?>
     </div>
 
     <br>
