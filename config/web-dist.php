@@ -9,6 +9,8 @@ $db_siad = require __DIR__ . '/db_siad.php';
 $db_siad_nivelacion = require __DIR__ . '/db_siad_nivelacion.php';
 $db_siad_posgrado = require __DIR__ . '/db_siad_posgrado.php';
 $db_eva_pregrado = require __DIR__ . '/db_eva_pregrado.php';
+$db_eva_posgrado = require __DIR__ . '/db_eva_posgrado.php';
+$db_onlycontrol = require __DIR__ . '/db_onlycontrol.php';
 use kartik\mpdf\Pdf;
 
 $config = [
@@ -148,6 +150,8 @@ $config = [
         'db_siad_nivelacion' => $db_siad_nivelacion,
         'db_siad_posgrado' => $db_siad_posgrado,
         'db_eva_pregrado' => $db_eva_pregrado,
+        'db_eva_posgrado' => $db_eva_posgrado,
+        'db_onlycontrol' => $db_onlycontrol,
         /*
         'urlManager' => [
             'enablePrettyUrl' => true,

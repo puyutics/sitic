@@ -15,7 +15,7 @@ return [
     // 'login' => 'username',
     // 'login' => 'userPrincipalName',
     // 'login' => 'mail',
-    'login' => 'username',
+    'login' => 'mail',
 
     //Contenedores AD/LDAP para gestión de usuarios
     'containers' => [
@@ -60,7 +60,7 @@ return [
 
 
     //Generar un Código de Seguridad (SaltKey) en el siguiente enlace
-    //https://passwordsgenerator.net/
+    //https://www.lastpass.com/es/features/password-generator#generatorTool
     //Tested -> 40 Characters Long (Good for Cakephp Security Salt)
     'saltKey'         => 'ENTER SALT KEY HERE',
     'algorithm'       => 'sha256',
@@ -80,10 +80,20 @@ return [
 
     //Moodle Sync
     //Revisar la configuración db_eva_pregrado.php
-    'moodle_host'     => '0.0.0.0',
-    'moodle_user'     => 'root',
-    'moodle_pass'     => '',
-    'course_code'     => 0,
-    'siad_periodo'    => 0,
+    'moodle_course_url' => 'https://moodle.dominio.com/pregrado/web/course/view.php?id=',
+    'moodle_host'       => 'localhost',
+    'moodle_user'       => 'root',
+    'moodle_ftpuser'    => 'ftpuser',
+    'moodle_pass'       => '',
+    'course_code'       => 0,
+    'siad_periodo'      => 0,
+
+    //Revisar la configuración db_eva_posgrado.php
+    'moodle_posgrado_course_url' => 'https://moodle.dominio.com/posgrado/web/course/view.php?id=',
+
+    //Office 365 API Credentials
+    'o365_api_tenant' => 'tenant.onmicrosoft.com',
+    'o365_api_client_id' => 'ENTER CLIENT ID HERE',
+    'o365_api_client_secret' => 'ENTER CLIENT SECRET HERE',
 
 ];
