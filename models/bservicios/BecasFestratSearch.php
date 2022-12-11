@@ -1,10 +1,10 @@
 <?php
 
-namespace app\models;
+namespace app\models\bservicios;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\BecasFestrat;
+use app\models\bservicios\BecasFestrat;
 
 /**
  * BecasFestratSearch represents the model behind the search form of `app\models\BecasFestrat`.
