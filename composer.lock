@@ -5833,16 +5833,16 @@
         },
         {
             "name": "tinymce/tinymce",
-            "version": "6.3.0",
+            "version": "6.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "058c00937b0128720e3663d0bfcfe49d2926cf92"
+                "reference": "bec6271ca90b2f37db48a955697746c1f58b9358"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/058c00937b0128720e3663d0bfcfe49d2926cf92",
-                "reference": "058c00937b0128720e3663d0bfcfe49d2926cf92",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/bec6271ca90b2f37db48a955697746c1f58b9358",
+                "reference": "bec6271ca90b2f37db48a955697746c1f58b9358",
                 "shasum": ""
             },
             "type": "component",
@@ -5886,9 +5886,9 @@
                 "wysiwyg"
             ],
             "support": {
-                "source": "https://github.com/tinymce/tinymce-dist/tree/6.3.0"
+                "source": "https://github.com/tinymce/tinymce-dist/tree/6.3.1"
             },
-            "time": "2022-11-23T02:47:17+00:00"
+            "time": "2022-12-06T02:19:08+00:00"
         },
         {
             "name": "vgrem/php-spo",
