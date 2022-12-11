@@ -3,8 +3,8 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\BecasFestrat;
-use app\models\BecasFestratSearch;
+use app\models\bservicios\BecasFestrat;
+use app\models\bservicios\BecasFestratSearch;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;

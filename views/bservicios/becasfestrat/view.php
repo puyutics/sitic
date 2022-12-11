@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\BecasFestrat */
+/* @var $model app\models\bservicios\BecasFestrat */
 
 $this->title = $model->idficha_sa;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Becas Festrats'), 'url' => ['index']];
