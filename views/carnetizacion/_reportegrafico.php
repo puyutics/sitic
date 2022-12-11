@@ -9,8 +9,8 @@ use yii\web\JsExpression;
 $this->title = 'Reporte Gráfico - Carnetización';
 
 $fecha = date("Y-m-d H:i:s");
-$periodo = \app\models\Periodo::getUltimoPeriodoActivo();
-$periodoDescriptivo = \app\models\Periodo::Periododescriptivo($periodo);
+$periodo = \app\models\siad_pregrado\Periodo::getUltimoPeriodoActivo();
+$periodoDescriptivo = \app\models\siad_pregrado\Periodo::Periododescriptivo($periodo);
 $url = Url::to('@web/uploads/carnetizacion/'.$periodo.'/', 'https');
 $username = Yii::$app->user->identity->username;
 $user_profile = \app\models\UserProfile::find()

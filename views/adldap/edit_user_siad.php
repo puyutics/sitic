@@ -9,7 +9,7 @@ use yii\helpers\Url;
 
 $dni = $model->dni;
 $CIInfPer = $dni;
-$estudiante_nivelacion = \app\models\Estudiantes::find()
+$estudiante_nivelacion = \app\models\siad_pregrado\Estudiantes::find()
     ->select('CIInfPer, cedula_pasaporte, ApellInfPer, ApellMatInfPer, NombInfPer, FechNacimPer, StatusPer, mailInst')
     ->where(['CIInfPer' => $dni])
     ->orWhere(['cedula_pasaporte' => $dni])
@@ -17,7 +17,7 @@ $estudiante_nivelacion = \app\models\Estudiantes::find()
 if (isset($estudiante_nivelacion)) {
     $CIInfPer = $estudiante_nivelacion->CIInfPer;
 }
-$estudiante_pregrado = \app\models\Estudiantes::find()
+$estudiante_pregrado = \app\models\siad_pregrado\Estudiantes::find()
     ->select('CIInfPer, cedula_pasaporte, ApellInfPer, ApellMatInfPer, NombInfPer, FechNacimPer, StatusPer, mailInst')
     ->where(['CIInfPer' => $dni])
     ->orWhere(['cedula_pasaporte' => $dni])
@@ -25,7 +25,7 @@ $estudiante_pregrado = \app\models\Estudiantes::find()
 if (isset($estudiante_nivelacion)) {
     $CIInfPer = $estudiante_pregrado->CIInfPer;
 }
-$estudiante_posgrado = \app\models\EstudiantesPosgrado::find()
+$estudiante_posgrado = \app\models\siad_posgrado\EstudiantesPosgrado::find()
     ->select('CIInfPer, cedula_pasaporte, ApellInfPer, ApellMatInfPer, NombInfPer, FechNacimPer, StatusPer, mailInst')
     ->where(['CIInfPer' => $dni])
     ->orWhere(['cedula_pasaporte' => $dni])
@@ -33,7 +33,7 @@ $estudiante_posgrado = \app\models\EstudiantesPosgrado::find()
 if (isset($estudiante_posgrado)) {
     $CIInfPer = $estudiante_posgrado->CIInfPer;
 }
-$docente_pregrado = \app\models\Docentes::find()
+$docente_pregrado = \app\models\siad_pregrado\Docentes::find()
     ->select('CIInfPer, cedula_pasaporte, ApellInfPer, ApellMatInfPer, NombInfPer, FechNacimPer, StatusPer, mailInst')
     ->where(['CIInfPer' => $dni])
     ->orWhere(['cedula_pasaporte' => $dni])
@@ -43,12 +43,12 @@ if (isset($docente_pregrado)) {
 }
 
 ////////SIAD ESTUDIANTE NIVELACION//////////
-$searchModelNivelacion = new \app\models\EstudiantesNivelacionSearch();
+$searchModelNivelacion = new \app\models\siad_nivelacion\EstudiantesNivelacionSearch();
 $dataProviderNivelacion = $searchModelNivelacion->search(Yii::$app->request->queryParams);
 $dataProviderNivelacion->query
     ->Where('CIInfPer = "' . $CIInfPer .'"');
 
-$searchModelMatriculaNivelacion = new \app\models\MatriculaNivelacionSearch();
+$searchModelMatriculaNivelacion = new \app\models\siad_nivelacion\MatriculaNivelacionSearch();
 $searchModelMatriculaNivelacion->CIInfPer = $CIInfPer;
 $dataProviderMatriculaNivelacion = $searchModelMatriculaNivelacion->search(Yii::$app->request->queryParams);
 $dataProviderMatriculaNivelacion->sort->defaultOrder = [
@@ -57,12 +57,12 @@ $dataProviderMatriculaNivelacion->sort->defaultOrder = [
 ];
 
 ////////SIAD ESTUDIANTE PREGRADO//////////
-$searchModelPregrado = new app\models\EstudiantesSearch();
+$searchModelPregrado = new app\models\siad_pregrado\EstudiantesSearch();
 $dataProviderPregrado = $searchModelPregrado->search(Yii::$app->request->queryParams);
 $dataProviderPregrado->query
     ->Where('CIInfPer = "' . $CIInfPer .'"');
 
-$searchModelMatriculaPregrado = new \app\models\MatriculaSearch();
+$searchModelMatriculaPregrado = new \app\models\siad_pregrado\MatriculaSearch();
 $searchModelMatriculaPregrado->CIInfPer = $CIInfPer;
 $dataProviderMatriculaPregrado = $searchModelMatriculaPregrado->search(Yii::$app->request->queryParams);
 $dataProviderMatriculaPregrado->sort->defaultOrder = [
@@ -71,12 +71,12 @@ $dataProviderMatriculaPregrado->sort->defaultOrder = [
 ];
 
 ////////SIAD ESTUDIANTE POSGRADO//////////
-$searchModelPosgrado = new app\models\EstudiantesPosgradoSearch();
+$searchModelPosgrado = new app\models\siad_posgrado\EstudiantesPosgradoSearch();
 $dataProviderPosgrado = $searchModelPosgrado->search(Yii::$app->request->queryParams);
 $dataProviderPosgrado->query
     ->Where('CIInfPer = "' . $CIInfPer .'"');
 
-$searchModelMatriculaPosgrado = new \app\models\MatriculaPosgradoSearch();
+$searchModelMatriculaPosgrado = new \app\models\siad_posgrado\MatriculaPosgradoSearch();
 $searchModelMatriculaPosgrado->CIInfPer = $CIInfPer;
 $dataProviderMatriculaPosgrado = $searchModelMatriculaPosgrado->search(Yii::$app->request->queryParams);
 $dataProviderMatriculaPosgrado->sort->defaultOrder = [
@@ -85,12 +85,12 @@ $dataProviderMatriculaPosgrado->sort->defaultOrder = [
 ];
 
 ////////SIAD DOCENTE PREGRADO//////////
-$searchModelDocentePregrado = new app\models\DocentesSearch();
+$searchModelDocentePregrado = new app\models\siad_pregrado\DocentesSearch();
 $dataProviderDocentePregrado = $searchModelDocentePregrado->search(Yii::$app->request->queryParams);
 $dataProviderDocentePregrado->query
     ->Where('CIInfPer = "' . $CIInfPer .'"');
 
-$searchModelAsignaturasDocentePregrado = new \app\models\DocenteAsignaturaSearch();
+$searchModelAsignaturasDocentePregrado = new \app\models\siad_pregrado\DocenteAsignaturaSearch();
 $searchModelAsignaturasDocentePregrado->CIInfPer = $CIInfPer;
 $dataProviderAsignaturasDocentePregrado = $searchModelAsignaturasDocentePregrado->search(Yii::$app->request->queryParams);
 $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
@@ -223,7 +223,7 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
                 'attribute' => 'idPer',
                 'value' => function ($model) {
                     $periodo = $model->idPer;
-                    return \app\models\Periodo::Periododescriptivo($periodo) . ' ('.$periodo.')';
+                    return \app\models\siad_pregrado\Periodo::Periododescriptivo($periodo) . ' ('.$periodo.')';
                 },
                 'group' => true,  // enable grouping
             ],
@@ -237,7 +237,7 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
                 'attribute' => 'idAsig',
                 'value' => function ($model) {
                     $idAsig = $model->idAsig;
-                    $asignatura = \app\models\Asignatura::find()
+                    $asignatura = \app\models\siad_pregrado\Asignatura::find()
                         ->select('nombAsig')
                         ->where(['idAsig' => $idAsig])
                         ->one();
@@ -251,7 +251,7 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
                 'attribute' => 'idCarr',
                 'value' => function ($model) {
                     $idCarr = $model->idCarr;
-                    return \app\models\Carrera::Carreradescriptivo($idCarr);
+                    return \app\models\siad_pregrado\Carrera::Carreradescriptivo($idCarr);
                 }
             ],
             //'idAnio',
@@ -362,7 +362,7 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
                     'buttons'=>[
                         'update' => function ($url, $model) {
                             return Html::a('<span class="btn btn-primary center-block"><i class="fa fa-fw fa-edit"></i></span>',
-                                Url::to(['estudiantesposgrado/update',
+                                Url::to(['siad_posgrado/estudiantesposgrado/update',
                                     'id' => $model->CIInfPer
                                 ]),
                                 ['title' => Yii::t('yii', 'Editar Estudiante')]);
@@ -404,16 +404,31 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
 
                 //'idMatricula',
                 //'idMatricula_anual',
-                'CIInfPer',
-                'idPer',
-                'idCarr',
+                //'CIInfPer',
+                [
+                    'attribute'=>'idPer',
+                    'value'=>function($model){
+                        $periodo = \app\models\siad_posgrado\PeriodoPosgrado::findOne($model->idPer);
+                        return $periodo->getPeriodoDetalle().' ('.$model->idPer.')';
+                    },
+                    'group' => true,
+                    'hAlign'=>'center',
+                    'vAlign'=>'middle',
+                ],
+                [
+                    'label' => 'Carrera',
+                    'attribute' => 'idCarr',
+                    'value' => function ($model) {
+                        $carrera = \app\models\siad_posgrado\CarreraPosgrado::findOne($model->idCarr);
+                        return $carrera->getFullname();
+                    },
+                ],
                 //'idanio',
                 'idsemestre',
                 'FechaMatricula',
                 //'idParalelo',
                 //'idMatricula_ant',
                 //'tipoMatricula',
-                'statusMatricula',
                 //'anulada',
                 //'observMatricula',
                 //'promocion',
@@ -429,6 +444,56 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
                 //'num_asig_repite',
                 //'aprobacion_automatica',
                 //'mail_enviado',
+                [
+                    'label' => 'Asignaturas',
+                    'value' => function($model) {
+                        $naas = \app\models\siad_pregrado\NotasAlumno::find()
+                            ->select('idAsig, dpa_id')
+                            ->andWhere(['CIInfPer' => $model->CIInfPer])
+                            ->andWhere(['idper' => $model->idPer])
+                            ->andWhere(['idMatricula' => $model->idMatricula])
+                            ->orderBy('idAsig ASC')
+                            ->all();
+                        if (count($naas) > 0) {
+                            $i=0;$echo = '';
+                            foreach ($naas as $naa) {
+                                $i=$i+1;
+                                $idAsig = $naa->idAsig;
+                                $dpa_id = $naa->dpa_id;
+                                $asignatura = \app\models\siad_pregrado\Asignatura::find()
+                                    ->select('nombAsig')
+                                    ->where(['idAsig' => $idAsig])
+                                    ->one();
+                                $nombAsig = $asignatura->nombAsig;
+                                $dpa = \app\models\siad_pregrado\DocenteAsignatura::find()
+                                    ->select('idParalelo')
+                                    ->where(['dpa_id' => $dpa_id])
+                                    ->one();
+                                if (isset($dpa)) {
+                                    $idParalelo = $dpa->idParalelo;;
+                                    $echo =  $echo .
+                                        $i.'. '.
+                                        $idAsig.
+                                        ' -- '.
+                                        $nombAsig.' ('.$idParalelo.')'.
+                                        '<br>';
+                                } else {
+                                    $echo =  $echo .
+                                        $i.'. '.
+                                        $idAsig.
+                                        ' -- '.
+                                        $nombAsig. ' (<code>Sin paralelo</code>)'.
+                                        '<br>';
+                                }
+                            }
+                            return $echo;
+                        } else {
+                            return '-';
+                        }
+                    },
+                    'format' => 'html',
+                ],
+                'statusMatricula',
 
                 //['class' => 'yii\grid\ActionColumn'],
             ],
@@ -502,7 +567,7 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
                     'buttons'=>[
                         'update' => function ($url, $model) {
                             return Html::a('<span class="btn btn-primary center-block"><i class="fa fa-fw fa-edit"></i></span>',
-                                Url::to(['estudiantes/update',
+                                Url::to(['siad_pregrado/estudiantes/update',
                                     'id' => $model->CIInfPer
                                 ]),
                                 ['title' => Yii::t('yii', 'Editar Estudiante')]);
@@ -542,18 +607,33 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
 
-                //'idMatricula',
                 //'idMatricula_anual',
-                'CIInfPer',
-                'idPer',
-                'idCarr',
+                //'CIInfPer',
+                [
+                    'attribute'=>'idPer',
+                    'value'=>function($model){
+                        $periodo = \app\models\siad_pregrado\Periodo::findOne($model->idPer);
+                        return $periodo->getPeriodoDetalle().' ('.$model->idPer.')';
+                    },
+                    'group' => true,
+                    'hAlign'=>'center',
+                    'vAlign'=>'middle',
+                ],
+                [
+                    'label' => 'Carrera',
+                    'attribute' => 'idCarr',
+                    'value' => function ($model) {
+                        $carrera = \app\models\siad_pregrado\Carrera::findOne($model->idCarr);
+                        return $carrera->getFullname();
+                    },
+                ],
+                'idMatricula',
                 //'idanio',
-                'idsemestre',
+                //'idsemestre',
                 'FechaMatricula',
                 //'idParalelo',
                 //'idMatricula_ant',
                 //'tipoMatricula',
-                'statusMatricula',
                 //'anulada',
                 //'observMatricula',
                 //'promocion',
@@ -569,6 +649,56 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
                 //'num_asig_repite',
                 //'aprobacion_automatica',
                 //'mail_enviado',
+                [
+                    'label' => 'Asignaturas',
+                    'value' => function($model) {
+                        $naas = \app\models\siad_pregrado\NotasAlumno::find()
+                            ->select('idAsig, dpa_id')
+                            ->andWhere(['CIInfPer' => $model->CIInfPer])
+                            ->andWhere(['idper' => $model->idPer])
+                            ->andWhere(['idMatricula' => $model->idMatricula])
+                            ->orderBy('idAsig ASC')
+                            ->all();
+                        if (count($naas) > 0) {
+                            $i=0;$echo = '';
+                            foreach ($naas as $naa) {
+                                $i=$i+1;
+                                $idAsig = $naa->idAsig;
+                                $dpa_id = $naa->dpa_id;
+                                $asignatura = \app\models\siad_pregrado\Asignatura::find()
+                                    ->select('nombAsig')
+                                    ->where(['idAsig' => $idAsig])
+                                    ->one();
+                                $nombAsig = $asignatura->nombAsig;
+                                $dpa = \app\models\siad_pregrado\DocenteAsignatura::find()
+                                    ->select('idParalelo')
+                                    ->where(['dpa_id' => $dpa_id])
+                                    ->one();
+                                if (isset($dpa)) {
+                                    $idParalelo = $dpa->idParalelo;;
+                                    $echo =  $echo .
+                                        $i.'. '.
+                                        $idAsig.
+                                        ' -- '.
+                                        $nombAsig.' ('.$idParalelo.')'.
+                                        '<br>';
+                                } else {
+                                    $echo =  $echo .
+                                        $i.'. '.
+                                        $idAsig.
+                                        ' -- '.
+                                        $nombAsig. ' (<code>Sin paralelo</code>)'.
+                                        '<br>';
+                                }
+                            }
+                            return $echo;
+                        } else {
+                            return '-';
+                        }
+                    },
+                    'format' => 'html',
+                ],
+                'statusMatricula',
 
                 //['class' => 'yii\grid\ActionColumn'],
             ],
@@ -642,7 +772,7 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
                     'buttons'=>[
                         'update' => function ($url, $model) {
                             return Html::a('<span class="btn btn-primary center-block"><i class="fa fa-fw fa-edit"></i></span>',
-                                Url::to(['estudiantesnivelacion/update',
+                                Url::to(['siad_nivelacion/estudiantesnivelacion/update',
                                     'id' => $model->CIInfPer
                                 ]),
                                 ['title' => Yii::t('yii', 'Editar Estudiante')]);

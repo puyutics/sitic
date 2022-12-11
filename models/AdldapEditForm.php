@@ -37,10 +37,10 @@ class AdldapEditForm extends Model
         return [
             [['dni','firstname', 'lastname','mail','commonname',
                 'displayname','personalmail','uac'], 'required'],
-            [['department','title','addGroup','deleteGroup'],'string'],
+            [['department','title','deleteGroup'],'string'],
             [['mobile','uac'],'number'],
             [['mail','personalmail'], 'email'],
-            [['search'], 'safe'],
+            [['search','addGroup'], 'safe'],
         ];
     }
 

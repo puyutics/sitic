@@ -10,7 +10,6 @@ use app\models\Department;
 use kartik\select2\Select2;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Url;
 use kartik\icons\Icon;
 Icon::map($this);
 
@@ -117,6 +116,14 @@ if (isset($_GET['search'])) { ?>
 
                     <div align="center">
                         <p></p>
+                        <p><b>Cuenta creada: </b>
+                            <?php
+                            echo convert_ldap_time($whenCreated, 'Y-m-d H:i:s');
+                            ?>
+                        </p>
+                    </div>
+                    <div align="center">
+                        <p></p>
                         <p><b>Último cambio de contraseña: </b>
                             <?php
                             echo $diff . ' días (' . $user->getPasswordLastSetDate() . ')';
@@ -133,7 +140,7 @@ if (isset($_GET['search'])) { ?>
                         <h3 align="center">Acciones Especiales</h3>
                         <br>
                         <div class="form-group" align="center">
-                            <?= Html::submitButton(Icon::show('envelope') . 'Cuenta nueva',['class' => 'btn btn-default',
+                            <?= Html::submitButton(Icon::show('envelope') . 'Activar cuenta',['class' => 'btn btn-default',
                                 'value'=>'sendActivate', 'name'=>'sendActivate',
                                 'onClick'=>'buttonClicked']) ?>
                             <?= Html::submitButton(Icon::show('envelope') . 'Enviar TOKEN',['class' => 'btn btn-default',
@@ -146,6 +153,12 @@ if (isset($_GET['search'])) { ?>
                                 ['adldap/oumove', 'samaccountname'=>$model->samaccountname],
                                 ['class' => 'btn btn-default']
                             ); ?>
+                            <br>
+                            <br>
+                            <?= Html::a(Icon::show('trash') . 'Eliminar Usuario',
+                                ['adldap/deleteuser', 'samaccountname'=>$model->samaccountname],
+                                ['class' => 'btn btn-danger']
+                            ); ?>
                         </div>
                     </div>
                 </div>
@@ -153,4 +166,11 @@ if (isset($_GET['search'])) { ?>
         </div>
     </div>
 
-<?php }?>
+<?php } ?>
+
+<?php function convert_ldap_time($ldap_time, $output_format)
+{
+    $format = DateTime::createFromFormat('YmdHis', rtrim($ldap_time, '.0Z'));
+    if (!$format) $format = DateTime::createFromFormat('Ymdhis', rtrim($ldap_time, '.0Z'));
+    return ($format) ? $format->format($output_format) : false;
+} ?>

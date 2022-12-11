@@ -139,7 +139,7 @@ $dataProvider->sort->defaultOrder = ['Apellidos' => SORT_ASC];
                 'format' => ['image',['width'=>'20']],
                 'value' => function ($model) {
                     $dni = $model->CedulaPasaporte;
-                    $matricula = \app\models\Matricula::find()
+                    $matricula = \app\models\siad_pregrado\Matricula::find()
                         ->where(["CIInfPer" => $dni])
                         ->andWhere(["idPer" => 34])
                         ->andWhere(["statusMatricula" => 'APROBADA'])
@@ -157,7 +157,7 @@ $dataProvider->sort->defaultOrder = ['Apellidos' => SORT_ASC];
                 'label' => 'Mat.',
                 'value' => function ($model) {
                     $dni = $model->CedulaPasaporte;
-                    $matricula = \app\models\Matricula::find()
+                    $matricula = \app\models\siad_pregrado\Matricula::find()
                         ->where(["CIInfPer" => $dni])
                         ->andWhere(["idPer" => 34])
                         ->andWhere(["statusMatricula" => 'APROBADA'])
@@ -176,7 +176,7 @@ $dataProvider->sort->defaultOrder = ['Apellidos' => SORT_ASC];
                 'format' => ['image',['width'=>'20']],
                 'value' => function ($model) {
                     $dni = $model->CedulaPasaporte;
-                    $matricula = \app\models\Matricula::find()
+                    $matricula = \app\models\siad_pregrado\Matricula::find()
                         ->where(["CIInfPer" => $dni])
                         ->andWhere(["idPer" => 34])
                         ->andWhere(["statusMatricula" => 'APROBADA'])
@@ -202,7 +202,7 @@ $dataProvider->sort->defaultOrder = ['Apellidos' => SORT_ASC];
                 'label' => 'Sem.',
                 'value' => function ($model) {
                     $dni = $model->CedulaPasaporte;
-                    $matricula = \app\models\Matricula::find()
+                    $matricula = \app\models\siad_pregrado\Matricula::find()
                         ->where(["CIInfPer" => $dni])
                         ->andWhere(["idPer" => 34])
                         ->andWhere(["statusMatricula" => 'APROBADA'])

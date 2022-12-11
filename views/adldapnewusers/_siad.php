@@ -10,11 +10,11 @@ use yii\helpers\Url;
 $dni = $model->dni;
 
 ////////SIAD NIVELACION//////////
-$searchModelNivelacion = new \app\models\EstudiantesNivelacionSearch();
+$searchModelNivelacion = new \app\models\siad_nivelacion\EstudiantesNivelacionSearch();
 $dataProviderNivelacion = $searchModelNivelacion->search(Yii::$app->request->queryParams);
 $dataProviderNivelacion->query->Where('CIInfPer = "' . $dni .'"');
 
-$searchModelMatriculaNivelacion = new \app\models\MatriculaNivelacionSearch();
+$searchModelMatriculaNivelacion = new \app\models\siad_nivelacion\MatriculaNivelacionSearch();
 $searchModelMatriculaNivelacion->CIInfPer = $dni;
 $dataProviderMatriculaNivelacion = $searchModelMatriculaNivelacion->search(Yii::$app->request->queryParams);
 $dataProviderMatriculaNivelacion->sort->defaultOrder = [
@@ -23,11 +23,11 @@ $dataProviderMatriculaNivelacion->sort->defaultOrder = [
 ];
 
 ////////SIAD PREGRADO//////////
-$searchModelPregrado = new app\models\EstudiantesSearch();
+$searchModelPregrado = new app\models\siad_pregrado\EstudiantesSearch();
 $dataProviderPregrado = $searchModelPregrado->search(Yii::$app->request->queryParams);
 $dataProviderPregrado->query->Where('CIInfPer = "' . $dni .'"');
 
-$searchModelMatriculaPregrado = new \app\models\MatriculaSearch();
+$searchModelMatriculaPregrado = new \app\models\siad_pregrado\MatriculaSearch();
 $searchModelMatriculaPregrado->CIInfPer = $dni;
 $dataProviderMatriculaPregrado = $searchModelMatriculaPregrado->search(Yii::$app->request->queryParams);
 $dataProviderMatriculaPregrado->sort->defaultOrder = [
@@ -93,7 +93,7 @@ $dataProviderMatriculaPregrado->sort->defaultOrder = [
                     'buttons'=>[
                         'update' => function ($url, $model) {
                             return Html::a('<span class="btn btn-primary center-block"><i class="fa fa-fw fa-edit"></i>Editar</span>',
-                                Url::to(['estudiantes/update',
+                                Url::to(['siad_pregrado/estudiantes/update',
                                     'id' => $model->CIInfPer
                                 ]),
                                 ['title' => Yii::t('yii', 'Editar Estudiante')]);
@@ -233,7 +233,7 @@ $dataProviderMatriculaPregrado->sort->defaultOrder = [
                     'buttons'=>[
                         'update' => function ($url, $model) {
                             return Html::a('<span class="btn btn-primary center-block"><i class="fa fa-fw fa-edit"></i>Editar</span>',
-                                Url::to(['estudiantesnivelacion/update',
+                                Url::to(['siad_nivelacion/estudiantesnivelacion/update',
                                     'id' => $model->CIInfPer
                                 ]),
                                 ['title' => Yii::t('yii', 'Editar Estudiante')]);

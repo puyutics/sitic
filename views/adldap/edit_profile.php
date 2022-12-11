@@ -6,6 +6,8 @@
  * Time: 08:53
  */
 
+/* @var $model */
+
 use yii\helpers\Html;
 use kartik\form\ActiveForm;
 

@@ -105,7 +105,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label' => 'Email institucional',
                 'value' => function($model) {
-                    $estudiante = \app\models\Estudiantes::find()
+                    $estudiante = \app\models\siad_pregrado\Estudiantes::find()
                         ->select('mailInst')
                         ->where(['CIInfPer' => $model->dni])
                         ->orWhere((['cedula_pasaporte' => $model->dni]))

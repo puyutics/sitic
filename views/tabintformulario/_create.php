@@ -34,7 +34,7 @@ $tabintformulario = \app\models\TabIntFormulario::find()
     ->where(["cedula" => $dni])
     ->all();
 
-$estudiante = \app\models\Estudiantes::find()
+$estudiante = \app\models\siad_pregrado\Estudiantes::find()
     ->where(["cedula_pasaporte" => $dni])
     ->all();
 
@@ -56,7 +56,7 @@ $senescyt = \app\models\TabIntSenescyt::find()
     ->orderBy(["ID" => SORT_ASC])
     ->all();
 
-$matricula = \app\models\Matricula::find()
+$matricula = \app\models\siad_pregrado\Matricula::find()
     ->where(["CIInfPer" => $dni])
     ->andwhere(["idPer" => '34'])
     ->orderBy(["idsemestre" => SORT_DESC])

@@ -144,9 +144,9 @@ AppAsset::register($this);
                     'items' => [
                         //['label' => '..Reportes TI', 'url' => 'index.php?r=site/reports'],
                         //'<li class="divider"></li>',
-                        ['label' => 'SIAD - Docente::Asignatura', 'url' => 'index.php?r=docenteasignatura/index&idper=37'],
-                        ['label' => 'SIAD - Estudiantes::Asignatura', 'url' => 'index.php?r=notasalumno/index&idper=37'],
-                        ['label' => 'SIAD >> EVA Pregrado', 'url' => 'index.php?r=mdlroleassignments'],
+                        //['label' => 'SIAD - Docente::Asignatura', 'url' => 'index.php?r=siad_pregrado/docenteasignatura/index&idper=37'],
+                        //['label' => 'SIAD - Estudiantes::Asignatura', 'url' => 'index.php?r=siad_pregrado/notasalumno/index&idper=37'],
+                        ['label' => 'SIAD >> EVA Pregrado', 'url' => 'index.php?r=eva_pregrado/mdlroleassignments'],
                     ],
                 ],
                 //['label' => 'Acerca de', 'url' => ['/site/about']],

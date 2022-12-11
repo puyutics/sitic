@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use kartik\detail\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Estudiantes */
+/* @var $model app\models\siad_pregrado\Estudiantes */
 
 if (isset($_GET['search'])) {
     $search = $_GET['search'];
@@ -18,7 +18,7 @@ if (isset($_GET['search'])) {
     $dni = $user->getAttribute(Yii::$app->params['dni'],0);
 }
 
-$model = \app\models\Estudiantes::findOne(['CIInfPer' => $dni]);
+$model = \app\models\siad_pregrado\Estudiantes::findOne(['CIInfPer' => $dni]);
 
 ?>
 

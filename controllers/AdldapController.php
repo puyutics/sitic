@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\models\EstudiantesMalla;
+use app\models\siad_pregrado\EstudiantesMalla;
 use Yii;
 use Yii\base\Security;
 use yii\filters\AccessControl;
@@ -20,6 +20,7 @@ use app\models\AdldapCreateStudentForm;
 use app\models\AdldapEditForm;
 use app\models\AdldapGroupForm;
 use app\models\AdldapOuMoveForm;
+use app\models\AdldapDeleteUserForm;
 
 class AdldapController extends Controller
 {
@@ -34,13 +35,13 @@ class AdldapController extends Controller
                 'only' => ['create','index','profile','edituser','viewuser','forgetpass',
                     'forgetuser','password','reset','saveLog','sendToken','sendNewUser',
                     'viewgroups','createstudent','editemail','renewstudent','clearstudents',
-                    'oumove'],
+                    'oumove','deleteuser'],
                 'rules' => [
                     [
                         'actions' => ['index','profile','edituser',
                             'forgetpass','forgetuser','password','reset','saveLog',
                             'sendToken','sendNewUser','viewgroups','create','createstudent',
-                            'renewstudent','clearstudents','oumove'],
+                            'renewstudent','clearstudents','oumove','deleteuser'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
@@ -152,6 +153,52 @@ class AdldapController extends Controller
         }
 
         return $this->render('ou_move', [
+            'model' => $model,
+            'samaccountname' => $samaccountname
+        ]);
+    }
+
+
+    public function actionDeleteuser($samaccountname)
+    {
+        $model = new AdldapDeleteUserForm();
+
+        if ($model->load(Yii::$app->request->post())) {
+            $user = \Yii::$app->ad->search()->findBy('samaccountname', $samaccountname);
+            $delete_user = $model->delete_user;
+            //Eliminar usuario
+            if ($delete_user == true) {
+                try {
+                    $user->delete();
+                    //Crear Registro de Log en la base de datos
+                    $log = '';
+                    $log = $log . $samaccountname;
+                    $description =
+                        'Usuario eliminado: ' . $log
+                    ;
+                    $username = Yii::$app->user->identity->username;
+                    $this->saveLog('adldapDeleteUser', $username, $description, $samaccountname,'adldap');
+
+                    Yii::$app->session->setFlash('success',
+                        "Usuario <code>$samaccountname</code> eliminado correctamente");
+
+                    return $this->redirect(['edituser',
+                        'search' => $samaccountname
+                    ]);
+                } catch (Exception $e) {
+                    Yii::$app->session->setFlash('error',
+                        'Error: '.$e->getMessage());
+
+                    return $this->render('delete_user', [
+                        'model' => $model,
+                        'samaccountname' => $samaccountname
+                    ]);
+                }
+            }
+
+        }
+
+        return $this->render('delete_user', [
             'model' => $model,
             'samaccountname' => $samaccountname
         ]);
@@ -332,7 +379,7 @@ class AdldapController extends Controller
             //Buscar usuario en Active Directory
             $user = \Yii::$app->ad->search()->findBy(Yii::$app->params['dni'], $model->dni);
             if (isset($user)) {
-                $estudiante = \app\models\Estudiantes::find()
+                $estudiante = \app\models\siad_pregrado\Estudiantes::find()
                     ->where(['CIInfPer' => $model->dni])
                     ->orWhere(['cedula_pasaporte' => $model->dni])
                     ->one();
@@ -361,7 +408,7 @@ class AdldapController extends Controller
                         }
                     }
                     elseif ($model->step == 2) {
-                        $estudiante_malla_actual = \app\models\EstudiantesMalla::find()
+                        $estudiante_malla_actual = \app\models\siad_pregrado\EstudiantesMalla::find()
                             ->where(['CIInfPer' => $model->dni])
                             ->orderBy('anio_mallacurricular DESC')
                             ->one();
@@ -1651,7 +1698,7 @@ class AdldapController extends Controller
                                 $this->saveLog('resetPasswordToken', $model->samaccountname, $description, $model->samaccountname,'adldap');
 
                                 //Actualizar datos en SIAD Nivelacion
-                                $estudianteNivelacion = \app\models\EstudiantesNivelacion::find()
+                                $estudianteNivelacion = \app\models\siad_nivelacion\EstudiantesNivelacion::find()
                                     ->where(['CIInfPer' => $model->dni])
                                     ->orWhere(['cedula_pasaporte' => $model->dni])
                                     ->one();
@@ -1665,7 +1712,7 @@ class AdldapController extends Controller
                                 }
 
                                 //Actualizar datos en SIAD Pregrado
-                                $estudiantePregrado = \app\models\Estudiantes::find()
+                                $estudiantePregrado = \app\models\siad_pregrado\Estudiantes::find()
                                     ->where(['CIInfPer' => $model->dni])
                                     ->orWhere(['cedula_pasaporte' => $model->dni])
                                     ->one();
@@ -1778,6 +1825,8 @@ class AdldapController extends Controller
                 $users = Yii::$app->ad->getProvider('default')->search()->users()
                     ->orWhereContains('samaccountname', $search)
                     ->orWhereContains('cn', $search)
+                    ->orWhereContains('mobile', $search)
+                    ->orWhereContains('personalmail', $search)
                     ->orWhereEquals(Yii::$app->params['dni'], $search)
                     ->sortBy('samaccountname', 'asc')
                     ->get();
@@ -1970,46 +2019,49 @@ class AdldapController extends Controller
 
 
                     if (Yii::$app->request->post('addGroup')==='addGroup') {
-
                         // https://github.com/Adldap2/Adldap2/blob/master/docs/models/traits/has-member-of.md#adding-a-group
                         // find user
                         $userObject = \Yii::$app->ad->search()->findBy('sAMAccountname', $sAMAccountname);
-
                         $groupNames = $userObject->getGroupNames($recursive = true);
-                        $existGroup = '';
-                        foreach ($groupNames as $groupName) {
-                            if ($groupName == $model->addGroup) {
-                                $existGroup = 'SI';
+
+                        $groups = $model->addGroup;
+                        foreach ($groups as $group) {
+                            $existGroup = '';
+                            foreach ($groupNames as $groupName) {
+                                if ($groupName == $group) {
+                                    $existGroup = 'SI';
+                                }
+                            }
+
+                            if ($existGroup != 'SI') {
+                                // find group
+                                $groupObject = \Yii::$app->ad->search()->findBy('cn', $group);
+                                // add group to user
+                                $userObject->addGroup($groupObject);
+
+                                if ($groupObject != null && $groupObject->exists && $userObject->save()) {
+
+                                    //Crear Registro de Log en la base de datos
+                                    $description =
+                                        'Grupo agregado: ' . $group
+                                    ;
+                                    $this->saveLog('addGroup', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
+
+                                    //Mensaje de grupo agregado
+                                    Yii::$app->session->setFlash('success', 'Grupo agregado correctamente');
+
+                                } else {
+                                    //Mensaje de error
+                                    Yii::$app->session->setFlash('error', 'Error al agregar grupo');
+                                }
                             }
                         }
 
-                        if ($existGroup != 'SI') {
-                            // find group
-                            $groupObject = \Yii::$app->ad->search()->findBy('cn', $model->addGroup);
-                            // add group to user
-                            $userObject->addGroup($groupObject);
+                        $user = \Yii::$app->ad->search()->findBy('sAMAccountname', $sAMAccountname);
+                        $model->groups = $user->getGroups();
+                        $model->addGroup = '';
+                        $model->deleteGroup = '';
 
-                            if ($groupObject != null && $groupObject->exists && $userObject->save()) {
-
-                                //Crear Registro de Log en la base de datos
-                                $description =
-                                    'Grupo agregado: ' . $model->addGroup
-                                ;
-                                $this->saveLog('addGroup', Yii::$app->user->identity->username, $description, $sAMAccountname,'adldap');
-
-                                //Mensaje de grupo eliminado
-                                Yii::$app->session->setFlash('success', 'Grupo agregado correctamente');
-
-                                $user = \Yii::$app->ad->search()->findBy('sAMAccountname', $sAMAccountname);
-                                $model->groups = $user->getGroups();
-                                $model->addGroup = '';
-                                $model->deleteGroup = '';
-
-                            } else {
-                                //Mensaje de grupo eliminado
-                                Yii::$app->session->setFlash('error', 'Error al agregar grupo');
-                            }
-                        }
                         return $this->render('edit_user',
                             ['model'=>$model]);
                     }
@@ -2431,7 +2483,7 @@ class AdldapController extends Controller
                     ->findBy('sAMAccountname', $sAMAccountname);
 
                 if (isset($user)) {
-                    $estudiante_nivelacion = \app\models\EstudiantesNivelacion::find()
+                    $estudiante_nivelacion = \app\models\siad_nivelacion\EstudiantesNivelacion::find()
                         ->where(['CIInfPer' => $post_dni])
                         ->orWhere(['cedula_pasaporte' => $post_dni])
                         ->one();
@@ -2440,7 +2492,7 @@ class AdldapController extends Controller
                         $fec_nacimiento = $estudiante_nivelacion->FechNacimPer;
                     }
 
-                    $estudiante_pregrado = \app\models\Estudiantes::find()
+                    $estudiante_pregrado = \app\models\siad_pregrado\Estudiantes::find()
                         ->where(['CIInfPer' => $post_dni])
                         ->orWhere(['cedula_pasaporte' => $post_dni])
                         ->one();
@@ -2449,7 +2501,7 @@ class AdldapController extends Controller
                         $fec_nacimiento = $estudiante_pregrado->FechNacimPer;
                     }
 
-                    $estudiante_posgrado = \app\models\EstudiantesPosgrado::find()
+                    $estudiante_posgrado = \app\models\siad_posgrado\EstudiantesPosgrado::find()
                         ->where(['CIInfPer' => $post_dni])
                         ->orWhere(['cedula_pasaporte' => $post_dni])
                         ->one();

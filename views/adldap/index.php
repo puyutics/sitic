@@ -27,13 +27,18 @@ $this->params['breadcrumbs'][] = $this->title;
 
             ],
             [
-                'label'=>'<i class="glyphicon glyphicon-list-alt"></i> BD Local',
-                'content' => $this->render('index_local')
+                'label'=>'<i class="glyphicon glyphicon-list-alt"></i> BD OnlyControl',
+                'content' => $this->render('index_onlycontrol')
 
             ],
             [
-                'label'=>'<i class="glyphicon glyphicon-list-alt"></i> BD Asistencia',
+                'label'=>'<i class="glyphicon glyphicon-list-alt"></i> BD Biométrico',
                 'content' => $this->render('index_biometrico')
+
+            ],
+            [
+                'label'=>'<i class="glyphicon glyphicon-list-alt"></i> BD Local',
+                'content' => $this->render('index_local')
 
             ],
         ],

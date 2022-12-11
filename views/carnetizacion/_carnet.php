@@ -34,7 +34,7 @@ if ($model->idCarr == 'TUR'
 }
 
 //Datos del período
-$periodoDescriptivo = \app\models\Periodo::Periododescriptivo($model->idPer);
+$periodoDescriptivo = \app\models\siad_pregrado\Periodo::Periododescriptivo($model->idPer);
 
 //Crear URL para el código QR
 $url = Url::to('@web/index.php?r=carnetizacion/view&id='.base64_encode($model->id), 'https');

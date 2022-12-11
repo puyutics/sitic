@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\MatriculaSearch */
+/* @var $searchModel app\models\siad_pregrado\MatriculaSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 if (isset($_GET['search'])) {
@@ -19,7 +19,7 @@ if (isset($_GET['search'])) {
     $dni = $user->getAttribute(Yii::$app->params['dni'],0);
 }
 
-$searchModelMatricula = new \app\models\MatriculaSearch();
+$searchModelMatricula = new \app\models\siad_pregrado\MatriculaSearch();
 $searchModelMatricula->CIInfPer = $dni;
 //$searchModelMatricula->idPer = '34';
 $dataProviderMatricula = $searchModelMatricula->search(Yii::$app->request->queryParams);

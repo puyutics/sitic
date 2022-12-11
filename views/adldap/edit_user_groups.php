@@ -35,13 +35,24 @@ if (isset($_GET['search'])) { ?>
                     ?>
 
                     <?php echo "<p></p>";
-                    echo $form->field($model, 'addGroup')->widget(Select2::classname(), [
+                    /*echo $form->field($model, 'addGroup')->widget(Select2::classname(), [
                         'data' => Yii::$app->params['groups'],
                         'options' => ['placeholder' => 'Seleccionar grupo'],
                         'pluginOptions' => [
                             'allowClear' => true
                         ],
-                    ]); ?>
+                    ]);*/
+                    echo $form->field($model, 'addGroup')->widget(Select2::classname(), [
+                        'data' => Yii::$app->params['groups'],
+                        'options' => [
+                            'placeholder' => 'Seleccionar grupos',
+                            'multiple' => true
+                        ],
+                        'pluginOptions' => [
+                            'allowClear' => true
+                        ],
+                    ]);
+                    ?>
 
                     <div class="form-group" align="center">
                             <?= Html::submitButton('Agregar',['class' => 'btn btn-success',

@@ -32,6 +32,7 @@ if (isset($_GET['search'])) {
         $today = strtotime(date('Y-m-d H:i:s'));
         $lastSetPassword = strtotime($user->getPasswordLastSetDate());
         $diff = round(($today - $lastSetPassword)/86400);
+        $whenCreated = $user->getAttribute('whenCreated',0);
 
         $this->title = Yii::t('app', 'Editar: {nameAttribute}', [
             'nameAttribute' => $sAMAccountname,
@@ -112,6 +113,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
                 <th bgcolor="#EEEEEE" style="text-align: center">Usuario</th>
                 <th bgcolor="#EEEEEE" style="text-align: center">Nombre Completo</th>
                 <th bgcolor="#EEEEEE" style="text-align: center">Email institucional</th>
+                <th bgcolor="#EEEEEE" style="text-align: center">Estado</th>
                 <th bgcolor="#EEEEEE" style="text-align: center">Editar</th>
             </tr>
             <?php $i=0 ?>
@@ -121,8 +123,20 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
                     <th style="text-align: center"><?= $i ?></th>
                     <th style="text-align: center"><?= $single_user->getAttribute(Yii::$app->params['dni'],0) ?></th>
                     <th style="text-align: center"><?= $single_user->getAttribute('samaccountname',0) ?></th>
-                    <th style="text-align: center"><?= $single_user->getAttribute('cn',0) ?></th>
+                    <th style="text-align: center"><?= $single_user->getAttribute('displayname',0) ?></th>
                     <th style="text-align: center"><?= $single_user->getEmail() ?></th>
+                    <th style="text-align: center">
+                        <?php $uac = $single_user->getUserAccountControl();
+                        //NORMAL_ACCOUNT	0x0200	512
+                        if ($uac == 512) { ?><span class="label label-success">CUENTA ACTIVADA</span><?php }
+                        //Disabled Account	0x0202	514
+                        if ($uac == 514) { ?><span class="label label-danger">CUENTA DESACTIVADA</span><?php }
+                        //Enabled, Password Doesn’t Expire	0x10200	66048
+                        if ($uac == 66048) { ?><span class="label label-success">CUENTA ACTIVADA, CONTRASEÑA NUNCA EXPIRA</span><?php }
+                        //Disabled, Password Doesn’t Expire	0x10202	66050
+                        if ($uac == 66050) { ?><span class="label label-danger">CUENTA DESACTIVADA, CONTRASEÑA NUNCA EXPIRA</span><?php }
+                        ?>
+                    </th>
                     <th style="text-align: center"><?= Html::a('<span class="btn btn-outline-secondary">Editar</span>',
                             Url::to(['/adldap/edituser',
                                 'search' => $_GET['search'],
@@ -151,9 +165,9 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
                         'model' => $model,
                         'form' => $form,
                         'diff' => $diff,
+                        'whenCreated' => $whenCreated,
                         'user' => $user,
                     ])
-
                 ],
                 [
                     'label'=>'<i class="glyphicon glyphicon-list-alt"></i> Grupos',
@@ -161,28 +175,36 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
                         'model' => $model,
                         'form' => $form,
                     ])
-
-                ],
-                [
-                    'label'=>'<i class="glyphicon glyphicon-list-alt"></i> Historial',
-                    'content' => $this->render('edit_user_logs', [
-                        'model' => $model,
-                    ])
-
                 ],
                 [
                     'label'=>'<i class="glyphicon glyphicon-list-alt"></i> SIAD',
                     'content' => $this->render('edit_user_siad', [
                         'model' => $model,
                     ])
-
                 ],
                 [
                     'label'=>'<i class="glyphicon glyphicon-list-alt"></i> EVA',
                     'content' => $this->render('edit_user_moodle', [
                         'model' => $model,
                     ])
-
+                ],
+                [
+                    'label'=>'<i class="glyphicon glyphicon-list-alt"></i> MS 365',
+                    'content' => $this->render('edit_user_o365', [
+                        'model' => $model,
+                    ])
+                ],
+                [
+                    'label'=>'<i class="glyphicon glyphicon-list-alt"></i> OnlyControl',
+                    'content' => $this->render('edit_user_onlycontrol', [
+                        'model' => $model,
+                    ])
+                ],
+                [
+                    'label'=>'<i class="glyphicon glyphicon-list-alt"></i> Auditoria',
+                    'content' => $this->render('edit_user_logs', [
+                        'model' => $model,
+                    ])
                 ],
             ],
         ]);

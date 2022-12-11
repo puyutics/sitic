@@ -8,10 +8,10 @@ use kartik\form\ActiveForm;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\UserInfo */
+/* @var $model app\models\biometrico\UserInfo */
 
 if (isset($dni)) {
-    $searchModelUserInfo = new \app\models\UserInfoSearch();
+    $searchModelUserInfo = new \app\models\biometrico\UserInfoSearch();
     $searchModelUserInfo->SSN = $dni;
     $dataProviderUserInfo = $searchModelUserInfo->search(Yii::$app->request->queryParams);
 
@@ -63,14 +63,14 @@ if (isset($dni)) {
                 'items' => [
                     [
                         'label'=>'<i class="glyphicon glyphicon-list-alt"></i> Marcaciones',
-                        'content' => $this->render('../userinfo/_checkinout', [
+                        'content' => $this->render('../biometrico/userinfo/_checkinout', [
                             'model' => $model
                         ])
 
                     ],
                     [
                         'label'=>'<i class="glyphicon glyphicon-list-alt"></i> Permisos',
-                        'content' => $this->render('../userinfo/_permisos', [
+                        'content' => $this->render('../biometrico/userinfo/_permisos', [
                             'model' => $model,
                         ])
 

@@ -114,7 +114,7 @@ $mimeType = $mimeType[0];
                         [
                             'attribute' => 'idPer',
                             'value' => call_user_func(function($model) {
-                                $periodoDescriptivo = \app\models\Periodo::Periododescriptivo($model->idPer);
+                                $periodoDescriptivo = \app\models\siad_pregrado\Periodo::Periododescriptivo($model->idPer);
                                 if (isset($periodoDescriptivo)) {
                                     return $periodoDescriptivo;
                                 } else {

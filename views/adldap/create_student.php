@@ -11,6 +11,8 @@ use yii\helpers\Html;
 use kartik\date\DatePicker;
 use yii\helpers\Url;
 use kartik\password\PasswordInput;
+use kartik\icons\Icon;
+Icon::map($this);
 
 /* @var $model */
 
@@ -19,8 +21,12 @@ $this->title = Yii::t('app', 'Crear estudiante');
 //$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Usuarios'), 'url' => ['adldap/index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-$fecha_inicio = ('2022-06-01 08:00:00');
-if (strtotime(date("Y-m-d H:i:s",time())) > strtotime($fecha_inicio)) {
+$fecha_inicio = ('2022-10-27 00:00:00');
+$fecha_fin = ('2022-12-02 23:59:59');
+
+if (strtotime(date("Y-m-d H:i:s",time())) > strtotime($fecha_inicio)
+    AND strtotime(date("Y-m-d H:i:s",time())) < strtotime($fecha_fin)
+    ) {
     $system_status = true;
 } else {
     $system_status = false;
@@ -152,6 +158,10 @@ if (isset($_GET['test'])) {
 
                         <div class="form-group" align="center">
                             <?= Html::submitButton('Validar Datos', ['class' => 'btn btn-success']) ?>
+                        </div>
+
+                        <div align="center">
+                            <a href="https://www.facebook.com/ueaeduec/videos/801062734487607" target="_blank">Video con instrucciones</a>
                         </div>
                     </div>
                 </div>
@@ -291,9 +301,9 @@ if (isset($_GET['test'])) {
                             </div>
                         </div>
 
-                        <?= $form->field($model, 'title')->textInput(['readOnly' => true]) ?>
+                        <?= $form->field($model, 'title')->textInput(['readOnly' => true])->label('Tipo de Usuario') ?>
 
-                        <?= $form->field($model, 'department')->textInput(['readOnly' => true]) ?>
+                        <?= $form->field($model, 'department')->textInput(['readOnly' => true])->label('Carrera') ?>
 
                         <div class="alert alert-warning" align="center">
                             <h4>Verifique que todos sus datos sean correctos antes de crear el usuario institucional</h4>
@@ -462,7 +472,7 @@ if (isset($_GET['test'])) {
                             <?php } ?>
 
                             <div class="alert alert-success" align="center">
-                                <h4>Etapa 2: Matricularse</h4>
+                                <h4>Etapa 2: Actualización de Datos Académicos</h4>
                                 <h5>Ingrese al Sistema Académico SIAD Pregrado y actualice su ficha de datos personales. La Secretaria Académica de la UEA, procederá a realizar su matrícula de forma manual.</h5>
                                 <?php echo Html::a('SIAD Pregrado', 'https://www.uea.edu.ec/siad2', [
                                     'class'=>'btn btn-primary',
@@ -493,6 +503,18 @@ if (isset($_GET['test'])) {
 
 <?php } else { ?>
     <div class="alert alert-info" align="center">
-        <h3 align="center">El sistema no se encuentra habilitado. A partir del próximo <?= $fecha_inicio ?>, empezará el proceso de inscripción para todos los estudiantes que hayan aceptado un cupo para nuestra institución.</h3>
+        <h3 align="center">
+            <code>EL SISTEMA NO ESTÁ HABILITADO</code>
+            <br>
+            <br>
+            Manténgase informado por nuestro canales oficiales donde se informará de manera oportuna el inicio del proceso de aceptación de cupos y creación de cuenta institucional.
+            <br>
+            <br>
+            <br>
+            <code>Canales Oficiales de la Universidad Estatal Amazónica</code>
+            <br>
+            <br>
+            <a href="https://www.uea.edu.ec" target="_blank"><?= Icon::show('globe')?> Sitio web</a> | <a href="https://www.facebook.com/ueaeduec" target="_blank">Facebook</a> | <a href="https://www.twitter.com/ueaeduec" target="_blank">Twitter</a> | <a href="https://www.instagram.com/uea.edu.ec" target="_blank">Instagram</a>
+        </h3>
     </div>
 <?php } ?>

@@ -114,7 +114,7 @@ class CarnetizacionController extends Controller
         }
 
         //Verificar si existe el perfil de estudiante de pregrado
-        $estudiante = \app\models\Estudiantes::find()
+        $estudiante = \app\models\siad_pregrado\Estudiantes::find()
             ->where(['CIInfPer' => $dni])
             ->orWhere(['cedula_pasaporte' => $dni])
             ->one();
@@ -122,14 +122,14 @@ class CarnetizacionController extends Controller
             //Verificar si es un usuario activo
             if ($estudiante->statusper == 1) {
                 //Verificar si tiene una matrícula vigente
-                $periodo = \app\models\Periodo::getUltimoPeriodoActivo();
-                $periodoDescriptivo = \app\models\Periodo::Periododescriptivo($periodo);
-                $matricula = \app\models\Matricula::find()
+                $periodo = \app\models\siad_pregrado\Periodo::getUltimoPeriodoActivo();
+                $periodoDescriptivo = \app\models\siad_pregrado\Periodo::Periododescriptivo($periodo);
+                $matricula = \app\models\siad_pregrado\Matricula::find()
                     ->where(['CIInfPer' => $estudiante->CIInfPer])
                     ->andWhere(['idPer' => $periodo])
                     ->andWhere(['statusMatricula' => 'APROBADA'])
                     ->one();
-                $periodolectivo = \app\models\Periodo::find()
+                $periodolectivo = \app\models\siad_pregrado\Periodo::find()
                     ->where(['idper' => $periodo])
                     ->one();
                 if (isset($matricula)) {

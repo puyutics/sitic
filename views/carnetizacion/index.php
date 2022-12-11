@@ -87,10 +87,10 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'idCarr',
                 'value'=>function($model){
-                    return \app\models\Carrera::findOne($model->idCarr)->Fullname;
+                    return \app\models\siad_pregrado\Carrera::findOne($model->idCarr)->Fullname;
                 },
                 'filterType'=>GridView::FILTER_SELECT2,
-                'filter'=>ArrayHelper::map(\app\models\Carrera::find()
+                'filter'=>ArrayHelper::map(\app\models\siad_pregrado\Carrera::find()
                     ->all(),
                     'idCarr',
                     'datosCompletos'
@@ -104,10 +104,10 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'idPer',
                 'value'=>function($model){
-                    return \app\models\Periodo::Periododescriptivo($model->idPer);
+                    return \app\models\siad_pregrado\Periodo::Periododescriptivo($model->idPer);
                 },
                 'filterType'=>GridView::FILTER_SELECT2,
-                'filter'=>ArrayHelper::map(\app\models\Periodo::find()
+                'filter'=>ArrayHelper::map(\app\models\siad_pregrado\Periodo::find()
                     ->where('idper >= 39')
                     ->orderBy('idper DESC')
                     ->all(),

@@ -15,7 +15,7 @@ if (isset($_GET['search'])) {
     $dni = $user->getAttribute(Yii::$app->params['dni'],0);
 }
 
-$estudiante = \app\models\Estudiantes::find()
+$estudiante = \app\models\siad_pregrado\Estudiantes::find()
     ->where(["cedula_pasaporte" => $dni])
     ->all();
 
@@ -23,7 +23,7 @@ $contratos = \app\models\TabIntFormulario::find()
     ->andWhere(['cedula' => $dni])
     ->all();
 
-$matricula = \app\models\Matricula::find()
+$matricula = \app\models\siad_pregrado\Matricula::find()
     ->where(["CIInfPer" => $dni])
     ->andwhere(["idPer" => '35'])
     ->orderBy(["idsemestre" => SORT_DESC])

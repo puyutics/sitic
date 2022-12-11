@@ -18,7 +18,7 @@ use kartik\password\PasswordInput;
 $this->title = Yii::t('app', 'Reingreso de estudiantes');
 $this->params['breadcrumbs'][] = $this->title;
 
-if (strtotime(date("Y-m-d H:i:s",time())) > strtotime("2022-09-05 08:00:00")) {
+if (strtotime(date("Y-m-d H:i:s",time())) > strtotime("2023-03-01 08:00:00")) {
     $system_status = true;
 } else {
     $system_status = false;
@@ -81,13 +81,13 @@ if (isset($_GET['test'])) {
     <?php }
     elseif ($model->step == 2) { ?>
         <?php
-        $estudiante_malla_actual = \app\models\EstudiantesMalla::find()
+        $estudiante_malla_actual = \app\models\siad_pregrado\EstudiantesMalla::find()
             ->where(['CIInfPer' => $estudiante->CIInfPer])
             ->orderBy('anio_mallacurricular DESC')
             ->one();
 
         if (isset($estudiante_malla_actual)) {
-            $estudiante_malla_inicial = \app\models\EstudiantesMalla::find()
+            $estudiante_malla_inicial = \app\models\siad_pregrado\EstudiantesMalla::find()
                 ->where(['CIInfPer' => $estudiante->CIInfPer])
                 ->andWhere(['idcarr' => $estudiante_malla_actual->idcarr])
                 ->orderBy('anio_mallacurricular ASC')

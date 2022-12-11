@@ -14,7 +14,7 @@ if ($groupObject != null && $groupObject->exists) {
     $members = $groupObject->getMembers();
 }
 
-$estudiantes_descontinuados = \app\models\Estudiantes::find()
+$estudiantes_descontinuados = \app\models\siad_pregrado\Estudiantes::find()
     ->select(['CIInfPer',
         'cedula_pasaporte',
         'ApellInfPer',
@@ -25,7 +25,7 @@ $estudiantes_descontinuados = \app\models\Estudiantes::find()
     ->where(['statusper' => 0])
     ->all();
 
-$estudiantes_habilitados = \app\models\Estudiantes::find()
+$estudiantes_habilitados = \app\models\siad_pregrado\Estudiantes::find()
     ->select(['CIInfPer',
         'cedula_pasaporte',
         'ApellInfPer',
@@ -36,7 +36,7 @@ $estudiantes_habilitados = \app\models\Estudiantes::find()
     ->where(['statusper' => 1])
     ->all();
 
-$estudiantes_graduados = \app\models\Estudiantes::find()
+$estudiantes_graduados = \app\models\siad_pregrado\Estudiantes::find()
     ->select(['CIInfPer',
         'cedula_pasaporte',
         'ApellInfPer',
@@ -47,7 +47,7 @@ $estudiantes_graduados = \app\models\Estudiantes::find()
     ->where(['statusper' => 2])
     ->all();
 
-$estudiantes_inhabilitados = \app\models\Estudiantes::find()
+$estudiantes_inhabilitados = \app\models\siad_pregrado\Estudiantes::find()
     ->select(['CIInfPer',
         'cedula_pasaporte',
         'ApellInfPer',
@@ -97,7 +97,7 @@ $p_ei=0;
             echo 'Caracter en blanco en cédula: '.$dni;
             echo '<br>';
         }
-        $estudiante = \app\models\Estudiantes::find()
+        $estudiante = \app\models\siad_pregrado\Estudiantes::find()
             ->select(['CIInfPer',
                 'cedula_pasaporte',
                 'ApellInfPer',
@@ -158,7 +158,7 @@ $p_ei=0;
                 $eh=$eh+1;
                 userEnable($estudiante, $user, $h);
                 //Chequear carrera y contenedor
-                $estudiante_malla_actual = \app\models\EstudiantesMalla::find()
+                $estudiante_malla_actual = \app\models\siad_pregrado\EstudiantesMalla::find()
                     ->where(['CIInfPer' => $dni])
                     ->orderBy('anio_mallacurricular DESC')
                     ->one();
