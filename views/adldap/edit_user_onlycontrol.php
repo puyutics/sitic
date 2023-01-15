@@ -1,8 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\helpers\Url;
-use kartik\grid\GridView;
+use kartik\tabs\TabsX;
 use kartik\icons\Icon;
 Icon::map($this);
 
@@ -52,122 +51,50 @@ $dataProviderNomPuerta->pagination = ['pageSize' => $countDataProvider];
                 ['onlycontrol/nomina/profile', 'oc_user_id'=>base64_encode($oc_user_id)],
                 ['class' => 'btn btn-primary','target' => '_blank']
             ); ?>
+            <?= Html::a(Icon::show('door-closed') . 'Puertas',
+                ['onlycontrol/nompuerta/indexuser', 'oc_user_id'=>base64_encode($oc_user_id)],
+                ['class' => 'btn btn-primary','target' => '_blank']
+            ); ?>
             <?= Html::a(Icon::show('fingerprint') . 'Accesos',
                 ['onlycontrol/asistnow/indexuser', 'oc_user_id'=>base64_encode($oc_user_id)],
                 ['class' => 'btn btn-primary','target' => '_blank']
             ); ?>
+            <?= Html::a(Icon::show('clipboard-list') . 'Logs',
+                ['onlycontrol/puertasta/indexuser', 'oc_user_id'=>base64_encode($oc_user_id)],
+                ['class' => 'btn btn-success','target' => '_blank']
+            ); ?>
         </div>
+    <?php } ?>
 
-        <?= GridView::widget([
-            'dataProvider' => $dataProviderNomPuerta,
-            //'filterModel' => $searchModelNomPuerta,
-            'pjax'=>false,
-            'columns' => [
-                ['class' => 'yii\grid\SerialColumn'],
-
-                //'NOM_ID',
+    <div class="col-sm-offset-0 col-sm-12">
+        <?php echo TabsX::widget([
+            'position' => TabsX::POS_ABOVE,
+            'align' => TabsX::ALIGN_CENTER,
+            'sideways'=>false,
+            'bordered'=>false,
+            'encodeLabels'=>false,
+            'enableStickyTabs' => true,
+            'items' => [
                 [
-                    'label' => 'Ubicación',
-                    'value' => function ($model) {
-                        $puerta = \app\models\onlycontrol\Puerta::findOne($model->PUER_ID);
-                        return $puerta->PRI_EMPRESA_NOM
-                            .'<br>('. $puerta->PRI_AREA1 .')';
-                    },
-                    'format' => 'html',
-                    'group' => true,
-                    'hAlign'=>'center',
-                    'vAlign'=>'middle',
+                    'label' => Icon::show('door-closed').' Puertas Activas',
+                    'content' => $this->render('../onlycontrol/nompuerta/index_user_nom_puerta', [
+                        'oc_user_id' => $oc_user_id,
+                    ])
                 ],
                 [
-                    'label' =>'Puerta',
-                    'attribute' =>'PUER_ID',
-                    'value' => function ($model) {
-                        $puerta = \app\models\onlycontrol\Puerta::findOne($model->PUER_ID);
-                        return $puerta->PRI_DES;
-                    },
-                    'format' => 'html'
+                    'label' => Icon::show('door-closed').' Puertas Revocadas',
+                    'content' => $this->render('../onlycontrol/nompuerta/index_user_nom_puertadel', [
+                        'oc_user_id' => $oc_user_id,
+                    ])
                 ],
                 [
-                    'label' =>'Conexión',
-                    'value' => function ($model) {
-                        $puerta = \app\models\onlycontrol\Puerta::findOne($model->PUER_ID);
-                        if ($puerta->PRI_STA == 'OK') {
-                            return '<p style="color:darkgreen">'. $puerta->PRI_STA .' '.Icon::show('plug').'</p>';
-                        } elseif ($puerta->PRI_STA == 'UNPLUG') {
-                            return '<p style="color:darkred">'. $puerta->PRI_STA .' '.Icon::show('plug').'</p>';
-                        } else {
-                            return '<p style="color:#f4c01a">'. $puerta->PRI_STA .' '.Icon::show('question').'</p>';
-                        }
-                    },
-                    'format' => 'html',
+                    'label' => Icon::show('clipboard-list').' Auditoría',
+                    'content' => $this->render('../onlycontrol/nompuerta/index_user_nom_puertalog', [
+                        'oc_user_id' => $oc_user_id,
+                    ])
                 ],
-                [
-                    'label' =>'Modelo',
-                    'value' => function ($model) {
-                        $puerta = \app\models\onlycontrol\Puerta::findOne($model->PUER_ID);
-                        return $puerta->PRI_VIRDI;
-                    }
-                ],
-                [
-                    'label' =>'Uso',
-                    'value' => function ($model) {
-                        $puerta = \app\models\onlycontrol\Puerta::findOne($model->PUER_ID);
-                        return $puerta->PRI_TI;
-                    }
-                ],
-                [
-                    'label' =>'IP Address',
-                    'value' => function ($model) {
-                        $puerta = \app\models\onlycontrol\Puerta::findOne($model->PUER_ID);
-                        return $puerta->PRI_IP;
-                    }
-                ],
-                //'TURN_NOW',
-                [
-                    'label' => 'Tipo',
-                    'attribute' => 'TURN_TCOD',
-                ],
-                [
-                    'label' => 'Estado',
-                    'attribute' => 'TURN_ESTADO_UP',
-                    'value' => function ($model) {
-                        if ($model->TURN_ESTADO_UP == 1) {
-                            return '<p style="color:darkgreen">Sincronizado '.Icon::show('sync').'</p>';
-                        } elseif ($model->TURN_ESTADO_UP == 0) {
-                            return '<p style="color:darkred">Pendiente '.Icon::show('exclamation').'</p>';
-                        } else {
-                            return '<p style="color:#f4c01a">'. $model->TURN_ESTADO_UP .' '.Icon::show('question').'</p>';
-                        }
-                    },
-                    'format' => 'html'
-                ],
-                //'TURN_FECHA_UP',
-                //'TURN_ID',
-                //'TURN_FECI',
-                //'TURN_FECF',
-                //'TURN_TIPO',
-                //'TURN_STA',
-                //'TURN_MARCA',
-                //'TURN_SEL',
-                //'ES_SINCRONIZADO',
-                //'ES_UPDATE',
-                //'TURN_CONFSIMILAR',
-
-                ['class' => 'kartik\grid\ActionColumn',
-                    'template'=>'{access}',
-                    'buttons'=>[
-                        'access' => function ($url, $model) {
-                            $puerta = \app\models\onlycontrol\Puerta::findOne($model->PUER_ID);
-                            return Html::a('<span class="btn btn-primary center-block">'.Icon::show('fingerprint') . 'Accesos'.'</span>',
-                                Url::to(['onlycontrol/asistnow/indexuser', 'oc_user_id'=>base64_encode($model->NOM_ID), 'oc_zona'=>base64_encode($puerta->PRI_IP)]),
-                                ['title' => Yii::t('yii', 'Accesos'),'target' => '_blank']);
-                        },
-                    ]
-                ],
-
-                //['class' => 'yii\grid\ActionColumn'],
             ],
         ]); ?>
-    <?php } ?>
+    </div>
 
 </div>

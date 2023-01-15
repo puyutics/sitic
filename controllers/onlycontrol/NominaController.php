@@ -58,6 +58,13 @@ class NominaController extends Controller
     {
         $searchModel = new NominaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->sort->defaultOrder = [
+            'NOMINA_AREA1' => SORT_ASC,
+            'NOMINA_DEP1' => SORT_ASC,
+            'NOMINA_APE' => SORT_ASC,
+            'NOMINA_NOM' => SORT_ASC,
+        ];
+        $dataProvider->pagination = ['pageSize' => 50];
 
         return $this->render('index', [
             'searchModel' => $searchModel,

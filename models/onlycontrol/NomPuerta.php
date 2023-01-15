@@ -30,6 +30,8 @@ use Yii;
  */
 class NomPuerta extends \yii\db\ActiveRecord
 {
+    public $revocar_puerta;
+
     /**
      * {@inheritdoc}
      */
@@ -64,6 +66,7 @@ class NomPuerta extends \yii\db\ActiveRecord
             [['NOM_ID'], 'exist', 'skipOnError' => true, 'targetClass' => Nomina::className(), 'targetAttribute' => ['NOM_ID' => 'NOMINA_ID']],
             [['PUER_ID'], 'exist', 'skipOnError' => true, 'targetClass' => Puerta::className(), 'targetAttribute' => ['PUER_ID' => 'PRT_COD']],
             [['TURN_ID'], 'exist', 'skipOnError' => true, 'targetClass' => TblmodTurno::className(), 'targetAttribute' => ['TURN_ID' => 'MOD_ID']],
+            [['revocar_puerta'], 'safe'],
         ];
     }
 
@@ -78,7 +81,7 @@ class NomPuerta extends \yii\db\ActiveRecord
             'TURN_ID' => 'Turn ID',
             'TURN_FECI' => 'Turn Feci',
             'TURN_FECF' => 'Turn Fecf',
-            'TURN_TIPO' => '1',
+            'TURN_TIPO' => 'Turn Tipo',
             'TURN_STA' => '0 Control Activo 1 Sin Control',
             'TURN_NOW' => 'Turn Now',
             'TURN_MARCA' => 'Turn Marca',
@@ -89,6 +92,7 @@ class NomPuerta extends \yii\db\ActiveRecord
             'ES_SINCRONIZADO' => 'Es Sincronizado',
             'ES_UPDATE' => 'Es Update',
             'TURN_CONFSIMILAR' => 'Turn Confsimilar',
+            'revocar_puerta' => 'Revocar Permiso Puerta'
         ];
     }
 

@@ -35,6 +35,11 @@ class NomPuertalog extends \yii\db\ActiveRecord
         return Yii::$app->get('db_onlycontrol');
     }
 
+    /*public static function primaryKey()
+    {
+        return ['TURN_NOW'];
+    }*/
+
     /**
      * {@inheritdoc}
      */

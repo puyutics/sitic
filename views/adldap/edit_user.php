@@ -13,6 +13,8 @@ use yii\helpers\Html;
 use kartik\form\ActiveForm;
 use yii\helpers\Url;
 use kartik\tabs\TabsX;
+use kartik\icons\Icon;
+Icon::map($this);
 
 if (isset($_GET['search'])) {
     $search = $_GET['search'];
@@ -151,64 +153,82 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
         </table>
         <br>
     <?php } else { ?>
-        <?php echo TabsX::widget([
-            'position' => TabsX::POS_ABOVE,
-            'align' => TabsX::ALIGN_CENTER,
-            'sideways'=>false,
-            'bordered'=>false,
-            'encodeLabels'=>false,
-            'enableStickyTabs' => true,
-            'items' => [
-                [
-                    'label'=>'<i class="glyphicon glyphicon-list-alt"></i> Perfil',
-                    'content' => $this->render('edit_user_index', [
-                        'model' => $model,
-                        'form' => $form,
-                        'diff' => $diff,
-                        'whenCreated' => $whenCreated,
-                        'user' => $user,
-                    ])
+        <div class="col-sm-offset-0 col-sm-12">
+            <?php echo TabsX::widget([
+                'position' => TabsX::POS_ABOVE,
+                'align' => TabsX::ALIGN_CENTER,
+                'sideways'=>false,
+                'bordered'=>false,
+                'encodeLabels'=>false,
+                'enableStickyTabs' => true,
+                'items' => [
+                    [
+                        'label' => Icon::show('user').' Perfil',
+                        'content' => $this->render('edit_user_profile', [
+                            'model' => $model,
+                            'form' => $form,
+                            'diff' => $diff,
+                            'whenCreated' => $whenCreated,
+                            'user' => $user,
+                        ])
+                    ],
+                    [
+                        'label' => Icon::show('users').' Grupos',
+                        'content' => $this->render('edit_user_groups', [
+                            'model' => $model,
+                            'form' => $form,
+                        ])
+                    ],
+                    [
+                        'label' => Icon::show('cloud').' MS 365',
+                        'content' => $this->render('edit_user_o365', [
+                            'model' => $model,
+                        ])
+                    ],
+                    [
+                        'label' => Icon::show('university').' Académico',
+                        'items'=>[
+                            [
+                                'label'=>' SIAD',
+                                'content' => $this->render('edit_user_siad', [
+                                    'model' => $model,
+                                ])
+                            ],
+                            [
+                                'label'=>' EVA',
+                                'content' => $this->render('edit_user_moodle', [
+                                    'model' => $model,
+                                ])
+                            ],
+                        ],
+                    ],
+                    [
+                        'label' => Icon::show('fingerprint').' Access Control',
+                        'items'=>[
+                            [
+                                'label'=>' Biométrico',
+                                'content' => $this->render('edit_user_biometrico', [
+                                    'model' => $model,
+                                ])
+                            ],
+                            [
+                                'label'=>' OnlyControl',
+                                'content' => $this->render('edit_user_onlycontrol', [
+                                    'model' => $model,
+                                ])
+                            ],
+                        ],
+                    ],
+                    [
+                        'label' => Icon::show('clipboard-list').' Auditoria',
+                        'content' => $this->render('edit_user_logs', [
+                            'model' => $model,
+                        ])
+                    ],
                 ],
-                [
-                    'label'=>'<i class="glyphicon glyphicon-list-alt"></i> Grupos',
-                    'content' => $this->render('edit_user_groups', [
-                        'model' => $model,
-                        'form' => $form,
-                    ])
-                ],
-                [
-                    'label'=>'<i class="glyphicon glyphicon-list-alt"></i> SIAD',
-                    'content' => $this->render('edit_user_siad', [
-                        'model' => $model,
-                    ])
-                ],
-                [
-                    'label'=>'<i class="glyphicon glyphicon-list-alt"></i> EVA',
-                    'content' => $this->render('edit_user_moodle', [
-                        'model' => $model,
-                    ])
-                ],
-                [
-                    'label'=>'<i class="glyphicon glyphicon-list-alt"></i> MS 365',
-                    'content' => $this->render('edit_user_o365', [
-                        'model' => $model,
-                    ])
-                ],
-                [
-                    'label'=>'<i class="glyphicon glyphicon-list-alt"></i> OnlyControl',
-                    'content' => $this->render('edit_user_onlycontrol', [
-                        'model' => $model,
-                    ])
-                ],
-                [
-                    'label'=>'<i class="glyphicon glyphicon-list-alt"></i> Auditoria',
-                    'content' => $this->render('edit_user_logs', [
-                        'model' => $model,
-                    ])
-                ],
-            ],
-        ]);
-        ?>
+            ]);
+            ?>
+        </div>
     <?php } ?>
 
     <?php } elseif (isset($_GET['search'])) { ?>

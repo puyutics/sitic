@@ -1,23 +1,23 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
+use yii\helpers\ArrayHelper;
+use kartik\icons\Icon;
+Icon::map($this);
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\onlycontrol\NominaSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Nominas';
+$this->title = 'Onlycontrol - Usuarios';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="nomina-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?= Html::a('Create Nomina', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <div class="alert alert-info" align="center">
+        <h3 align="center"><?= $this->title ?></h3>
+    </div>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -25,20 +25,130 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'NOMINA_ID',
-            'NOMINA_APE',
-            'NOMINA_NOM',
-            'NOMINA_CLAVE',
-            'NOMINA_COD',
-            //'NOMINA_TIPO',
+
+            [
+                'label' => 'Área',
+                'attribute' => 'NOMINA_AREA1',
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>ArrayHelper::map(\app\models\onlycontrol\Nomina::find()
+                    ->orderBy('NOMINA_AREA1 ASC')
+                    ->all(),
+                    'NOMINA_AREA1',
+                    'NOMINA_AREA1'),
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>['allowClear'=>true],
+                ],
+                'filterInputOptions'=>['placeholder'=>'Seleccionar'],
+                'width' => '100px',
+                'group' => true,
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+            ],
+            [
+                'label' => 'Ubicación',
+                'attribute' => 'NOMINA_DEP1',
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>ArrayHelper::map(\app\models\onlycontrol\Nomina::find()
+                    ->orderBy('NOMINA_DEP1 ASC')
+                    ->all(),
+                    'NOMINA_DEP1',
+                    'NOMINA_DEP1'),
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>['allowClear'=>true],
+                ],
+                'filterInputOptions'=>['placeholder'=>'Seleccionar'],
+                'width' => '100px',
+                'group' => true,
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+            ],
+            [
+                'label' => 'Código',
+                'attribute' => 'NOMINA_ID',
+                'width' => '100px',
+            ],
+            [
+                'label' => 'Usuario',
+                'attribute' => 'NOMINA_COD',
+                'value' => function ($model) {
+                    return $model->NOMINA_COD .': '. $model->NOMINA_APE .' '. $model->NOMINA_NOM;
+                },
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>ArrayHelper::map(\app\models\onlycontrol\Nomina::find()
+                    ->orderBy('NOMINA_APE ASC, NOMINA_NOM ASC')
+                    ->all(),
+                    'NOMINA_COD',
+                    'datosCompletos'),
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>['allowClear'=>true],
+                ],
+                'filterInputOptions'=>['placeholder'=>'Seleccionar'],
+            ],
+            [
+                'label' => 'Tipo',
+                'attribute' => 'NOMINA_TIPO',
+                'filter'=>['USUARIO'=>'USUARIO','ADMINISTRADOR'=>'ADMINISTRADOR'],
+            ],
+
+            ['class' => 'kartik\grid\ActionColumn',
+                'template'=>'{profile}',
+                'buttons'=>[
+                    'profile' => function ($url, $model) {
+                        return Html::a(Icon::show('eye') . 'Perfil',
+                            ['onlycontrol/nomina/profile', 'oc_user_id'=>base64_encode($model->NOMINA_ID)],
+                            ['class' => 'btn btn-primary','target' => '_blank']
+                        );
+                    },
+                ]
+            ],
+            ['class' => 'kartik\grid\ActionColumn',
+                'template'=>'{doors}',
+                'buttons'=>[
+                    'doors' => function ($url, $model) {
+                        return Html::a(Icon::show('door-closed') . 'Puertas',
+                            ['onlycontrol/nompuerta/indexuser', 'oc_user_id'=>base64_encode($model->NOMINA_ID)],
+                            ['class' => 'btn btn-primary','target' => '_blank']
+                        );
+                    },
+                ]
+            ],
+            ['class' => 'kartik\grid\ActionColumn',
+                'template'=>'{access}',
+                'buttons'=>[
+                    'access' => function ($url, $model) {
+                        return Html::a(Icon::show('fingerprint') . 'Accesos',
+                            ['onlycontrol/asistnow/indexuser', 'oc_user_id'=>base64_encode($model->NOMINA_ID)],
+                            ['class' => 'btn btn-primary','target' => '_blank']
+                        );
+                    },
+                ]
+            ],
+            ['class' => 'kartik\grid\ActionColumn',
+                'template'=>'{logs}',
+                'buttons'=>[
+                    'logs' => function ($url, $model) {
+                        return Html::a(Icon::show('clipboard-list') . 'Logs',
+                            ['onlycontrol/puertasta/indexuser', 'oc_user_id'=>base64_encode($model->NOMINA_ID)],
+                            ['class' => 'btn btn-success','target' => '_blank']
+                        );
+                    },
+                ]
+            ],
+
+
+            //'NOMINA_FING',
+            //'NOMINA_FSAL',
+            //'NOMINA_CARD',
+            //'NOMINA_FCARD',
+            //'NOMINA_NOW',
+            //'NOMINA_CONTROLAPB',
+            //'NOMINA_TIPOID',
+            //'NOMINA_TIPONOM',
+            //'NOMINA_CAL1',
+            //'NOMINA_CLAVE',
             //'NOMINA_CAL',
             //'NOMINA_AREA',
             //'NOMINA_DEP',
-            //'NOMINA_CAL1',
-            //'NOMINA_AREA1',
-            //'NOMINA_DEP1',
-            //'NOMINA_FING',
-            //'NOMINA_FSAL',
             //'NOMINA_SUEL',
             //'NOMINA_COM',
             //'NOMINA_AUTI',
@@ -81,10 +191,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //'NOMINA_DOC',
             //'NOMINA_PLA',
             //'NOMINA_F',
-            //'NOMINA_CARD',
-            //'NOMINA_FCARD',
             //'NOMINA_OBS1',
-            //'NOMINA_NOW',
             //'NOMINA_CAFE',
             //'NOMINA_AUTO',
             //'NOMINA_P21',
@@ -92,12 +199,8 @@ $this->params['breadcrumbs'][] = $this->title;
             //'NOMINA_P23',
             //'NOMINA_P24',
             //'NOMINA_P25',
-            //'NOMINA_CONTROLAPB',
-            //'NOMINA_STATUSAPB',
             //'NOMINA_CAFEMENU',
             //'NOMINA_LEVEL',
-            //'NOMINA_TIPOID',
-            //'NOMINA_TIPONOM',
             //'NOMINA_HS1',
             //'NOMINA_HS2',
             //'NOMINA_CAFECONTROL',
@@ -121,8 +224,9 @@ $this->params['breadcrumbs'][] = $this->title;
             //'NOMINA_KEY_CONSULT',
             //'NOMINA_P27',
             //'NOMINA_ADMIN_BIO',
+            //'NOMINA_STATUSAPB',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            //['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
 </div>

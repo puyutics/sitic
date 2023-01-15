@@ -11,13 +11,24 @@ Icon::map($this);
 /* @var $searchModel app\models\onlycontrol\NomPuertaSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Acceso a Usuario - Activos (Global)';
+$this->title = 'Acceso a Usuarios (Puerta)';
 $this->params['breadcrumbs'][] = $this->title;
+
+$oc_zona = base64_decode($_GET['oc_zona']);
+$puerta = \app\models\onlycontrol\Puerta::find()
+    ->where(['PRT_COD' => $oc_zona])
+    ->one();
 ?>
 <div class="nom-puerta-index">
 
     <div class="alert alert-info" align="center">
         <h3 align="center"><?= $this->title ?></h3>
+        <h3 align="center"><?= $puerta->PRI_DES ?></h3>
+        <h4 align="center" style="color:palevioletred">Empresa: <?= $puerta->PRI_EMPRESA_NOM ?></h4>
+        <h4 align="center" style="color:palevioletred">Área: <?= $puerta->PRI_AREA1 ?></h4>
+        <h4 align="center" style="color:palevioletred">IP Address: <?= $puerta->PRI_IP ?></h4>
+        <h4 align="center" style="color:palevioletred">Modelo: <?= $puerta->PRI_VIRDI ?></h4>
+        <h4 align="center" style="color:palevioletred">Conexión: <?= $puerta->PRI_STA ?></h4>
     </div>
 
     <?= GridView::widget([
@@ -63,56 +74,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'filterInputOptions'=>['placeholder'=>'Seleccionar'],
                 'format' => 'html',
-            ],
-            [
-                'label' => 'Código',
-                'attribute' => 'PUER_ID',
-                'width' => '100px',
-            ],
-            [
-                'label' =>'Puerta',
-                'attribute' =>'PUER_ID',
-                'value' => function ($model) {
-                    $puerta = \app\models\onlycontrol\Puerta::findOne($model->PUER_ID);
-                    return $puerta->PRI_DES;
-                },
-                'filterType'=>GridView::FILTER_SELECT2,
-                'filter'=>ArrayHelper::map(\app\models\onlycontrol\Puerta::find()
-                    ->orderBy('PRI_DES ASC')
-                    ->all(),
-                    'PRT_COD',
-                    'PRI_DES'),
-                'filterWidgetOptions'=>[
-                    'pluginOptions'=>['allowClear'=>true],
-                ],
-                'filterInputOptions'=>['placeholder'=>'Seleccionar'],
-                'format' => 'html',
-                'width' => '150px',
-            ],
-            [
-                'label' =>'Conexión',
-                'value' => function ($model) {
-                    $puerta = \app\models\onlycontrol\Puerta::findOne($model->PUER_ID);
-                    if ($puerta->PRI_STA == 'OK') {
-                        return '<p style="color:darkgreen">'. $puerta->PRI_STA .' '.Icon::show('plug').'</p>';
-                    } elseif ($puerta->PRI_STA == 'UNPLUG') {
-                        return '<p style="color:darkred">'. $puerta->PRI_STA .' '.Icon::show('plug').'</p>';
-                    } else {
-                        return '<p style="color:#f4c01a">'. $puerta->PRI_STA .' '.Icon::show('question').'</p>';
-                    }
-                },
-                'format' => 'html',
-            ],
-            [
-                'label' =>'Detalles',
-                'value' => function ($model) {
-                    $puerta = \app\models\onlycontrol\Puerta::findOne($model->PUER_ID);
-                    return
-                        '<b>Modelo: </b>'.$puerta->PRI_VIRDI.'<br>'.
-                        '<b>Uso: </b>'.$puerta->PRI_TI.'<br>'.
-                        '<b>IP Address: </b>'.$puerta->PRI_IP;
-                },
-                'format' => 'html'
             ],
             [
                 'label' => 'Fecha / Hora',
@@ -174,7 +135,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'delete' => function ($url, $model) {
                         if ($model->TURN_ESTADO_UP == 0 ) {
                             return Html::a('<span class="btn btn-danger center-block">'.Icon::show('trash').' Revocar'.'</span>',
-                                Url::to(['onlycontrol/nompuerta/revocar', 'oc_user_id'=>base64_encode($model->NOM_ID), 'oc_puerta_id'=>base64_encode($model->PUER_ID)]),
+                                Url::to(['onlycontrol/nompuerta/revoca', 'oc_user_id'=>base64_encode($model->NOM_ID), 'oc_puerta_id'=>base64_encode($model->PUER_ID)]),
                                 ['title' => Yii::t('yii', 'Revocar Acceso'),'target' => '_blank']);
                         }
                     },

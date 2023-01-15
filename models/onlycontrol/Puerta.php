@@ -201,4 +201,11 @@ class Puerta extends \yii\db\ActiveRecord
     {
         return $this->hasMany(TblDispositivosMarcacion::className(), ['DM_PUERTA' => 'PRT_COD']);
     }
+
+    public function getDatosCompletos()
+    {
+        //$puerta = \app\models\onlycontrol\Puerta::findOne($this->PUER_ID);
+        //return $this->PRT_COD.": ".$this->PRI_DES .$puerta->PRI_EMPRESA_NOM .' ('. $puerta->PRI_AREA1 .') '. $this->PRI_STA;
+        return $this->PRT_COD.': '.$this->PRI_DES.' ('.$this->PRI_STA.') >> '.$this->PRI_IP;
+    }
 }

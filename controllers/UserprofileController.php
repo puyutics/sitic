@@ -25,10 +25,12 @@ class UserprofileController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['admin','create','delete','index','update', 'view'],
+                'only' => ['create','delete','index','update','view',
+                    'admin'],
                 'rules' => [
                     [
-                        'actions' => ['admin','create','index','update'],
+                        'actions' => ['create','index','update',
+                            'admin'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],

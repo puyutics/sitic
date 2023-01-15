@@ -6,7 +6,6 @@
  * Time: 08:51
  */
 
-use kartik\select2\Select2;
 use kartik\form\ActiveForm;
 use yii\helpers\Html;
 use yii\helpers\Url;

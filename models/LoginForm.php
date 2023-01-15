@@ -34,6 +34,9 @@ class LoginForm extends Model
                 ['rememberMe', 'boolean'],
                 // password is validated by validatePassword()
                 ['password', 'validatePassword'],
+                [['username'], 'match',
+                    'pattern' => '/^[a-z0-9@.]+$/u',
+                    'message'=>'{attribute} no debe contener espacios en blancos, caracteres especiales, ni mayúsculas'],
             ];
     }
 
@@ -63,10 +66,10 @@ class LoginForm extends Model
             $user = $this->getUser();
 
             if (!$user) {
-                $this->addError($attribute, 'Usuario incorrecto.');
+                $this->addError($attribute, 'Usuario no existe.');
             }
             elseif (!$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Contraseña incorrecta.');
+                $this->addError($attribute, 'Contraseña incorrecta o caducada. Cambie su contraseña');
             }
 
         }
@@ -78,7 +81,6 @@ class LoginForm extends Model
      */
     public function login()
     {
-
         if ($this->validate()) {
             //Agregar variable de sesión authtype
             Yii::$app->session->set('authtype',$this->authtype);

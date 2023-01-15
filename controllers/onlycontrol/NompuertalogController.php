@@ -3,17 +3,17 @@
 namespace app\controllers\onlycontrol;
 
 use Yii;
-use app\models\onlycontrol\NomPuertaDel;
-use app\models\onlycontrol\NomPuertaDelSearch;
+use app\models\onlycontrol\NomPuertalog;
+use app\models\onlycontrol\NomPuertalogSearch;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * NompuertadelController implements the CRUD actions for NomPuertaDel model.
+ * NompuertalogController implements the CRUD actions for NomPuertalog model.
  */
-class NompuertadelController extends Controller
+class NompuertalogController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -23,10 +23,11 @@ class NompuertadelController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','delete','index','update','view'],
+                'only' => ['create','delete','index','update','view',
+                    'indexuser'],
                 'rules' => [
                     [
-                        'actions' => ['index','view'],
+                        'actions' => ['index','view','indexuser'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
@@ -50,14 +51,14 @@ class NompuertadelController extends Controller
     }
 
     /**
-     * Lists all NomPuertaDel models.
+     * Lists all NomPuertalog models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new NomPuertaDelSearch();
+        $searchModel = new NomPuertalogSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $dataProvider->sort->defaultOrder = ['TURN_FECHA_DEL' => SORT_DESC,];
+        $dataProvider->sort->defaultOrder = ['TURN_DELNOW' => SORT_DESC,'TURN_NOW' => SORT_DESC,];
         $dataProvider->pagination = ['pageSize' => 50];
 
         return $this->render('index', [
@@ -66,31 +67,52 @@ class NompuertadelController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single NomPuertaDel model.
-     * @param string $NOM_ID
-     * @param string $PUER_ID
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($NOM_ID, $PUER_ID)
+    public function actionIndexuser($oc_user_id, $oc_zona = NULL)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($NOM_ID, $PUER_ID),
+        $oc_user_id = base64_decode($oc_user_id);
+        $oc_zona = base64_decode($oc_zona);
+        $searchModel = new NomPuertalogSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->Where(['NOM_ID' => $oc_user_id]);
+        if ($oc_zona != NULL) {
+            $puerta = \app\models\onlycontrol\Puerta::find()
+                ->where(['PRI_IP' => $oc_zona])
+                ->one();
+            $dataProvider->query->andWhere(['PUER_ID' => $puerta->PRT_COD]);
+        }
+        $dataProvider->sort->defaultOrder = ['TURN_NOW' => SORT_DESC,];
+        $dataProvider->pagination = ['pageSize' => 50];
+
+        return $this->render('index_user', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Creates a new NomPuertaDel model.
+     * Displays a single NomPuertalog model.
+     * @param string $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionView($id)
+    {
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+
+    /**
+     * Creates a new NomPuertalog model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new NomPuertaDel();
+        $model = new NomPuertalog();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'NOM_ID' => $model->NOM_ID, 'PUER_ID' => $model->PUER_ID]);
+            return $this->redirect(['view', 'id' => $model->TURN_NOW]);
         }
 
         return $this->render('create', [
@@ -99,19 +121,18 @@ class NompuertadelController extends Controller
     }
 
     /**
-     * Updates an existing NomPuertaDel model.
+     * Updates an existing NomPuertalog model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $NOM_ID
-     * @param string $PUER_ID
+     * @param string $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($NOM_ID, $PUER_ID)
+    public function actionUpdate($id)
     {
-        $model = $this->findModel($NOM_ID, $PUER_ID);
+        $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'NOM_ID' => $model->NOM_ID, 'PUER_ID' => $model->PUER_ID]);
+            return $this->redirect(['view', 'id' => $model->TURN_NOW]);
         }
 
         return $this->render('update', [
@@ -120,31 +141,29 @@ class NompuertadelController extends Controller
     }
 
     /**
-     * Deletes an existing NomPuertaDel model.
+     * Deletes an existing NomPuertalog model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $NOM_ID
-     * @param string $PUER_ID
+     * @param string $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($NOM_ID, $PUER_ID)
+    public function actionDelete($id)
     {
-        $this->findModel($NOM_ID, $PUER_ID)->delete();
+        $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
 
     /**
-     * Finds the NomPuertaDel model based on its primary key value.
+     * Finds the NomPuertalog model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $NOM_ID
-     * @param string $PUER_ID
-     * @return NomPuertaDel the loaded model
+     * @param string $id
+     * @return NomPuertalog the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($NOM_ID, $PUER_ID)
+    protected function findModel($id)
     {
-        if (($model = NomPuertaDel::findOne(['NOM_ID' => $NOM_ID, 'PUER_ID' => $PUER_ID])) !== null) {
+        if (($model = NomPuertalog::findOne($id)) !== null) {
             return $model;
         }
 

@@ -50,6 +50,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'vAlign'=>'middle',
             ],
             [
+                'label' => 'Código',
+                'attribute' => 'PRT_COD',
+                'width' => '100px',
+            ],
+            [
                 'label' => 'Descripción',
                 'attribute' => 'PRI_DES',
             ],
@@ -109,6 +114,36 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'IP Address',
                 'attribute' => 'PRI_IP',
             ],
+
+
+            ['class' => 'kartik\grid\ActionColumn',
+                'template'=>'{users}{access}',
+                'buttons'=>[
+                    'users' => function ($url, $model) {
+                        return Html::a('<span class="btn btn-primary center-block">'.Icon::show('users') . 'Usuarios'.'</span>',
+                            Url::to(['onlycontrol/nompuerta/indexpuerta', 'oc_zona'=>base64_encode($model->PRT_COD)]),
+                            ['title' => Yii::t('yii', 'Accesos'),'target' => '_blank']);
+                    },
+                    'access' => function ($url, $model) {
+                        return Html::a('<span class="btn btn-primary center-block">'.Icon::show('fingerprint') . 'Accesos'.'</span>',
+                            Url::to(['onlycontrol/asistnow/indexpuerta', 'oc_zona'=>base64_encode($model->PRI_IP)]),
+                            ['title' => Yii::t('yii', 'Accesos'),'target' => '_blank']);
+                    },
+                ]
+            ],
+
+            ['class' => 'kartik\grid\ActionColumn',
+                'template'=>'{logs}',
+                'buttons'=>[
+                    'logs' => function ($url, $model) {
+                        return Html::a('<span class="btn btn-success center-block">'.Icon::show('clipboard-list') . 'Logs'.'</span>',
+                            Url::to(['onlycontrol/puertasta/indexpuerta', 'oc_zona'=>base64_encode($model->PRT_COD)]),
+                            ['title' => Yii::t('yii', 'Accesos'),'target' => '_blank']);
+                    },
+                ]
+            ],
+
+
             //'PRI_LOC',
             //'PRI_P',
             //'PRI_AREA',
@@ -154,17 +189,6 @@ $this->params['breadcrumbs'][] = $this->title;
             //'PRI_KEYEQUIPO',
             //'PRI_DPTO',
             //'PRI_ENROLA',
-
-            ['class' => 'kartik\grid\ActionColumn',
-                'template'=>'{access}',
-                'buttons'=>[
-                    'access' => function ($url, $model) {
-                        return Html::a('<span class="btn btn-primary center-block">'.Icon::show('fingerprint') . 'Accesos'.'</span>',
-                            Url::to(['onlycontrol/asistnow/indexpuerta', 'oc_zona'=>base64_encode($model->PRI_IP)]),
-                            ['title' => Yii::t('yii', 'Accesos'),'target' => '_blank']);
-                    },
-                ]
-            ],
 
             //['class' => 'yii\grid\ActionColumn'],
         ],

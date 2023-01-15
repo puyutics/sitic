@@ -6,13 +6,13 @@ use kartik\icons\Icon;
 Icon::map($this);
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\onlycontrol\NomPuertaDelSearch */
+/* @var $searchModel app\models\onlycontrol\NomPuertalogSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Acceso a Usuarios - Revocados (Global)';
+$this->title = 'Acceso a Usuarios - Auditoría (Global)';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="nom-puerta-del-index">
+<div class="nom-puertalog-index">
 
     <div class="alert alert-info" align="center">
         <h3 align="center"><?= $this->title ?></h3>
@@ -52,7 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'PUER_ID',
             [
                 'label' =>'Puerta',
-                'attribute' => 'PUER_ID',
+                'attribute' =>'PUER_ID',
                 'value' => function ($model) {
                     $puerta = \app\models\onlycontrol\Puerta::find()
                         ->where(['PRT_COD' => $model->PUER_ID])
@@ -71,58 +71,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterInputOptions'=>['placeholder'=>'Seleccionar'],
                 'format' => 'html'
             ],
-            [
-                'label' =>'Conexión',
-                'value' => function ($model) {
-                    $puerta = \app\models\onlycontrol\Puerta::findOne($model->PUER_ID);
-                    if ($puerta->PRI_STA == 'OK') {
-                        return '<p style="color:darkgreen">'. $puerta->PRI_STA .' '.Icon::show('plug').'</p>';
-                    } elseif ($puerta->PRI_STA == 'UNPLUG') {
-                        return '<p style="color:darkred">'. $puerta->PRI_STA .' '.Icon::show('plug').'</p>';
-                    } else {
-                        return '<p style="color:#f4c01a">'. $puerta->PRI_STA .' '.Icon::show('question').'</p>';
-                    }
-                },
-                'format' => 'html',
-            ],
-            [
-                'label' =>'Modelo',
-                'value' => function ($model) {
-                    $puerta = \app\models\onlycontrol\Puerta::findOne($model->PUER_ID);
-                    return $puerta->PRI_VIRDI;
-                }
-            ],
-            [
-                'label' =>'Uso',
-                'value' => function ($model) {
-                    $puerta = \app\models\onlycontrol\Puerta::findOne($model->PUER_ID);
-                    return $puerta->PRI_TI;
-                }
-            ],
-            [
-                'label' =>'IP Address',
-                'value' => function ($model) {
-                    $puerta = \app\models\onlycontrol\Puerta::findOne($model->PUER_ID);
-                    return $puerta->PRI_IP;
-                }
-            ],
-            'TURN_FECHA_DEL',
-            [
-                'label' => 'Estado',
-                'attribute' => 'TURN_ESTADO_DEL',
-                'value' => function ($model) {
-                    if ($model->TURN_ESTADO_DEL == 1) {
-                        return '<p style="color:darkgreen">Sincronizado '.Icon::show('sync').'</p>';
-                    } elseif ($model->TURN_ESTADO_DEL == 0) {
-                        return '<p style="color:darkred">Pendiente '.Icon::show('exclamation').'</p>';
-                    } else {
-                        return '<p style="color:#f4c01a">'. $model->TURN_ESTADO_DEL .' '.Icon::show('question').'</p>';
-                    }
-                },
-                'filter'=>['0'=>'Pendiente','1'=>'Sincronizado'],
-                'format' => 'html'
-            ],
-            //'FLAG_T',
+            //'TURN_TIPO',
+            //'TURN_STA',
+            'TURN_NOW',
+            'TURN_DELNOW',
+            //'TURN_ID',
+            //'TURN_FECI',
+            //'TURN_FECF',
 
             //['class' => 'yii\grid\ActionColumn'],
         ],

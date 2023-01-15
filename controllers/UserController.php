@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\User;
 use app\models\UserSearch;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -24,10 +25,11 @@ class UserController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','delete','index','update', 'view'],
+                'only' => ['create','delete','index','update', 'view',
+                    'estatus'],
                 'rules' => [
                     [
-                        'actions' => ['index'],
+                        'actions' => ['index','estatus'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
@@ -140,5 +142,20 @@ class UserController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+    public function actionEstatus(){
+        if(Yii::$app->request->post('hasEditable')){
+            $id=Yii::$app->request->post('editableKey');
+            $model = \app\models\User::findOne($id);
+            $posted = current($_POST['User']);
+            $post = ['User' => $posted];
+            if ($model->load($post) && $model->save()){
+                $value=$model->status;
+                $out=Json::encode(['output'=>$value,'message'=>'']);}
+            else $out=Json::encode(['output'=>'','message'=>'Error en el Ingreso']);
+            echo $out;
+            return;
+        }
     }
 }

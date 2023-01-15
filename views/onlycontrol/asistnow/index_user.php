@@ -9,7 +9,7 @@ Icon::map($this);
 /* @var $searchModel app\models\onlycontrol\AsistnowSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Registros de Acceso';
+$this->title = 'Registros de Acceso (Usuario)';
 $this->params['breadcrumbs'][] = $this->title;
 
 if (isset($_GET['oc_user_id'])) {
@@ -99,24 +99,22 @@ if (isset($oc_user)) {
                 'format' => 'html',
             ],
             [
-                'label' =>'Modelo',
+                'label' =>'Detalles',
                 'value' => function ($model) {
                     $puerta = \app\models\onlycontrol\Puerta::find()
                         ->where(['PRI_IP' => $model->ASIS_ZONA])
                         ->one();
-                    return $puerta->PRI_VIRDI;
-                }
-            ],
-            [
-                'label' =>'IP Address',
-                'attribute' =>'ASIS_ZONA',
+                    return
+                        '<b>Modelo: </b>'.$puerta->PRI_VIRDI.'<br>'.
+                        '<b>Uso: </b>'.$puerta->PRI_TI.'<br>'.
+                        '<b>IP Address: </b>'.$puerta->PRI_IP;
+                },
+                'format' => 'html'
             ],
             [
                 'label' =>'Fecha / Hora',
                 'attribute' =>'ASIS_ING',
             ],
-            //'ASIS_FECHA',
-            //'ASIS_HORA',
             [
                 'label' =>'Tipo',
                 'attribute' =>'ASIS_TIPO',
@@ -125,6 +123,8 @@ if (isset($oc_user)) {
                 'label' =>'Registro',
                 'attribute' =>'ASIS_RES',
             ],
+            //'ASIS_FECHA',
+            //'ASIS_HORA',
             //'ASIS_F',
             //'ASIS_FN',
             //'ASIS_HN',

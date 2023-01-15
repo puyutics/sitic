@@ -3,7 +3,10 @@
 namespace app\controllers\onlycontrol;
 
 use Yii;
+use app\models\Logs;
+use app\models\onlycontrol\PuertaSta;
 use app\models\onlycontrol\NomPuerta;
+use app\models\onlycontrol\NomPuertaDel;
 use app\models\onlycontrol\NomPuertaSearch;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -23,10 +26,12 @@ class NompuertaController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','delete','index','update','view'],
+                'only' => ['create','delete','index','update','view',
+                    'indexuser','indexpuerta','revoca'],
                 'rules' => [
                     [
-                        'actions' => ['index','view'],
+                        'actions' => ['index','view','create','indexuser',
+                            'indexpuerta','revoca'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
@@ -57,8 +62,40 @@ class NompuertaController extends Controller
     {
         $searchModel = new NomPuertaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->sort->defaultOrder = ['TURN_NOW' => SORT_DESC,];
+        $dataProvider->pagination = ['pageSize' => 50];
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionIndexuser($oc_user_id)
+    {
+        $oc_user_id = base64_decode($oc_user_id);
+        $searchModel = new NomPuertaSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->Where(['NOM_ID' => $oc_user_id]);
+        $dataProvider->sort->defaultOrder = ['TURN_NOW' => SORT_DESC,];
+        $dataProvider->pagination = ['pageSize' => 50];
+
+        return $this->render('index_user', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionIndexpuerta($oc_zona)
+    {
+        $oc_zona = base64_decode($oc_zona);
+        $searchModel = new NomPuertaSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->Where(['PUER_ID' => $oc_zona]);
+        $dataProvider->sort->defaultOrder = ['TURN_NOW' => SORT_DESC,];
+        $dataProvider->pagination = ['pageSize' => 50];
+
+        return $this->render('index_puerta', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
@@ -83,15 +120,151 @@ class NompuertaController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($oc_user_id)
     {
+        $oc_user_id = base64_decode($oc_user_id);
+
         $model = new NomPuerta();
+        $model->NOM_ID = $oc_user_id;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'NOM_ID' => $model->NOM_ID, 'PUER_ID' => $model->PUER_ID]);
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            //Check registro existente
+            $nomPuerta = \app\models\onlycontrol\NomPuerta::find()
+                ->where(['NOM_ID' => $model->NOM_ID])
+                ->andWhere(['PUER_ID' => $model->PUER_ID])
+                ->one();
+
+            if (!isset($nomPuerta)) {
+                $oc_user = \app\models\onlycontrol\Nomina::findOne($oc_user_id);
+                $nomina_fing = $oc_user->NOMINA_FING;
+                $nomina_fsal = $oc_user->NOMINA_FSAL;
+                $model->TURN_ID = 0;
+                if ($nomina_fing != NULL) {
+                    $model->TURN_FECI = date('Ymd 00:00:00.000', strtotime($nomina_fing));
+                } else {
+                    $model->TURN_FECI = date('Ymd 00:00:00.000');
+                }
+                if ($nomina_fsal != NULL) {
+                    $model->TURN_FECF = date('Ymd 00:00:00.000', strtotime($nomina_fsal));
+                } else {
+                    $fecha_actual = date('Ymd 00:00:00.000');
+                    $model->TURN_FECF = date('Ymd 00:00:00.000', strtotime($fecha_actual."+ 1 year"));
+                }
+                $model->TURN_TIPO = 1;
+                $model->TURN_STA = 0; //0 Control Activo 1 Sin Control
+                $model->TURN_NOW = date('Ymd H:i:s.000');
+                $model->TURN_MARCA = 8; //4 PyC - 8 RF
+                $model->TURN_TCOD = 'RF'; //4 PyC - 8 RF
+                $model->TURN_SEL = '0';
+                $model->TURN_ESTADO_UP = 0;
+                $model->TURN_FECHA_UP = NULL;
+                $model->ES_SINCRONIZADO = 0;
+                $model->ES_UPDATE = 1;
+                $model->TURN_CONFSIMILAR = 0;
+                try {
+                    if ($model->save()) {
+                        //Agregar log al servidor OnlyControl
+                        $modelPuertaSta = new PuertaSta();
+                        $fecha_inicio = date('d/m/Y',strtotime($model->TURN_FECI));
+                        $fecha_fin = date('d/m/Y',strtotime($model->TURN_FECF));
+                        $modelPuertaSta->P_ID = $_SERVER['SERVER_ADDR'];
+                        $modelPuertaSta->P_Fecha = $model->TURN_NOW ;
+                        $modelPuertaSta->P_Status = 'Otorga Acceso Zona: '.$model->PUER_ID.' Usuario: '.$model->NOM_ID.' -> Tipo Permiso: LIBRE / Rango de Fechas: '.$fecha_inicio.' - '.$fecha_fin.' / Modo Marcacion: '.$model->TURN_TCOD.' / Horario: LIBRE 00:00 - 23:59';
+                        $modelPuertaSta->P_User = '999998';
+                        $modelPuertaSta->P_Maq = 'sitic';
+                        $modelPuertaSta->save();
+
+                        //Eliminar puerta eliminada
+                        $nomPuertaDel = \app\models\onlycontrol\NomPuertaDel::find()
+                            ->where(['NOM_ID' => $model->NOM_ID])
+                            ->andWhere(['PUER_ID' => $model->PUER_ID])
+                            ->one();
+                        if (isset($nomPuertaDel)) {
+                            $nomPuertaDel->delete();
+                        }
+
+                        //Crear Registro de Log en la base de datos
+                        $external_id = $model->NOM_ID.'@'.$model->PUER_ID;
+                        $description = $modelPuertaSta->P_Status;
+                        $username = Yii::$app->user->identity->username;
+                        $this->saveLog('onlycontrolNompuertaCreate', $username, $description, $external_id,'onlycontrol/nompuerta');
+
+                        return $this->redirect(['onlycontrol/nompuerta/indexuser',
+                            'oc_user_id' => base64_encode($model->NOM_ID),
+                        ]);
+
+                    }
+                } catch (Exception $e) {
+                    Yii::$app->session->setFlash('error',
+                        'Excepción capturada: ',  $e->getMessage());
+                }
+            } else {
+                Yii::$app->session->setFlash('error',
+                    'Ya existe un permiso registrado');
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
         }
-
         return $this->render('create', [
+            'model' => $model,
+        ]);
+    }
+
+
+    public function actionRevoca($oc_user_id, $oc_puerta_id)
+    {
+        $oc_user_id = base64_decode($oc_user_id);
+        $oc_puerta_id = base64_decode($oc_puerta_id);
+        $model = $this->findModel($oc_user_id, $oc_puerta_id);
+
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->delete()) {
+                //Registra puerta eliminada
+                $nomPuertaDel = NomPuertaDel::find()
+                    ->where(['NOM_ID' => $oc_user_id])
+                    ->andWhere((['PUER_ID' => $oc_puerta_id]))
+                    ->one();
+                if (!isset($nomPuertaDel)) {
+                    $modelNomPuertaDel = new NomPuertaDel();
+                    $modelNomPuertaDel->NOM_ID = $oc_user_id;
+                    $modelNomPuertaDel->PUER_ID = $oc_puerta_id;
+                    $modelNomPuertaDel->FLAG_T = 0;
+                    $modelNomPuertaDel->TURN_ESTADO_DEL = 1;
+                    $modelNomPuertaDel->TURN_FECHA_DEL = date('Ymd H:i:s.000');
+                    $modelNomPuertaDel->save();
+                } else {
+                    $modelNomPuertaDel = $nomPuertaDel;
+                    $modelNomPuertaDel->TURN_ESTADO_DEL = 1;
+                    $modelNomPuertaDel->TURN_FECHA_DEL = date('Ymd H:i:s.000');
+                    $modelNomPuertaDel->save();
+                }
+
+                //Agregar log al servidor OnlyControl
+                $modelPuertaSta = new PuertaSta();
+                $modelPuertaSta->P_ID = $_SERVER['SERVER_ADDR'];
+                $modelPuertaSta->P_Fecha = $modelNomPuertaDel->TURN_FECHA_DEL;
+                $modelPuertaSta->P_Status = 'Revoca Acceso Zona: '.$model->PUER_ID.' Usuario: '.$model->NOM_ID;
+                $modelPuertaSta->P_User = '999998';
+                $modelPuertaSta->P_Maq = 'sitic';
+                $modelPuertaSta->save();
+
+                //Crear Registro de Log en la base de datos
+                $external_id = $model->NOM_ID.'@'.$model->PUER_ID;
+                $description = $modelPuertaSta->P_Status;
+                $username = Yii::$app->user->identity->username;
+                $this->saveLog('onlycontrolNompuertaRevoca', $username, $description, $external_id,'onlycontrol/nompuerta');
+
+                return $this->redirect(['onlycontrol/nompuerta/indexuser',
+                    'oc_user_id' => base64_encode($model->NOM_ID),
+                ]);
+
+            }
+
+            Yii::$app->session->setFlash('error',
+                'Registro Eliminado');
+        }
+        return $this->render('revoca', [
             'model' => $model,
         ]);
     }
@@ -147,5 +320,21 @@ class NompuertaController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+
+    public function saveLog($type, $username, $description, $external_id, $external_type)
+    {
+        //Registro (Log) Evento
+        $modelLogs              = new Logs();
+        $modelLogs->type        = $type;
+        $modelLogs->username    = $username;
+        $modelLogs->datetime    = date('Y-m-d H:i:s');
+        $modelLogs->description = $description;
+        ;
+        $modelLogs->ipaddress       = \app\models\User::obtenerip();
+        $modelLogs->external_id     = $external_id;
+        $modelLogs->external_type   = $external_type;
+        $modelLogs->save(false);
     }
 }

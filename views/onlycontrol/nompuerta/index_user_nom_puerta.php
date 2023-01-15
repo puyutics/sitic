@@ -2,30 +2,30 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
 use kartik\icons\Icon;
 Icon::map($this);
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\onlycontrol\NomPuertaSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $oc_user_id */
 
-$this->title = 'Acceso a Usuario - Activos (Global)';
-$this->params['breadcrumbs'][] = $this->title;
+$searchModelNomPuerta = new \app\models\onlycontrol\NomPuertaSearch();
+$dataProviderNomPuerta = $searchModelNomPuerta->search(Yii::$app->request->queryParams);
+$dataProviderNomPuerta->query->Where(['NOM_ID' => $oc_user_id]);
+$dataProviderNomPuerta->sort->defaultOrder = ['TURN_NOW' => SORT_DESC,];
+$countDataProvider = $dataProviderNomPuerta->getTotalCount();
+$dataProviderNomPuerta->pagination = ['pageSize' => $countDataProvider];
 ?>
 <div class="nom-puerta-index">
 
-    <div class="alert alert-info" align="center">
-        <h3 align="center"><?= $this->title ?></h3>
-    </div>
-
     <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        'dataProvider' => $dataProviderNomPuerta,
+        //'filterModel' => $searchModelNomPuerta,
+        'pjax'=>false,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
+            //'NOM_ID',
             [
                 'label' => 'Ubicación',
                 'value' => function ($model) {
@@ -40,31 +40,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'vAlign'=>'middle',
             ],
             [
-                'label' =>'Usuario',
-                'attribute' =>'NOM_ID',
-                'value' => function ($model) {
-                    $oc_user = \app\models\onlycontrol\Nomina::find()
-                        ->where(['NOMINA_ID' => $model->NOM_ID])
-                        ->one();
-                    if (isset($oc_user)) {
-                        return $oc_user->NOMINA_ID .': '. $oc_user->NOMINA_APE .' '. $oc_user->NOMINA_NOM;
-                    } else {
-                        return $model->NOM_ID;
-                    }
-                },
-                'filterType'=>GridView::FILTER_SELECT2,
-                'filter'=>ArrayHelper::map(\app\models\onlycontrol\Nomina::find()
-                    ->orderBy('NOMINA_APE ASC, NOMINA_NOM ASC')
-                    ->all(),
-                    'NOMINA_ID',
-                    'datosCompletos'),
-                'filterWidgetOptions'=>[
-                    'pluginOptions'=>['allowClear'=>true],
-                ],
-                'filterInputOptions'=>['placeholder'=>'Seleccionar'],
-                'format' => 'html',
-            ],
-            [
                 'label' => 'Código',
                 'attribute' => 'PUER_ID',
                 'width' => '100px',
@@ -76,16 +51,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     $puerta = \app\models\onlycontrol\Puerta::findOne($model->PUER_ID);
                     return $puerta->PRI_DES;
                 },
-                'filterType'=>GridView::FILTER_SELECT2,
-                'filter'=>ArrayHelper::map(\app\models\onlycontrol\Puerta::find()
-                    ->orderBy('PRI_DES ASC')
-                    ->all(),
-                    'PRT_COD',
-                    'PRI_DES'),
-                'filterWidgetOptions'=>[
-                    'pluginOptions'=>['allowClear'=>true],
-                ],
-                'filterInputOptions'=>['placeholder'=>'Seleccionar'],
                 'format' => 'html',
                 'width' => '150px',
             ],
@@ -122,17 +87,6 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label' => 'Tipo',
                 'attribute' => 'TURN_TCOD',
-                'filterType'=>GridView::FILTER_SELECT2,
-                'filter'=>ArrayHelper::map(\app\models\onlycontrol\NomPuerta::find()
-                    ->orderBy('TURN_TCOD ASC')
-                    ->all(),
-                    'TURN_TCOD',
-                    'TURN_TCOD'),
-                'filterWidgetOptions'=>[
-                    'pluginOptions'=>['allowClear'=>true],
-                ],
-                'filterInputOptions'=>['placeholder'=>'Seleccionar'],
-                'width' => '10px',
             ],
             [
                 'label' => 'Estado',
@@ -146,7 +100,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         return '<p style="color:#f4c01a">'. $model->TURN_ESTADO_UP .' '.Icon::show('question').'</p>';
                     }
                 },
-                'filter'=>['0'=>'Online','1'=>'Online / Local'],
                 'width' => '80px',
                 'format' => 'html'
             ],
@@ -174,7 +127,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'delete' => function ($url, $model) {
                         if ($model->TURN_ESTADO_UP == 0 ) {
                             return Html::a('<span class="btn btn-danger center-block">'.Icon::show('trash').' Revocar'.'</span>',
-                                Url::to(['onlycontrol/nompuerta/revocar', 'oc_user_id'=>base64_encode($model->NOM_ID), 'oc_puerta_id'=>base64_encode($model->PUER_ID)]),
+                                Url::to(['onlycontrol/nompuerta/revoca', 'oc_user_id'=>base64_encode($model->NOM_ID), 'oc_puerta_id'=>base64_encode($model->PUER_ID)]),
                                 ['title' => Yii::t('yii', 'Revocar Acceso'),'target' => '_blank']);
                         }
                     },
