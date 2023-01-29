@@ -31,7 +31,8 @@ $this->title = 'Iniciar Sesión';
                         'id' => 'login-form',
                         'layout' => 'horizontal',
                         'fieldConfig' => [
-                            'template' => "{label}\n<div class=\"col-lg-7\">{input}</div>\n<div class=\"col-lg-12\">{error}</div>",
+                            'options' => ['autocomplete' => 'off'],
+                            'template' => "{label}\n<div class=\"col-lg-8\">{input}</div>\n<div class=\"col-lg-12\">{error}</div>",
                             'labelOptions' => ['class' => 'col-lg-4 control-label'],
                         ],
                     ]); ?>

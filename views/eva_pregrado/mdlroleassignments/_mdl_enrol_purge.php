@@ -91,6 +91,8 @@ $siad_estudiantes_command = $siad_connection->createCommand("
     WHERE
             naa.idPer = ".Yii::$app->params['siad_periodo']."
             AND naa.dpa_id <> 0
+            AND naa.anulada = 0
+            AND naa.retirado = 0
             AND ipe.CIInfPer = naa.CIInfPer
             AND ipe.mailInst LIKE '%@uea.edu.ec'
             AND m.idMatricula = naa.idMatricula
