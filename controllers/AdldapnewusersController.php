@@ -31,6 +31,11 @@ class AdldapnewusersController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['rolTecnicos'],
+                    ],
+                    [
                         'actions' => ['view'],
                         'allow' => true,
                         'roles' => ['@'],

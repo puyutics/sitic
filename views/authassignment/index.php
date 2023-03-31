@@ -4,6 +4,8 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
+use kartik\icons\Icon;
+Icon::map($this);
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\AuthAssignmentSearch */
@@ -58,7 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'buttons'=>[
                     'update' => function ($url, $model) {
                         if ($model->user_id != 1){
-                            return Html::a('<span class="btn btn-primary center-block"><i class="fa fa-fw fa-edit"></i>Editar</span>',
+                            return Html::a('<span class="btn btn-primary center-block">' . Icon::show('edit') . '</span>',
                                 Url::to(['update',
                                     'item_name' => $model->item_name,
                                     'user_id' => $model->user_id
@@ -72,12 +74,15 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn',
                 'template' => '{delete}',
                 'buttons'=>[
-                    'delete' => function ($url) {
-                        return Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', $url, [
-                            'title' => Yii::t('app', 'Delete'),
-                            'data-confirm' => Yii::t('yii', '¿Está seguro de eliminar este elemento?'),
-                            'data-method' => 'post', 'data-pjax' => '0',
-                        ]);
+                    'delete' => function ($url, $model) {
+                        if ($model->user_id != 1){
+                            return Html::a('<span class="btn btn-danger center-block">' . Icon::show('trash') . '</span>',
+                                $url, [
+                                'title' => Yii::t('app', 'Delete'),
+                                'data-confirm' => Yii::t('yii', '¿Está seguro de eliminar este elemento?'),
+                                'data-method' => 'post', 'data-pjax' => '0',
+                            ]);
+                        }
                     }
                 ],
             ],

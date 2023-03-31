@@ -118,7 +118,8 @@ if (isset($_GET['search'])) { ?>
                         <p></p>
                         <p><b>Cuenta creada: </b>
                             <?php
-                            echo convert_ldap_time($whenCreated, 'Y-m-d H:i:s');
+                            $whenCreated = convert_ldap_time($whenCreated, 'Y-m-d H:i:s');
+                            echo $whenCreated;
                             ?>
                         </p>
                     </div>

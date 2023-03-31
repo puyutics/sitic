@@ -248,16 +248,18 @@ $dataProviderMdlRAposgrado->query->Where(['userid' => $mdl_user_posgrado_id]);
                                     ->andWhere(['idParalelo' => $codigo[4]])
                                     ->one();
 
-                                $notasAlumno = \app\models\siad_pregrado\NotasAlumno::find()
-                                    ->select('dpa_id')
-                                    ->where(['CIInfPer' => $estudiante->CIInfPer])
-                                    ->andWhere(['dpa_id' => $docenteAsignatura->dpa_id])
-                                    ->one();
+                                if (isset($estudiante)) {
+                                    $notasAlumno = \app\models\siad_pregrado\NotasAlumno::find()
+                                        ->select('dpa_id')
+                                        ->where(['CIInfPer' => $estudiante->CIInfPer])
+                                        ->andWhere(['dpa_id' => $docenteAsignatura->dpa_id])
+                                        ->one();
 
-                                if (isset($notasAlumno)) {
-                                    return "Correcto. ($notasAlumno->dpa_id)";
-                                } else {
-                                    return 'del, student, '.$estudiante->mailInst.', '.$docenteAsignatura->dpa_id;
+                                    if (isset($notasAlumno)) {
+                                        return "Correcto. ($notasAlumno->dpa_id)";
+                                    } else {
+                                        return 'del, student, '.$estudiante->mailInst.', '.$docenteAsignatura->dpa_id;
+                                    }
                                 }
                             } elseif ($mdl_role->shortname == 'teacher'
                                 or $mdl_role->shortname == 'editingteacher') {

@@ -698,6 +698,27 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
                     },
                     'format' => 'html',
                 ],
+                [
+                    'label' => 'Sem/Nivel',
+                    'value' => function ($model) {
+                        $idsemestre = $model->idsemestre;
+                        if ($idsemestre != NULL) {
+                            return 'Sem.: '.$idsemestre;
+                        } else {
+                            $CIInfPer = $model->CIInfPer;
+                            $idPer = $model->idPer;
+                            $perlec_carr_est_nivel = \app\models\siad_pregrado\PerlecCarrEstNivel::find()
+                                ->select('nivel')
+                                ->where(['ciinfper' => $CIInfPer])
+                                ->andWhere(['idper' => $idPer])
+                                ->one();
+                            if (isset($perlec_carr_est_nivel)) {
+                                return 'Nivel: '.$perlec_carr_est_nivel->nivel;
+                            }
+                        }
+                        return '-';
+                    }
+                ],
                 'statusMatricula',
 
                 //['class' => 'yii\grid\ActionColumn'],
