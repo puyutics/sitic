@@ -34,14 +34,15 @@ class AdldapController extends Controller
                 'class' => AccessControl::className(),
                 'only' => ['create','index','profile','edituser','viewuser','forgetpass',
                     'forgetuser','password','reset','saveLog','sendToken','sendNewUser',
-                    'viewgroups','createstudent','editemail','renewstudent','clearstudents',
-                    'oumove','deleteuser'],
+                    'viewgroups','createstudent','editemail','renewstudent',
+                    'indexclearstudents','clearstudents','oumove','deleteuser'],
                 'rules' => [
                     [
                         'actions' => ['index','profile','edituser',
                             'forgetpass','forgetuser','password','reset','saveLog',
                             'sendToken','sendNewUser','viewgroups','create','createstudent',
-                            'renewstudent','clearstudents','oumove','deleteuser'],
+                            'renewstudent','indexclearstudents','clearstudents','oumove',
+                            'deleteuser'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
@@ -100,6 +101,12 @@ class AdldapController extends Controller
     public function actionIndex()
     {
         return $this->render('index');
+    }
+
+
+    public function actionIndexclearstudents()
+    {
+        return $this->render('index_clear_students');
     }
 
 

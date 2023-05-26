@@ -379,6 +379,7 @@ $tiempoEjecucion = round($tiempoFinal - $tiempoInicial,2) . ' segundos';
         <br>
         <b>Fecha y hora: </b><?= date('Y-m-d H:i:s') ?>
     </div>
+    </div>
 
 <?php function copyFileRemoteServer() {
     $srcFile = '/var/www/web_apps/sitic.uea.edu.ec/web/enrol/siad_pregrado.txt';

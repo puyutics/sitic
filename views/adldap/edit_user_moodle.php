@@ -26,6 +26,9 @@ if (isset($mdl_user_pregrado)) {
 $searchModelMdlRApregrado = new MdlRoleAssignmentsSearch();
 $dataProviderMdlRApregrado = $searchModelMdlRApregrado->search(Yii::$app->request->queryParams);
 $dataProviderMdlRApregrado->query->Where(['userid' => $mdl_user_pregrado_id]);
+$dataProviderMdlRApregrado->sort->defaultOrder = [
+    'contextid' => SORT_ASC,
+];
 
 //Buscar usuario en EVA Posgrado
 $mdl_user_posgrado = \app\models\eva_posgrado\MdlUserPosgrado::find()
@@ -41,6 +44,9 @@ if (isset($mdl_user_posgrado)) {
 $searchModelMdlRAposgrado = new MdlRoleAssignmentsPosgradoSearch();
 $dataProviderMdlRAposgrado = $searchModelMdlRAposgrado->search(Yii::$app->request->queryParams);
 $dataProviderMdlRAposgrado->query->Where(['userid' => $mdl_user_posgrado_id]);
+$dataProviderMdlRAposgrado->sort->defaultOrder = [
+    'contextid' => SORT_ASC,
+];
 
 ?>
 
@@ -109,7 +115,6 @@ $dataProviderMdlRAposgrado->query->Where(['userid' => $mdl_user_posgrado_id]);
                 ],
                 [
                     'label' => 'ID Number',
-                    'attribute' => 'contextid',
                     'value' => function ($model) {
                         $contextid = $model->contextid;
                         $mdl_context = \app\models\eva_pregrado\MdlContext::find()
@@ -132,7 +137,6 @@ $dataProviderMdlRAposgrado->query->Where(['userid' => $mdl_user_posgrado_id]);
                 ],
                 [
                     'label' => 'Código Curso',
-                    'attribute' => 'contextid',
                     'value' => function ($model) {
                         $contextid = $model->contextid;
                         $mdl_context = \app\models\eva_pregrado\MdlContext::find()
@@ -151,7 +155,6 @@ $dataProviderMdlRAposgrado->query->Where(['userid' => $mdl_user_posgrado_id]);
                 ],
                 [
                     'label' => 'Nombre Curso',
-                    'attribute' => 'contextid',
                     'value' => function ($model) {
                         $contextid = $model->contextid;
                         $mdl_context = \app\models\eva_pregrado\MdlContext::find()
@@ -195,7 +198,6 @@ $dataProviderMdlRAposgrado->query->Where(['userid' => $mdl_user_posgrado_id]);
                 ],
                 [
                     'label' => 'Participantes',
-                    'attribute' => 'contextid',
                     'value' => function ($model) {
                         $contextid = $model->contextid;
                         $mdl_context = \app\models\eva_pregrado\MdlRoleAssignments::find()
@@ -288,7 +290,6 @@ $dataProviderMdlRAposgrado->query->Where(['userid' => $mdl_user_posgrado_id]);
                         return '-';
                     }
                 ],
-
                 //'timemodified:datetime',
                 //'modifierid',
                 //'component',
@@ -301,7 +302,6 @@ $dataProviderMdlRAposgrado->query->Where(['userid' => $mdl_user_posgrado_id]);
             'toolbar' =>  [
                 [
                     'content'=>
-
                         Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], [
                             'class' => 'btn btn-default',
                             'title' => ('Reset Grid')
@@ -389,7 +389,6 @@ $dataProviderMdlRAposgrado->query->Where(['userid' => $mdl_user_posgrado_id]);
                 ],
                 [
                     'label' => 'ID Number',
-                    'attribute' => 'contextid',
                     'value' => function ($model) {
                         $contextid = $model->contextid;
                         $mdl_context = \app\models\eva_posgrado\MdlContextPosgrado::find()
@@ -412,7 +411,6 @@ $dataProviderMdlRAposgrado->query->Where(['userid' => $mdl_user_posgrado_id]);
                 ],
                 [
                     'label' => 'Código Curso',
-                    'attribute' => 'contextid',
                     'value' => function ($model) {
                         $contextid = $model->contextid;
                         $mdl_context = \app\models\eva_posgrado\MdlContextPosgrado::find()
@@ -431,7 +429,6 @@ $dataProviderMdlRAposgrado->query->Where(['userid' => $mdl_user_posgrado_id]);
                 ],
                 [
                     'label' => 'Nombre Curso',
-                    'attribute' => 'contextid',
                     'value' => function ($model) {
                         $contextid = $model->contextid;
                         $mdl_context = \app\models\eva_posgrado\MdlContextPosgrado::find()
@@ -475,7 +472,6 @@ $dataProviderMdlRAposgrado->query->Where(['userid' => $mdl_user_posgrado_id]);
                 ],
                 [
                     'label' => 'Participantes',
-                    'attribute' => 'contextid',
                     'value' => function ($model) {
                         $contextid = $model->contextid;
                         $mdl_context = \app\models\eva_posgrado\MdlRoleAssignmentsPosgrado::find()
@@ -564,8 +560,6 @@ $dataProviderMdlRAposgrado->query->Where(['userid' => $mdl_user_posgrado_id]);
                         return '-';
                     }
                 ],
-
-
                 //'timemodified:datetime',
                 //'modifierid',
                 //'component',
@@ -578,7 +572,6 @@ $dataProviderMdlRAposgrado->query->Where(['userid' => $mdl_user_posgrado_id]);
             'toolbar' =>  [
                 [
                     'content'=>
-
                         Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], [
                             'class' => 'btn btn-default',
                             'title' => ('Reset Grid')

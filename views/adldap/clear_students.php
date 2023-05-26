@@ -58,6 +58,17 @@ $estudiantes_inhabilitados = \app\models\siad_pregrado\Estudiantes::find()
     ->where(['statusper' => 3])
     ->all();
 
+$estudiantes_fallecidos = \app\models\siad_pregrado\Estudiantes::find()
+    ->select(['CIInfPer',
+        'cedula_pasaporte',
+        'ApellInfPer',
+        'ApellMatInfPer',
+        'NombInfPer',
+        'statusper'
+    ])
+    ->where(['statusper' => 10])
+    ->all();
+
 $tiempoInicial = microtimeFloat();
 ?>
 
@@ -69,9 +80,10 @@ $total_estudiantes_habilitados = count($estudiantes_habilitados);
 $total_estudiantes_descontinuados = count($estudiantes_descontinuados);
 $total_estudiantes_graduados = count($estudiantes_graduados);
 $total_estudiantes_inhabilitados = count($estudiantes_inhabilitados);
-$ad=0;
-$o_ad=0;
-$p_ad=0;
+$total_estudiantes_fallecidos = count($estudiantes_fallecidos);
+$ad=0; //Total deshabilitados Active Directory
+$o_ad=0; //Otros Contenedores Active Directory
+$p_ad=0; //Total habilitados Active Directory
 $i=0;
 $h=0;
 $n_i=0;
@@ -83,11 +95,14 @@ $eg=0;
 $p_eg=0;
 $ei=0;
 $p_ei=0;
+$ef=0;
+$p_ef=0;
 
 ?>
 
 <?= '<h3>Usuarios Active Directory</h3>' ?>
 
+<!--Desactivar usuarios miembros del Grupo Estudiantes (Active Directory)-->
 <?php foreach ($members as $member)
 {
     $dn = $member->getDn();
@@ -121,12 +136,18 @@ $p_ei=0;
         }
     } else {
         verificarADduplicado($dni);
-        $o_ad=$o_ad+1;
+        if (str_contains($dn,'OU=POSGRADO,OU=ESTUDIANTES,DC=uea,DC=edu,DC=ec')) {
+            $p_ad=$p_ad+1;
+        } else {
+            $o_ad=$o_ad+1;
+            echo $o_ad.'. Otro Contenedor: ' . $dni .' >> '.$dn;
+            echo '<br>';
+        }
     }
 }
 
 ?>
-
+<br>
 <div style="font-size: 9pt; text-align: left;">
     <b>Active Directory - Grupo Estudiantes: <?= $total_estudiantes_active_directory ?></b>
 </div>
@@ -144,6 +165,7 @@ $p_ei=0;
 
 <?= '<h3>Usuarios Habilitados</h3>' ?>
 
+<!--Desactivar usuarios habilitados y sin matrícula vigente (SIAD Pregrado)-->
 <?php foreach ($estudiantes_habilitados as $estudiante) {
     //Buscar usuario en Active Directory
     $dni = $estudiante->cedula_pasaporte;
@@ -168,8 +190,12 @@ $p_ei=0;
                     $estudiante_malla_actual->idcarr == 'AMB' or
                     $estudiante_malla_actual->idcarr == 'BLG' or
                     $estudiante_malla_actual->idcarr == 'COM' or
+                    $estudiante_malla_actual->idcarr == 'ECO' or
+                    $estudiante_malla_actual->idcarr == 'EDB' or
+                    $estudiante_malla_actual->idcarr == 'EDI' or
                     $estudiante_malla_actual->idcarr == 'FRT' or
                     $estudiante_malla_actual->idcarr == 'LTUR' or
+                    $estudiante_malla_actual->idcarr == 'TIF' or
                     $estudiante_malla_actual->idcarr == 'TUR'
                 ) {
                     $campus = 'PUYO';
@@ -194,10 +220,13 @@ $p_ei=0;
             } else {
                 $p_eh=$p_eh+1;
             }
+        } else {
+            echo 'Otro Contenedor: ' . $dni .' >> '.$dn;
+            echo '<br>';
         }
     } else {
         $n_i=$n_i+1;
-        echo $n_i.'. No se encuentra: '.$estudiante->CIInfPer.' - '.$estudiante->cedula_pasaporte.' - '.$estudiante->ApellInfPer.' '.$estudiante->ApellMatInfPer.' '.$estudiante->NombInfPer;
+        echo $n_i.'. No se encuentra: '.$estudiante->CIInfPer.' // '.$estudiante->cedula_pasaporte.' >> '.$estudiante->ApellInfPer.' '.$estudiante->ApellMatInfPer.' '.$estudiante->NombInfPer;
         echo '<br>';
     }
 }
@@ -282,6 +311,28 @@ foreach ($estudiantes_inhabilitados as $estudiante) {
     }
 }
 
+foreach ($estudiantes_fallecidos as $estudiante) {
+    //Buscar usuario en Active Directory
+    $dni = $estudiante->cedula_pasaporte;
+    $user = \Yii::$app->ad->search()->findBy(Yii::$app->params['dni'], $dni);
+    if (isset($user)) {
+        verificarADduplicado($dni);
+        $dn = $user->getDn();
+        $uac = $user->getUserAccountControl();
+        if (str_contains($dn,'OU=PREGRADO,OU=ESTUDIANTES,DC=uea,DC=edu,DC=ec')) {
+            if ($uac != 514) {
+                $i=$i+1;
+                $ef=$ef+1;
+                userDisable($estudiante, $user, $i);
+                removeGroups($estudiante, $user);
+                moveContainer($estudiante, $user);
+            } else {
+                $p_ef=$p_ef+1;
+            }
+        }
+    }
+}
+
 $tiempoFinal = microtimeFloat();
 $tiempoEjecucion = round($tiempoFinal - $tiempoInicial,2) . ' segundos';
 
@@ -318,6 +369,16 @@ $tiempoEjecucion = round($tiempoFinal - $tiempoInicial,2) . ' segundos';
 </div>
 <br>
 <div style="font-size: 9pt; text-align: left;">
+    <b>SIAD - Estudiantes fallecidoa: <?= $total_estudiantes_fallecidos ?></b>
+</div>
+<div style="font-size: 9pt; text-align: left;">
+    <b>Total previamente desactivados: <?= $p_ef ?></b>
+</div>
+<div style="font-size: 9pt; text-align: left;">
+    <b>Total desactivados: <?= $ef ?></b>
+</div>
+<br>
+<div style="font-size: 9pt; text-align: left;">
     <b>Tiempo: <?= $tiempoEjecucion ?></b>
 </div>
 
@@ -328,7 +389,7 @@ $tiempoEjecucion = round($tiempoFinal - $tiempoInicial,2) . ' segundos';
         ->orWhereEquals(Yii::$app->params['dni'], $dni)
         ->get();
     if (count($users) > 1) {
-        echo 'Duplicado: '.$dni;
+        echo 'Error Usuario Duplicado: '.$dni;
         echo '<br>';
     }
 } ?>
@@ -488,7 +549,7 @@ $tiempoEjecucion = round($tiempoFinal - $tiempoInicial,2) . ' segundos';
     $user->setUserAccountControl(514);
     $user->save();
     if (isset($estudiante)) {
-        echo $i . '. ' . $estudiante->cedula_pasaporte . ' ' . $estudiante->ApellInfPer . ' ' . $estudiante->ApellMatInfPer . ' ' . $estudiante->NombInfPer;
+        echo $i . '. Usuario Desactivado: ' . $estudiante->cedula_pasaporte . ' - ' . $estudiante->ApellInfPer . ' ' . $estudiante->ApellMatInfPer . ' ' . $estudiante->NombInfPer;
         echo '<br>';
     }
 } ?>
@@ -521,14 +582,14 @@ $tiempoEjecucion = round($tiempoFinal - $tiempoInicial,2) . ' segundos';
     $groupNames = $user->getGroupNames($recursive = true);
     if (count($groupNames) > 1) {
         foreach ($groupNames as $groupName) {
-            if (($groupName != 'Usuarios del dominio') and ($groupName != 'Usuarios')) {
+            if (($groupName != 'Usuarios del dominio') and ($groupName != 'Usuarios') and ($groupName != 'estudiantes-usuarios-del-dominio')) {
                 $groupObject = \Yii::$app->ad->search()->findBy('cn', $groupName);
                 try {
                     $user->removeGroup($groupObject);
                     $user->save();
                 } catch (Exception $e) {
                     if (isset($estudiante)) {
-                        echo 'Error: [' . count($groupNames) . '] ' . $estudiante->cedula_pasaporte . ' ' . $e->getMessage();
+                        echo 'Error Remove Group: [' . count($groupNames) . '] ' . $estudiante->cedula_pasaporte . ' ' . $e->getMessage();
                         echo '<br>';
                     }
                     if (isset($groupNames)) {

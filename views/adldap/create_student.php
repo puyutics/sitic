@@ -21,8 +21,8 @@ $this->title = Yii::t('app', 'Crear estudiante');
 //$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Usuarios'), 'url' => ['adldap/index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-$fecha_inicio = ('2022-10-27 00:00:00');
-$fecha_fin = ('2022-12-02 23:59:59');
+$fecha_inicio = ('2023-01-01 00:00:00');
+$fecha_fin = ('2023-12-31 23:59:59');
 
 if (strtotime(date("Y-m-d H:i:s",time())) > strtotime($fecha_inicio)
     AND strtotime(date("Y-m-d H:i:s",time())) < strtotime($fecha_fin)

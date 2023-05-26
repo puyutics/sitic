@@ -132,7 +132,7 @@ class DocentesController extends Controller
                 $external_id = $external_id[0];
 
                 if ($model->save(false)) {
-                    $this->saveLog('siadDoceneteEmail', $username, $description, $external_id,'adldap');
+                    $this->saveLog('siadDocenteEmail', $username, $description, $external_id,'adldap');
                     return $this->redirect(['adldap/edituser', 'search' => $model->cedula_pasaporte]);
                 }
             }
@@ -151,7 +151,7 @@ class DocentesController extends Controller
                 $external_id = $external_id[0];
 
                 if ($model->save(false)) {
-                    $this->saveLog('siadDoceneteStatus', $username, $description, $external_id,'adldap');
+                    $this->saveLog('siadDocenteStatus', $username, $description, $external_id,'adldap');
                     return $this->redirect(['adldap/edituser', 'search' => $model->cedula_pasaporte]);
                 }
             }

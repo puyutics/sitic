@@ -92,6 +92,7 @@ class Docentes extends \yii\db\ActiveRecord implements IdentityInterface
             [['DirecDomicilioPer'], 'string', 'max' => 200],
             [['Telf1InfPer', 'Telf2InfPer', 'CelularInfPer'], 'string', 'max' => 12],
             [['mailPer', 'mailInst'], 'string', 'max' => 60],
+            [['mailPer', 'mailInst'], 'email'],
             [['codigo_dactilar'], 'string', 'max' => 15],
             [['idcarr'], 'string', 'max' => 10],
         ];

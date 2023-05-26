@@ -176,7 +176,7 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
                     'buttons'=>[
                         'update' => function ($url, $model) {
                             return Html::a('<span class="btn btn-primary center-block"><i class="fa fa-fw fa-edit"></i></span>',
-                                Url::to(['docentes/update',
+                                Url::to(['siad_pregrado/docentes/update',
                                     'id' => $model->CIInfPer
                                 ]),
                                 ['title' => Yii::t('yii', 'Editar Estudiante')]);

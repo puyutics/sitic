@@ -21,8 +21,6 @@ if (isset($_GET['search'])) { ?>
                 </div>
                 <div class="panel-body">
 
-
-
                     <?php $i=0;
                     $members = array();
                     foreach($model->members as $member)
@@ -56,7 +54,7 @@ if (isset($_GET['search'])) { ?>
                         foreach($model->members as $member)
                         {
                             $i=$i+1;
-                            echo $i . '. ' . $member->getName()."<br>";
+                            echo $i . '. ' . $member->getAttribute(Yii::$app->params['dni'],0). ' -- '.$member->getName(). ' -- '.$member->getEmail()."<br>";
                         }
                     ?>
 
