@@ -1586,7 +1586,7 @@ class AdldapController extends Controller
 
                                 // Agregar licencias para estudiantes
                                 $groupNames = $user->getGroupNames($recursive = true);
-                                if (count($groupNames)>1) {
+                                if (count($groupNames) > 1) {
                                     $existGroup = '';
                                     foreach ($groupNames as $groupName) {
                                         if ($groupName == 'Microsoft 365 Apps para Estudiantes') {
@@ -1638,15 +1638,34 @@ class AdldapController extends Controller
                                         $user->addGroup($groupObject);
                                     }
                                     if ($adldapnewuser->campus == 'PUYO') {
-                                        $existGroup = '';
-                                        foreach ($groupNames as $groupName) {
-                                            if ($groupName == 'pnnfxlrnu8mux5w') {
-                                                $existGroup = 'SI';
+                                        $carrera_en_linea = false;
+                                        if ($adldapnewuser->carrera == 'ECONOMIA') $carrera_en_linea = true;
+                                        if ($adldapnewuser->carrera == 'EDUCACION BASICA') $carrera_en_linea = true;
+                                        if ($adldapnewuser->carrera == 'EDUCACION INICIAL') $carrera_en_linea = true;
+                                        if ($adldapnewuser->carrera == 'TECNOLOGIAS DE LA INFORMACION') $carrera_en_linea = true;
+                                        //Agregar en Grupo de Carreras en Línea
+                                        if ($carrera_en_linea == true) {
+                                            $existGroup = '';
+                                            foreach ($groupNames as $groupName) {
+                                                if ($groupName == '3l0advo6on1680p') {
+                                                    $existGroup = 'SI';
+                                                }
                                             }
-                                        }
-                                        if ($existGroup != 'SI') {
-                                            $groupObject = \Yii::$app->ad->search()->findBy('cn', 'pnnfxlrnu8mux5w');
-                                            $user->addGroup($groupObject);
+                                            if ($existGroup != 'SI') {
+                                                $groupObject = \Yii::$app->ad->search()->findBy('cn', '3l0advo6on1680p');
+                                                $user->addGroup($groupObject);
+                                            }
+                                        } else {
+                                            $existGroup = '';
+                                            foreach ($groupNames as $groupName) {
+                                                if ($groupName == 'pnnfxlrnu8mux5w') {
+                                                    $existGroup = 'SI';
+                                                }
+                                            }
+                                            if ($existGroup != 'SI') {
+                                                $groupObject = \Yii::$app->ad->search()->findBy('cn', 'pnnfxlrnu8mux5w');
+                                                $user->addGroup($groupObject);
+                                            }
                                         }
                                     }
                                     if ($adldapnewuser->campus == 'LAGO AGRIO') {
@@ -1685,8 +1704,19 @@ class AdldapController extends Controller
                                     $groupObject = \Yii::$app->ad->search()->findBy('cn', '3gm4v0hkup5dx55');
                                     $user->addGroup($groupObject);
                                     if ($adldapnewuser->campus == 'PUYO') {
-                                        $groupObject = \Yii::$app->ad->search()->findBy('cn', 'pnnfxlrnu8mux5w');
-                                        $user->addGroup($groupObject);
+                                        $carrera_en_linea = false;
+                                        if ($adldapnewuser->carrera == 'ECONOMIA') $carrera_en_linea = true;
+                                        if ($adldapnewuser->carrera == 'EDUCACION BASICA') $carrera_en_linea = true;
+                                        if ($adldapnewuser->carrera == 'EDUCACION INICIAL') $carrera_en_linea = true;
+                                        if ($adldapnewuser->carrera == 'TECNOLOGIAS DE LA INFORMACION') $carrera_en_linea = true;
+                                        //Agregar en Grupo de Carreras en Línea
+                                        if ($carrera_en_linea == true) {
+                                            $groupObject = \Yii::$app->ad->search()->findBy('cn', '3l0advo6on1680p');
+                                            $user->addGroup($groupObject);
+                                        } else {
+                                            $groupObject = \Yii::$app->ad->search()->findBy('cn', 'pnnfxlrnu8mux5w');
+                                            $user->addGroup($groupObject);
+                                        }
                                     }
                                     if ($adldapnewuser->campus == 'LAGO AGRIO') {
                                         $groupObject = \Yii::$app->ad->search()->findBy('cn', 'djga0oexs3jesqu');
@@ -2935,12 +2965,12 @@ class AdldapController extends Controller
             "Céd/Pasaporte/Código: " . $dni . "\n" .
             "Nombres/Apellidos:       " . $fullname . "\n" .
             "Cuenta institucional:     " . $mail . "\n" .
-            "Proceso/MTN SENESCYT:     " . $mtn . "\n\n" .
+            "Proceso/SENESCYT:     " . $mtn . "\n\n" .
             "--------------------------------------------------------------------------------------" . "\n" .
             "Ingrese al Sistema Académico SIAD Pregrado y actualice su ficha de datos personales." . "\n" .
             "https://www.uea.edu.ec/siad2" . "\n\n" .
-            "La Secretaria Académica de la UEA, procederá a realizar su matrícula de forma manual." . "\n\n" .
-            "Una vez culminada su matrícula, usted recibirá un correo de confirmación." . "\n" .
+            //"La Secretaria Académica de la UEA, procederá a realizar su matrícula de forma manual." . "\n\n" .
+            //"Una vez culminada su matrícula, usted recibirá un correo de confirmación." . "\n" .
             "--------------------------------------------------------------------------------------" . "\n" .
             "Guarde estos datos. Si olvidó su contraseña ingrese en el siguiente enlace:" . "\n" .
             "https://password.uea.edu.ec" . "\n" .
