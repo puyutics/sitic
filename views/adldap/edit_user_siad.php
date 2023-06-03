@@ -289,7 +289,19 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
             //'compensar_tipo',
             //'regimen_academico',
             //'tutor',
-            'cupo',
+            [
+                'label' => 'Matr.',
+                'value' => function ($model) {
+                    $dpa_id = $model->dpa_id;
+                    $naa = \app\models\siad_pregrado\NotasAlumno::find()
+                        ->select('idnaa')
+                        ->where(['dpa_id' => $dpa_id])
+                        ->all();
+
+                    return count($naa);
+                }
+            ],
+            //'cupo',
 
             //['class' => 'yii\grid\ActionColumn'],
         ],
