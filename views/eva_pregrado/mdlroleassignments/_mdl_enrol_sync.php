@@ -116,6 +116,7 @@ $eva_courses = $eva_courses_command->queryAll();
 //Comparar matriculas docentes eva2siad (Delete)
 $eva_docentes = 0;
 $eva_estudiantes = 0;
+$eva_test = 0;
 $eva_coordinadores = 0;
 $coordinacion_agi = 0;
 $coordinacion_agp = 0;
@@ -140,78 +141,82 @@ foreach ($eva_matriculas as $eva_matricula) {
     $eva_mu_idnumber = $eva_matricula['mdl_user_idnumber'];
     $eva_mc_idnumber = $eva_matricula['mdl_course_idnumber'];
 
-    if (($eva_ri_shortname == 'editingteacher' or $eva_ri_shortname == 'teacher')) {
-        if ($eva_mu_idnumber == 'agroindustrias@uea.edu.ec'
-            or $eva_mu_idnumber == 'agropecuaria@uea.edu.ec'
-            or $eva_mu_idnumber == 'ambiental@uea.edu.ec'
-            or $eva_mu_idnumber == 'biologia@uea.edu.ec'
-            or $eva_mu_idnumber == 'biologia.lago@uea.edu.ec'
-            or $eva_mu_idnumber == 'biologia.pangui@uea.edu.ec'
-            or $eva_mu_idnumber == 'comunicacion@uea.edu.ec'
-            or $eva_mu_idnumber == 'forestal@uea.edu.ec'
-            or $eva_mu_idnumber == 'turismo@uea.edu.ec'
-            or $eva_mu_idnumber == 'turismo.lago@uea.edu.ec'
-            or $eva_mu_idnumber == 'turismo.pangui@uea.edu.ec'
-            or $eva_mu_idnumber == 'cdt.agroindustria@uea.edu.ec'
-            or $eva_mu_idnumber == 'cdt.agropecuaria@uea.edu.ec'
-            or $eva_mu_idnumber == 'cdt.ambiental@uea.edu.ec'
-            or $eva_mu_idnumber == 'cdt.biologia@uea.edu.ec'
-            or $eva_mu_idnumber == 'cdt.biologialago@uea.edu.ec'
-            or $eva_mu_idnumber == 'cdt.biologiapangui@uea.edu.ec'
-            or $eva_mu_idnumber == 'cdt.foresta@uea.edu.ecl'
-            or $eva_mu_idnumber == 'cdt.turismo@uea.edu.ec'
-            or $eva_mu_idnumber == 'cdt.turismolago@uea.edu.ec'
-            or $eva_mu_idnumber == 'cdt.turismopangui@uea.edu.ec'
-        ) {
-            $eva_coordinadores = $eva_coordinadores +1;
-            if ($eva_mu_idnumber == 'agroindustrias@uea.edu.ec') $coordinacion_agi = $coordinacion_agi + 1;
-            if ($eva_mu_idnumber == 'agropecuaria@uea.edu.ec') $coordinacion_agp = $coordinacion_agp + 1;
-            if ($eva_mu_idnumber == 'ambiental@uea.edu.ec') $coordinacion_amb = $coordinacion_amb + 1;
-            if ($eva_mu_idnumber == 'biologia@uea.edu.ec') $coordinacion_bio = $coordinacion_bio + 1;
-            if ($eva_mu_idnumber == 'biologia.lago@uea.edu.ec') $coordinacion_bio_lago = $coordinacion_bio_lago + 1;
-            if ($eva_mu_idnumber == 'biologia.pangui@uea.edu.ec') $coordinacion_bio_pangui = $coordinacion_bio_pangui + 1;
-            if ($eva_mu_idnumber == 'comunicacion@uea.edu.ec') $coordinacion_com = $coordinacion_com + 1;
-            if ($eva_mu_idnumber == 'forestal@uea.edu.ec') $coordinacion_for = $coordinacion_for + 1;
-            if ($eva_mu_idnumber == 'turismo@uea.edu.ec') $coordinacion_tur = $coordinacion_tur + 1;
-            if ($eva_mu_idnumber == 'turismo.lago@uea.edu.ec') $coordinacion_tur_lago = $coordinacion_tur_lago + 1;
-            if ($eva_mu_idnumber == 'turismo.pangui@uea.edu.ec') $coordinacion_tur_pangui = $coordinacion_tur_pangui + 1;
-        } else {
-            $eva_docentes = $eva_docentes + 1;
+    if ($eva_mu_idnumber != 'test@uea.edu.ec') {
+        if (($eva_ri_shortname == 'editingteacher' or $eva_ri_shortname == 'teacher')) {
+            if ($eva_mu_idnumber == 'agroindustrias@uea.edu.ec'
+                or $eva_mu_idnumber == 'agropecuaria@uea.edu.ec'
+                or $eva_mu_idnumber == 'ambiental@uea.edu.ec'
+                or $eva_mu_idnumber == 'biologia@uea.edu.ec'
+                or $eva_mu_idnumber == 'biologia.lago@uea.edu.ec'
+                or $eva_mu_idnumber == 'biologia.pangui@uea.edu.ec'
+                or $eva_mu_idnumber == 'comunicacion@uea.edu.ec'
+                or $eva_mu_idnumber == 'forestal@uea.edu.ec'
+                or $eva_mu_idnumber == 'turismo@uea.edu.ec'
+                or $eva_mu_idnumber == 'turismo.lago@uea.edu.ec'
+                or $eva_mu_idnumber == 'turismo.pangui@uea.edu.ec'
+                or $eva_mu_idnumber == 'cdt.agroindustria@uea.edu.ec'
+                or $eva_mu_idnumber == 'cdt.agropecuaria@uea.edu.ec'
+                or $eva_mu_idnumber == 'cdt.ambiental@uea.edu.ec'
+                or $eva_mu_idnumber == 'cdt.biologia@uea.edu.ec'
+                or $eva_mu_idnumber == 'cdt.biologialago@uea.edu.ec'
+                or $eva_mu_idnumber == 'cdt.biologiapangui@uea.edu.ec'
+                or $eva_mu_idnumber == 'cdt.foresta@uea.edu.ecl'
+                or $eva_mu_idnumber == 'cdt.turismo@uea.edu.ec'
+                or $eva_mu_idnumber == 'cdt.turismolago@uea.edu.ec'
+                or $eva_mu_idnumber == 'cdt.turismopangui@uea.edu.ec'
+            ) {
+                $eva_coordinadores = $eva_coordinadores +1;
+                if ($eva_mu_idnumber == 'agroindustrias@uea.edu.ec') $coordinacion_agi = $coordinacion_agi + 1;
+                if ($eva_mu_idnumber == 'agropecuaria@uea.edu.ec') $coordinacion_agp = $coordinacion_agp + 1;
+                if ($eva_mu_idnumber == 'ambiental@uea.edu.ec') $coordinacion_amb = $coordinacion_amb + 1;
+                if ($eva_mu_idnumber == 'biologia@uea.edu.ec') $coordinacion_bio = $coordinacion_bio + 1;
+                if ($eva_mu_idnumber == 'biologia.lago@uea.edu.ec') $coordinacion_bio_lago = $coordinacion_bio_lago + 1;
+                if ($eva_mu_idnumber == 'biologia.pangui@uea.edu.ec') $coordinacion_bio_pangui = $coordinacion_bio_pangui + 1;
+                if ($eva_mu_idnumber == 'comunicacion@uea.edu.ec') $coordinacion_com = $coordinacion_com + 1;
+                if ($eva_mu_idnumber == 'forestal@uea.edu.ec') $coordinacion_for = $coordinacion_for + 1;
+                if ($eva_mu_idnumber == 'turismo@uea.edu.ec') $coordinacion_tur = $coordinacion_tur + 1;
+                if ($eva_mu_idnumber == 'turismo.lago@uea.edu.ec') $coordinacion_tur_lago = $coordinacion_tur_lago + 1;
+                if ($eva_mu_idnumber == 'turismo.pangui@uea.edu.ec') $coordinacion_tur_pangui = $coordinacion_tur_pangui + 1;
+            } else {
+                $eva_docentes = $eva_docentes + 1;
+                $comprobar = 'del';
+                foreach ($siad_docentes_matriculas as $siad_docentes_matricula) {
+                    $siad_mu_idnumber = $siad_docentes_matricula['mdl_user_idnumber'];
+                    $siad_mc_idnumber = $siad_docentes_matricula['mdl_course_idnumber'];
+                    if ($siad_mu_idnumber == $eva_mu_idnumber AND $siad_mc_idnumber == $eva_mc_idnumber) {
+                        $siad_docentes_ok = $siad_docentes_ok + 1;
+                        $comprobar = 'none';
+                        break;
+                    }
+                }
+                if ($comprobar == 'del') {
+                    $siad_docentes_del = $siad_docentes_del + 1;
+                    echo $comprobar . ', ' . $eva_ri_shortname . ', ' . $eva_mu_idnumber . ', ' . $eva_mc_idnumber . '<br>';
+                    fwrite($myfile, $comprobar . ', ' . $eva_ri_shortname . ', ' . $eva_mu_idnumber . ', ' . $eva_mc_idnumber . PHP_EOL);
+                }
+            }
+        }
+
+        if (($eva_ri_shortname == 'student')) {
+            $eva_estudiantes = $eva_estudiantes + 1;
             $comprobar = 'del';
-            foreach ($siad_docentes_matriculas as $siad_docentes_matricula) {
-                $siad_mu_idnumber = $siad_docentes_matricula['mdl_user_idnumber'];
-                $siad_mc_idnumber = $siad_docentes_matricula['mdl_course_idnumber'];
+            foreach ($siad_estudiantes_matriculas as $siad_estudiantes_matricula) {
+                $siad_mu_idnumber = $siad_estudiantes_matricula['mdl_user_idnumber'];
+                $siad_mc_idnumber = $siad_estudiantes_matricula['mdl_course_idnumber'];
                 if ($siad_mu_idnumber == $eva_mu_idnumber AND $siad_mc_idnumber == $eva_mc_idnumber) {
-                    $siad_docentes_ok = $siad_docentes_ok + 1;
+                    $siad_estudiantes_ok = $siad_estudiantes_ok + 1;
                     $comprobar = 'none';
                     break;
                 }
             }
             if ($comprobar == 'del') {
-                $siad_docentes_del = $siad_docentes_del + 1;
+                $siad_estudiantes_del = $siad_estudiantes_del + 1;
                 echo $comprobar . ', ' . $eva_ri_shortname . ', ' . $eva_mu_idnumber . ', ' . $eva_mc_idnumber . '<br>';
                 fwrite($myfile, $comprobar . ', ' . $eva_ri_shortname . ', ' . $eva_mu_idnumber . ', ' . $eva_mc_idnumber . PHP_EOL);
             }
         }
-    }
-
-    if (($eva_ri_shortname == 'student')) {
-        $eva_estudiantes = $eva_estudiantes + 1;
-        $comprobar = 'del';
-        foreach ($siad_estudiantes_matriculas as $siad_estudiantes_matricula) {
-            $siad_mu_idnumber = $siad_estudiantes_matricula['mdl_user_idnumber'];
-            $siad_mc_idnumber = $siad_estudiantes_matricula['mdl_course_idnumber'];
-            if ($siad_mu_idnumber == $eva_mu_idnumber AND $siad_mc_idnumber == $eva_mc_idnumber) {
-                $siad_estudiantes_ok = $siad_estudiantes_ok + 1;
-                $comprobar = 'none';
-                break;
-            }
-        }
-        if ($comprobar == 'del') {
-            $siad_estudiantes_del = $siad_estudiantes_del + 1;
-            echo $comprobar . ', ' . $eva_ri_shortname . ', ' . $eva_mu_idnumber . ', ' . $eva_mc_idnumber . '<br>';
-            fwrite($myfile, $comprobar . ', ' . $eva_ri_shortname . ', ' . $eva_mu_idnumber . ', ' . $eva_mc_idnumber . PHP_EOL);
-        }
+    } else {
+        $eva_test = $eva_test + 1;
     }
 }
 //Comparar matriculas docentes siad2eva (Add)
@@ -300,6 +305,9 @@ $tiempoEjecucion = round($tiempoFinal - $tiempoInicial,2) . ' segundos';
     </div>
     <div style="font-size: 9pt; text-align: left;">
         <b>Total registros EVA: <?= count($eva_matriculas) - $eva_coordinadores ?></b>
+    </div>
+    <div style="font-size: 9pt; text-align: left;">
+        <b>Total registros EVA test: <?= $eva_test ?></b>
     </div>
     <div style="font-size: 9pt; text-align: left;">
         <b>Total registros EVA duplicados: <?= $eva_duplicados ?></b>

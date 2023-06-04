@@ -23,23 +23,23 @@ class MdlroleassignmentsController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','delete','index','update', 'view',
-                    'mdlenrolpurge','mdlcoursepurge','siad2eva'],
+                'only' => ['create','delete','index','update','view',
+                    'mdlenrolsync','mdlcourseview','mdlcoursesync','siad2eva'],
                 'rules' => [
                     [
-                        'actions' => ['index','mdlenrolpurge','mdlcoursepurge',
-                            'siad2eva'],
+                        'actions' => ['index','mdlenrolsync','mdlcoursesync',
+                            'mdlcourseview','siad2eva'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
                     [
-                        'actions' => ['index','mdlenrolpurge','mdlcoursepurge',
-                            'siad2eva'],
+                        'actions' => ['index','mdlenrolsync','mdlcoursesync',
+                            'mdlcourseview','siad2eva'],
                         'allow' => true,
                         'roles' => ['rolTecnicos'],
                     ],
                     [
-                        'actions' => ['mdlenrolpurge','delete','update','view'],
+                        'actions' => ['mdlenrolsync','delete','update','view'],
                         'allow' => false,
                     ],
                 ],
@@ -79,15 +79,21 @@ class MdlroleassignmentsController extends Controller
     }
 
 
-    public function actionMdlenrolpurge()
+    public function actionMdlenrolsync()
     {
-        return $this->render('_mdl_enrol_purge');
+        return $this->render('_mdl_enrol_sync');
     }
 
 
-    public function actionMdlcoursepurge()
+    public function actionMdlcourseview()
     {
-        return $this->render('_mdl_course_purge');
+        return $this->render('_mdl_course_view');
+    }
+
+
+    public function actionMdlcoursesync()
+    {
+        return $this->render('_mdl_course_sync');
     }
 
     /**

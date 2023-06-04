@@ -25,15 +25,16 @@ $this->params['breadcrumbs'][] = $this->title;
         <div align="center" class="col-lg-6">
             <h5 class="alert alert-info">
                 <b>Características</b><br>
-                <br>- Permite sincronizar los código de aulas: dpa_id (SIAD) >> idnumber (Moodle)
-                <br>
+                <br>- Permite visualizar los códigos de aulas e identificar inconsistencias
+                <br>- Permite sincronizar los códigos de aulas: dpa_id (SIAD) >> idnumber (Moodle)
                 <br>
                 <br>
                 <br>
                 <br>
                 <br>
             </h5>
-            <?= Html::a('Sincronizar Aulas', ['mdlcoursepurge'], ['class' => 'btn btn-md btn-danger', 'target' => '_blank']) ?>
+            <?= Html::a('Ver Aulas', ['mdlcourseview'], ['class' => 'btn btn-md btn-primary', 'target' => '_blank']) ?>
+            <?= Html::a('Sincronizar Aulas', ['mdlcoursesync'], ['class' => 'btn btn-md btn-danger', 'target' => '_blank']) ?>
         </div>
         <div align="center" class="col-lg-6">
             <h5 class="alert alert-info">
@@ -45,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <br>- Sincronización de estudiantes matriculados / eliminados
                 <br>- Generación <code>siad_pregrado.txt</code> y transferencia a <code>/enrol</code> servidor Moodle
             </h5>
-            <?= Html::a('Sincronizar Matrículas', ['mdlenrolpurge'], ['class' => 'btn btn-md btn-danger', 'target' => '_blank']) ?>
+            <?= Html::a('Sincronizar Matrículas', ['mdlenrolsync'], ['class' => 'btn btn-md btn-danger', 'target' => '_blank']) ?>
         </div>
     </div>
     <hr>

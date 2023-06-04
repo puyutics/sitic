@@ -54,7 +54,7 @@ $dataProviderMatriculaPregrado->sort->defaultOrder = [
 
                 'CIInfPer',
                 //'num_expediente',
-                //'cedula_pasaporte',
+                'cedula_pasaporte',
                 //'TipoDocInfPer',
                 'ApellInfPer',
                 'ApellMatInfPer',
@@ -133,18 +133,33 @@ $dataProviderMatriculaPregrado->sort->defaultOrder = [
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
 
-                //'idMatricula',
                 //'idMatricula_anual',
                 'CIInfPer',
-                'idPer',
-                'idCarr',
+                [
+                    'attribute'=>'idPer',
+                    'value'=>function($model){
+                        $periodo = \app\models\siad_pregrado\Periodo::findOne($model->idPer);
+                        return $periodo->getPeriodoDetalle().' ('.$model->idPer.')';
+                    },
+                    'group' => true,
+                    'hAlign'=>'center',
+                    'vAlign'=>'middle',
+                ],
+                [
+                    'label' => 'Carrera',
+                    'attribute' => 'idCarr',
+                    'value' => function ($model) {
+                        $carrera = \app\models\siad_pregrado\Carrera::findOne($model->idCarr);
+                        return $carrera->getFullname();
+                    },
+                ],
+                'idMatricula',
                 //'idanio',
-                'idsemestre',
+                //'idsemestre',
                 'FechaMatricula',
                 //'idParalelo',
                 //'idMatricula_ant',
                 //'tipoMatricula',
-                'statusMatricula',
                 //'anulada',
                 //'observMatricula',
                 //'promocion',
@@ -160,6 +175,77 @@ $dataProviderMatriculaPregrado->sort->defaultOrder = [
                 //'num_asig_repite',
                 //'aprobacion_automatica',
                 //'mail_enviado',
+                [
+                    'label' => 'Asignaturas',
+                    'value' => function($model) {
+                        $naas = \app\models\siad_pregrado\NotasAlumno::find()
+                            ->select('idAsig, dpa_id')
+                            ->andWhere(['CIInfPer' => $model->CIInfPer])
+                            ->andWhere(['idper' => $model->idPer])
+                            ->andWhere(['idMatricula' => $model->idMatricula])
+                            ->orderBy('idAsig ASC')
+                            ->all();
+                        if (count($naas) > 0) {
+                            $i=0;$echo = '';
+                            foreach ($naas as $naa) {
+                                $i=$i+1;
+                                $idAsig = $naa->idAsig;
+                                $dpa_id = $naa->dpa_id;
+                                $asignatura = \app\models\siad_pregrado\Asignatura::find()
+                                    ->select('nombAsig')
+                                    ->where(['idAsig' => $idAsig])
+                                    ->one();
+                                $nombAsig = $asignatura->nombAsig;
+                                $dpa = \app\models\siad_pregrado\DocenteAsignatura::find()
+                                    ->select('idParalelo')
+                                    ->where(['dpa_id' => $dpa_id])
+                                    ->one();
+                                if (isset($dpa)) {
+                                    $idParalelo = $dpa->idParalelo;;
+                                    $echo =  $echo .
+                                        $i.'. '.
+                                        $idAsig.
+                                        ' -- '.
+                                        $nombAsig.' ('.$idParalelo.')'.
+                                        '<br>';
+                                } else {
+                                    $echo =  $echo .
+                                        $i.'. '.
+                                        $idAsig.
+                                        ' -- '.
+                                        $nombAsig. ' (<code>Sin paralelo</code>)'.
+                                        '<br>';
+                                }
+                            }
+                            return $echo;
+                        } else {
+                            return '-';
+                        }
+                    },
+                    'format' => 'html',
+                ],
+                [
+                    'label' => 'Sem/Nivel',
+                    'value' => function ($model) {
+                        $idsemestre = $model->idsemestre;
+                        if ($idsemestre != NULL) {
+                            return 'Sem.: '.$idsemestre;
+                        } else {
+                            $CIInfPer = $model->CIInfPer;
+                            $idPer = $model->idPer;
+                            $perlec_carr_est_nivel = \app\models\siad_pregrado\PerlecCarrEstNivel::find()
+                                ->select('nivel')
+                                ->where(['ciinfper' => $CIInfPer])
+                                ->andWhere(['idper' => $idPer])
+                                ->one();
+                            if (isset($perlec_carr_est_nivel)) {
+                                return 'Nivel: '.$perlec_carr_est_nivel->nivel;
+                            }
+                        }
+                        return '-';
+                    }
+                ],
+                'statusMatricula',
 
                 //['class' => 'yii\grid\ActionColumn'],
             ],
