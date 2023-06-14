@@ -24,17 +24,18 @@ class MdlroleassignmentsController extends Controller
             'access' => [
                 'class' => AccessControl::className(),
                 'only' => ['create','delete','index','update','view',
-                    'mdlenrolsync','mdlcourseview','mdlcoursesync','siad2eva'],
+                    'mdlenrolsync','mdlcourseview','mdlcoursesync','siad2eva',
+                    'logs'],
                 'rules' => [
                     [
                         'actions' => ['index','mdlenrolsync','mdlcoursesync',
-                            'mdlcourseview','siad2eva'],
+                            'mdlcourseview','siad2eva','logs'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
                     [
                         'actions' => ['index','mdlenrolsync','mdlcoursesync',
-                            'mdlcourseview','siad2eva'],
+                            'mdlcourseview','siad2eva','logs'],
                         'allow' => true,
                         'roles' => ['rolTecnicos'],
                     ],
@@ -82,6 +83,12 @@ class MdlroleassignmentsController extends Controller
     public function actionMdlenrolsync()
     {
         return $this->render('_mdl_enrol_sync');
+    }
+
+
+    public function actionLogs()
+    {
+        return $this->render('_mdl_enrol_logs');
     }
 
 
@@ -176,4 +183,5 @@ class MdlroleassignmentsController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
 }

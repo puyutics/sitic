@@ -27,10 +27,17 @@ $mdl_courses = \app\models\eva_pregrado\MdlCourse::find()
             <?php $i = $i+1 ?>
             <?php $codigo = explode('-', $mdl_course->shortname);
             if ($codigo[0] == Yii::$app->params['course_code'] and isset($codigo[4])) {
+                if (isset($codigo[5])) {
+                    $idAsig = $codigo[1].'-'.$codigo[2].'-'.$codigo[3].'-'.$codigo[4];
+                    $idParalelo = $codigo[5];
+                } else {
+                    $idAsig = $codigo[1].'-'.$codigo[2].'-'.$codigo[3];
+                    $idParalelo = $codigo[4];
+                }
                 $dpa = \app\models\siad_pregrado\DocenteAsignatura::find()
                     ->where(['idPer' => Yii::$app->params['siad_periodo']])
-                    ->andWhere(['idAsig' => $codigo[1] . '-' . $codigo[2] . '-' . $codigo[3]])
-                    ->andWhere(['idParalelo' => $codigo[4]])
+                    ->andWhere(['idAsig' => $idAsig])
+                    ->andWhere(['idParalelo' => $idParalelo])
                     ->one();
                 if (isset($dpa)) {
                     $dpa_id = $dpa->dpa_id;

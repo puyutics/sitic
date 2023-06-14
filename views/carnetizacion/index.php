@@ -11,6 +11,9 @@ Icon::map($this);
 /* @var $searchModel app\models\CarnetizacionSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
+
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Gestión TI'), 'url' => ['site/management']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Usuarios'), 'url' => ['adldap/index']];
 $this->title = 'Carnets Digitales';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -133,13 +136,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template'=>'{view}',
                 'buttons'=>[
                     'view' => function ($url, $model) {
-                        return Html::a('<span class="btn btn-danger center-block">' . Icon::show('file-pdf') . '</span>',
-                            Url::to(['carnetizacion/view', 'id' => base64_encode($model->id)]),
-                            [
-                                'title' => Yii::t('yii', 'PDF'),
-                                'target'=>'_blank',
-                                'data-pjax'=>"0",
-                            ]);
+                        $file = $model->filefolder.$model->filename.$model->filetype;
+                        if (file_exists($file)) {
+                            return Html::a('<span class="btn btn-danger center-block">' . Icon::show('file-pdf') . '</span>',
+                                Url::to(['carnetizacion/view', 'id' => base64_encode($model->id)]),
+                                [
+                                    'title' => Yii::t('yii', 'PDF'),
+                                    'target'=>'_blank',
+                                    'data-pjax'=>"0",
+                                ]);
+                        } else {
+                            return '-';
+                        }
                     },
                 ]
             ],

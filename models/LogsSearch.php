@@ -60,11 +60,12 @@ class LogsSearch extends Logs
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'datetime' => $this->datetime,
+            //'datetime' => $this->datetime,
         ]);
 
         $query->andFilterWhere(['like', 'type', $this->type])
             ->andFilterWhere(['like', 'username', $this->username])
+            ->andFilterWhere(['like', 'datetime', $this->datetime])
             ->andFilterWhere(['like', 'description', $this->description])
             ->andFilterWhere(['like', 'ipaddress', $this->ipaddress])
             ->andFilterWhere(['like', 'external_id', $this->external_id])

@@ -1,8 +1,6 @@
 <?php
 
 use yii\helpers\Html;
-use kartik\grid\GridView;
-use yii\helpers\ArrayHelper;
 use kartik\icons\Icon;
 Icon::map($this);
 
@@ -46,6 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <br>- Sincronización de estudiantes matriculados / eliminados
                 <br>- Generación <code>siad_pregrado.txt</code> y transferencia a <code>/enrol</code> servidor Moodle
             </h5>
+            <?= Html::a('Ver Logs', ['logs'], ['class' => 'btn btn-md btn-primary', 'target' => '_blank']) ?>
             <?= Html::a('Sincronizar Matrículas', ['mdlenrolsync'], ['class' => 'btn btn-md btn-danger', 'target' => '_blank']) ?>
         </div>
     </div>

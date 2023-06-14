@@ -2,6 +2,7 @@
 
 namespace app\controllers\siad_pregrado;
 
+use app\models\Logs;
 use Yii;
 use app\models\siad_pregrado\Docentes;
 use app\models\siad_pregrado\DocentesSearch;
@@ -190,5 +191,22 @@ class DocentesController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+
+
+    public function saveLog($type, $username, $description, $external_type)
+    {
+        //Registro (Log) Evento sendToken
+        $modelLogs              = new Logs();
+        $modelLogs->type        = $type;
+        $modelLogs->username    = $username;
+        $modelLogs->datetime    = date('Y-m-d H:i:s');
+        $modelLogs->description = $description;
+        ;
+        $modelLogs->ipaddress       = \app\models\User::obtenerip();
+        $modelLogs->external_id     = $username;
+        $modelLogs->external_type   = $external_type;
+        $modelLogs->save(false);
     }
 }

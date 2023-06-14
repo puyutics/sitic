@@ -32,6 +32,18 @@ if ($model->idCarr == 'TUR'
     or $model->idCarr == 'LTUREP') {
     $carrera = 'TURISMO';
 }
+if ($model->idCarr == 'ECO') {
+    $carrera = 'ECONOMIA';
+}
+if ($model->idCarr == 'EDB') {
+    $carrera = 'EDUCACION BASICA';
+}
+if ($model->idCarr == 'EDI') {
+    $carrera = 'EDUCACION INICIAL';
+}
+if ($model->idCarr == 'TIF') {
+    $carrera = 'TECNOLOGIAS DE LA INFORMACION';
+}
 
 //Datos del período
 $periodoDescriptivo = \app\models\siad_pregrado\Periodo::Periododescriptivo($model->idPer);

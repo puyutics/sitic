@@ -21,8 +21,8 @@ $this->title = Yii::t('app', 'Crear estudiante');
 //$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Usuarios'), 'url' => ['adldap/index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-$fecha_inicio = ('2023-07-01 00:00:00');
-$fecha_fin = ('2023-12-31 23:59:59');
+$fecha_inicio = Yii::$app->params['senecyt_apertura'];
+$fecha_fin = Yii::$app->params['senecyt_cierre'];
 
 if (strtotime(date("Y-m-d H:i:s",time())) > strtotime($fecha_inicio)
     AND strtotime(date("Y-m-d H:i:s",time())) < strtotime($fecha_fin)
@@ -51,7 +51,6 @@ if (isset($_GET['test'])) {
     </div>
     <br>
     <?php if ($model->step == 0) { ?>
-
         <div class="edit-form">
             <div class="col-sm-offset-2 col-sm-8">
                 <div class="panel panel-default">
@@ -156,6 +155,18 @@ if (isset($_GET['test'])) {
                             ]) ?>
                         </div>
 
+                        <h5><b>Política de Protección de Datos Personales</b> (<a href="https://bit.ly/3C0V5XZ" target="_blank">https://bit.ly/3C0V5XZ</a>)</h5>
+                        <div class="alert alert-info" align="center">
+                            La Universidad Estatal Amazónica, comprometida con el respeto de los derechos de los titulares en el Tratamiento de Datos Personales, adopta la presente política con el fin de dar cumplimiento a la regulación vigente y definir el marco de tratamiento de los datos de carácter personal que recoja, almacene, use y circule de conformidad con lo dispuesto en la Ley Orgánica de Protección de Datos Personales (LOPD)
+                        </div>
+                        <div>
+                            <?php echo $form->field($model, 'status')->checkBox([
+                                'checked' => false,
+                                'required' => true,
+                                'label' => '<b>Acepto la Política de Protección de Datos Personales de la UEA</b>'
+                            ]) ?>
+                        </div>
+
                         <div class="form-group" align="center">
                             <?= Html::submitButton('Validar Datos', ['class' => 'btn btn-success']) ?>
                         </div>
@@ -196,6 +207,12 @@ if (isset($_GET['test'])) {
                             <h4>CONFIRMAR DATOS DE CONTACTO</h4>
                             <h4>Por favor verifique que su email personal y celular sean los correctos</h4>
                         </div>
+
+                        <?php if (Yii::$app->session->hasFlash('errorDominio')) { ?>
+                            <div class="alert alert-warning" align="center">
+                                <h4><?= Yii::$app->session->getFlash('errorDominio') ?></h4>
+                            </div>
+                        <?php } ?>
 
                         <div class="row">
                             <div class="col-md-6">
@@ -330,9 +347,9 @@ if (isset($_GET['test'])) {
                     </div>
                     <div class="panel-body">
 
-                        <?= $form->field($model, 'step')->hiddenInput()->label(false) ?>
-
-                        <?= $form->field($model, 'fec_nacimiento')->hiddenInput()->label(false) ?>
+                        <div class="alert alert-success" align="center">
+                            <h4>Cuenta creada correctamente, por favor configure una contraseña</h4>
+                        </div>
 
                         <?= $form->field($model, 'dni')->textInput(['readOnly' => true]) ?>
 
@@ -345,25 +362,20 @@ if (isset($_GET['test'])) {
                             </div>
                         </div>
 
-                        <?= $form->field($model, 'commonname')->hiddenInput()->label(false) ?>
-
-                        <?= $form->field($model, 'displayname')->hiddenInput()->label(false) ?>
-
-                        <div class="alert alert-success" align="center">
-                            <h4>Cuenta creada correctamente, por favor configure una contraseña</h4>
-                        </div>
-
-                        <?= $form->field($model, 'samaccountname')->hiddenInput()->label(false) ?>
-
                         <?= $form->field($model, 'mail')->textInput(['readOnly' => true]) ?>
 
-                        <?= $form->field($model, 'personalmail')->hiddenInput()->label(false) ?>
-
-                        <?= $form->field($model, 'mobile')->hiddenInput()->label(false) ?>
-
-                        <?= $form->field($model, 'title')->hiddenInput()->label(false) ?>
-
-                        <?= $form->field($model, 'department')->hiddenInput()->label(false) ?>
+                        <div class="alert alert-info" align="left">
+                            <h4 align="center">
+                                <code>Recomendaciones para su nueva contraseña</code>
+                            </h4>
+                            <hr>
+                            <h5> - No puede incluir su número de cédula / pasaporte</h5>
+                            <h5> - No puede incluir sus nombres / apellidos</h5>
+                            <h5> - Mínimo 8 caracteres</h5>
+                            <h5> - Mínimo 1 MAYÚSCULA</h5>
+                            <h5> - Mínimo 1 minúscula</h5>
+                            <h5> - Mínimo 1 número</h5>
+                        </div>
 
                         <?php if (Yii::$app->session->hasFlash('errorReset')) { ?>
                             <div class="alert alert-danger">
@@ -373,17 +385,35 @@ if (isset($_GET['test'])) {
 
                         <?= $form->field($model, 'newPassword')->widget(PasswordInput::classname(), [
                             'pluginOptions' => [
-                                'showMeter' => false,
+                                'showMeter' => true,
                                 'toggleMask' => true
                             ]])
                         ?>
 
                         <?= $form->field($model, 'verifyNewPassword')->widget(PasswordInput::classname(), [
                             'pluginOptions' => [
-                                'showMeter' => false,
+                                'showMeter' => true,
                                 'toggleMask' => true
                             ]])
                         ?>
+
+                        <?= $form->field($model, 'step')->hiddenInput()->label(false) ?>
+
+                        <?= $form->field($model, 'fec_nacimiento')->hiddenInput()->label(false) ?>
+
+                        <?= $form->field($model, 'commonname')->hiddenInput()->label(false) ?>
+
+                        <?= $form->field($model, 'displayname')->hiddenInput()->label(false) ?>
+
+                        <?= $form->field($model, 'samaccountname')->hiddenInput()->label(false) ?>
+
+                        <?= $form->field($model, 'personalmail')->hiddenInput()->label(false) ?>
+
+                        <?= $form->field($model, 'mobile')->hiddenInput()->label(false) ?>
+
+                        <?= $form->field($model, 'title')->hiddenInput()->label(false) ?>
+
+                        <?= $form->field($model, 'department')->hiddenInput()->label(false) ?>
 
                         <div align="center">
                             <?= Html::submitButton('Guardar contraseña',['class' => 'btn btn-danger',

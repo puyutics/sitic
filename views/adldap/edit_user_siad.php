@@ -719,10 +719,12 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
                         } else {
                             $CIInfPer = $model->CIInfPer;
                             $idPer = $model->idPer;
+                            $idCarr = $model->idCarr;
                             $perlec_carr_est_nivel = \app\models\siad_pregrado\PerlecCarrEstNivel::find()
                                 ->select('nivel')
                                 ->where(['ciinfper' => $CIInfPer])
                                 ->andWhere(['idper' => $idPer])
+                                ->andWhere(['idcarr' => $idCarr])
                                 ->one();
                             if (isset($perlec_carr_est_nivel)) {
                                 return 'Nivel: '.$perlec_carr_est_nivel->nivel;

@@ -3,8 +3,8 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
-use yii\helpers\ArrayHelper;
 use dosamigos\tinymce\TinyMce;
+use kartik\editors\Summernote;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\SysEmail */
@@ -61,7 +61,7 @@ $email = $user->getEmail();
 
     <?= $form->field($model, 'subject')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'body')->widget(TinyMce::className(), [
+    <?php /*echo $form->field($model, 'body')->widget(TinyMce::className(), [
         'options' => ['rows' => 6],
         'language' => 'es',
         'clientOptions' => [
@@ -72,7 +72,11 @@ $email = $user->getEmail();
             ],
             'toolbar' => "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
         ]
-    ]);?>
+    ])*/ ?>
+
+    <?php echo $form->field($model, 'body')->widget(Summernote::class, [
+        'useKrajeePresets' => true,
+    ]) ?>
 
     <?php //= $form->field($model, 'attach')->textarea(['rows' => 6]) ?>
 

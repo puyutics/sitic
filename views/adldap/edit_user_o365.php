@@ -4,10 +4,15 @@ use yii\widgets\DetailView;
 use Office365\GraphServiceClient;
 use Office365\Runtime\Auth\AADTokenProvider;
 use Office365\Runtime\Auth\ClientCredential;
+use yii\data\ArrayDataProvider;
+use kartik\grid\GridView;
 use kartik\icons\Icon;
 Icon::map($this);
 
 /* @var $model */
+
+//https://github.com/vgrem/phpSPO
+//https://learn.microsoft.com/en-us/graph/api/user-get?view=graph-rest-1.0&tabs=php
 
 ?>
 
@@ -30,7 +35,6 @@ Icon::map($this);
 <?php try {
     $client = new GraphServiceClient("acquireToken");
     //Buscar usuario
-    //$model->mail = 'test@puyo.gob.ec';
     $user = $client->getUsers()
         ->getById($model->mail)
         ->select([
@@ -57,36 +61,20 @@ Icon::map($this);
         ->executeQuery()
         ->toJson();
 
-    //Pruebas (test@uea.edu.ec)
-    if ($model->mail == 'test@uea.edu.ec') {
-        $test = $client->getUsers()
-            ->getById($model->mail)
-            ->select([
-                'Id',
-            ])
-            ->get()
-            ->executeQuery()
-            ->toJson()
-        ;
-        //print_r($test);
+    //Buscar Teams
+    $teams = $client->getUsers()
+        ->getById($model->mail)
+        ->getJoinedTeams()
+        ->get()
+        ->executeQuery()
+        ->toJson();
 
-        //Buscar Teams
-        $teams_ = $client->getGroups()
-            ->get()
-            ->executeQuery()
-            ->toJson();
-
-        if (isset($teams_)) {
-            $i=0;
-            foreach ($teams_ as $team) {
-                $i=$i+1;
-                echo $i.'. ';
-                echo $team['Id'].' >> ';
-                echo $team['DisplayName'];
-                echo "<br>";
-            }
-        }
-    }
+    $count = count($teams);
+    $teamsProvider = new ArrayDataProvider([
+        'allModels' => $teams,
+        'pagination' => ['pageSize' => $count,],
+        'sort' => ['attributes' => ['DisplayName' => SORT_ASC,]],
+    ]);
 
 } catch (Exception $e) {
     echo 'Excepción capturada: ',  $e->getMessage(), "\n";
@@ -219,23 +207,62 @@ Icon::map($this);
 <?php } ?>
 
 <?php if (isset($teams)) { ?>
-
     <div class="alert alert-info" align="center">
-        <h3 align="center">Teams/Groups - Microsoft 365</h3>
-        <h4><code>Información de prueba - Módulo en desarrollo</code></h4>
+        <h3 align="center">Microsoft Teams</h3>
+        <!--<h4><code>Información de prueba - Módulo en desarrollo</code></h4>-->
     </div>
 
-    <div align="center">
-        <?php $i=0;
+    <div align="left">
+        <?php /*$i=0;
         foreach ($teams as $team) {
-            if (str_contains($team['DisplayName'], Yii::$app->params['course_code'])) {
+            //if (str_contains($team['DisplayName'], Yii::$app->params['course_code'])) {
                 $i=$i+1;
                 echo $i.'. ';
-                echo $team['Id'].' >> ';
+                //echo $team['Id'].' >> ';
                 echo $team['DisplayName'];
+                //echo json_encode($team);
                 echo "<br>";
-            }
-        } ?>
+                break;
+            //}
+        }*/ ?>
+
+        <?= GridView::widget([
+            'dataProvider' => $teamsProvider,
+            'columns' => [
+                ['class' => 'yii\grid\SerialColumn'],
+
+                //'Id',
+                'DisplayName',
+                //'Description',
+                //'CreatedDateTime',
+                //'InternalId',
+                //'Classification',
+                //'Specialization',
+                //'Visibility',
+                //'WebUrl',
+                //'IsArchived',
+                //'TenantId',
+                //'IsMembershipLimitedToOwners',
+                //'MemberSettings',
+                //'GuestSettings',
+                //'MessagingSettings',
+                //'FunSettings',
+                //'DiscoverySettings',
+                //'Summary',
+
+                //['class' => 'yii\grid\ActionColumn'],
+            ],
+            'containerOptions' => ['style'=>'overflow: auto'],
+            'pjax' => false,
+            'bordered' => true,
+            'striped' => false,
+            'condensed' => false,
+            'responsive' => true,
+            'hover' => true,
+            'panel' => [
+                'type' => GridView::TYPE_PRIMARY
+            ],
+        ]); ?>
     </div>
 <?php } ?>
 

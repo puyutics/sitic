@@ -33,6 +33,7 @@
         "kartik-v/yii2-date-range": "dev-master",
         "kartik-v/yii2-detail-view": "*",
         "kartik-v/yii2-editable": "@dev",
+        "kartik-v/yii2-editors": "dev-master",
         "kartik-v/yii2-field-range": "*",
         "kartik-v/yii2-grid": "@dev",
         "kartik-v/yii2-icons": "@dev",

@@ -243,24 +243,32 @@ $dataProviderMdlRAposgrado->sort->defaultOrder = [
                                     ->where(['mailInst' => $mdl_user->username])
                                     ->one();
 
-                                $docenteAsignatura = \app\models\siad_pregrado\DocenteAsignatura::find()
+                                if (isset($codigo[5])) {
+                                    $idAsig = $codigo[1].'-'.$codigo[2].'-'.$codigo[3].'-'.$codigo[4];
+                                    $idParalelo = $codigo[5];
+                                } else {
+                                    $idAsig = $codigo[1].'-'.$codigo[2].'-'.$codigo[3];
+                                    $idParalelo = $codigo[4];
+                                }
+
+                                $dpa = \app\models\siad_pregrado\DocenteAsignatura::find()
                                     ->select('dpa_id')
                                     ->where(['idPer' => Yii::$app->params['siad_periodo']])
-                                    ->andWhere(['idAsig' => $codigo[1] . '-' . $codigo[2] . '-' . $codigo[3]])
-                                    ->andWhere(['idParalelo' => $codigo[4]])
+                                    ->andWhere(['idAsig' => $idAsig])
+                                    ->andWhere(['idParalelo' => $idParalelo])
                                     ->one();
 
                                 if (isset($estudiante)) {
                                     $notasAlumno = \app\models\siad_pregrado\NotasAlumno::find()
                                         ->select('dpa_id')
                                         ->where(['CIInfPer' => $estudiante->CIInfPer])
-                                        ->andWhere(['dpa_id' => $docenteAsignatura->dpa_id])
+                                        ->andWhere(['dpa_id' => $dpa->dpa_id])
                                         ->one();
 
                                     if (isset($notasAlumno)) {
                                         return "Correcto. ($notasAlumno->dpa_id)";
                                     } else {
-                                        return 'del, student, '.$estudiante->mailInst.', '.$docenteAsignatura->dpa_id;
+                                        return 'del, student, '.$estudiante->mailInst.', '.$dpa->dpa_id;
                                     }
                                 }
                             } elseif ($mdl_role->shortname == 'teacher'
