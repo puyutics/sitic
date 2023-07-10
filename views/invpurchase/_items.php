@@ -29,7 +29,7 @@ use yii\helpers\ArrayHelper;
             ['class' => 'kartik\grid\SerialColumn'],
 
             //'inv_purchase_id',
-            //'id',
+            'id',
             [
                 'class'=>'kartik\grid\EditableColumn',
                 'label'=>'DETALLE',

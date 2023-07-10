@@ -16,9 +16,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 
-<?php $open_ai_key = getenv('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');
+<?php $open_ai_key = getenv(Yii::$app->params['openai_api_key']);
 $open_ai = new OpenAi($open_ai_key);
-$open_ai->setORG("org-41xvUAFcddWIuOehauFAFTC5");
+$open_ai->setORG(Yii::$app->params['openai_org_key']);
 
 $chat = $open_ai->chat([
     'model' => 'gpt-3.5-turbo',
