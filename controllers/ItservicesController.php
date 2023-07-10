@@ -39,6 +39,11 @@ class ItservicesController extends Controller
                         'roles' => ['rolAdministrador'],
                     ],
                     [
+                        'actions' => ['admin','index'],
+                        'allow' => true,
+                        'roles' => ['rolTecnicos'],
+                    ],
+                    [
                         'actions' => ['delete','view'],
                         'allow' => false,
                     ],

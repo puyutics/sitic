@@ -21,8 +21,13 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                'only' => ['logout','openai'],
                 'rules' => [
+                    [
+                        'actions' => ['openai'],
+                        'allow' => true,
+                        'roles' => ['rolAdministrador'],
+                    ],
                     [
                         'actions' => ['logout'],
                         'allow' => true,
@@ -63,6 +68,12 @@ class SiteController extends Controller
     public function actionIndex()
     {
         return $this->render('index');
+    }
+
+
+    public function actionOpenai()
+    {
+        return $this->render('openai');
     }
 
     /**

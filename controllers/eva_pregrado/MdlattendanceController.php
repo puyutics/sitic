@@ -3,17 +3,17 @@
 namespace app\controllers\eva_pregrado;
 
 use Yii;
-use app\models\eva_pregrado\MdlRoleAssignments;
-use app\models\eva_pregrado\MdlRoleAssignmentsSearch;
+use app\models\eva_pregrado\MdlAttendance;
+use app\models\eva_pregrado\MdlAttendanceSearch;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * MdlroleassignmentsController implements the CRUD actions for MdlRoleAssignments model.
+ * MdlattendanceController implements the CRUD actions for MdlAttendance model.
  */
-class MdlroleassignmentsController extends Controller
+class MdlattendanceController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -23,29 +23,20 @@ class MdlroleassignmentsController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','delete','index','update','view',
-                    'mdlenrolsync','mdlcourseview','mdlcoursesync','siad2eva',
-                    'logs'],
+                'only' => ['create','delete','index','update','view'],
                 'rules' => [
                     [
-                        'actions' => ['index','mdlenrolsync','mdlcoursesync',
-                            'mdlcourseview','siad2eva','logs'],
+                        'actions' => ['index'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
                     [
-                        'actions' => ['index','mdlenrolsync','mdlcoursesync',
-                            'mdlcourseview','siad2eva','logs'],
+                        'actions' => ['index'],
                         'allow' => true,
                         'roles' => ['rolTecnicos'],
                     ],
                     [
-                        'actions' => ['mdlcourseview'],
-                        'allow' => true,
-                        'roles' => ['rolAdministrativo'],
-                    ],
-                    [
-                        'actions' => ['mdlenrolsync','delete','update','view'],
+                        'actions' => ['create','delete','update','view'],
                         'allow' => false,
                     ],
                 ],
@@ -60,23 +51,18 @@ class MdlroleassignmentsController extends Controller
     }
 
     /**
-     * Lists all MdlRoleAssignments models.
+     * Lists all MdlAttendance models.
      * @return mixed
      */
-    public function actionIndex($role = NULL)
+    public function actionIndex()
     {
-        $searchModel = new MdlRoleAssignmentsSearch();
+        $searchModel = new MdlAttendanceSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        if ($role != NULL) {
-            if ($role == 'teacher') {
-                $dataProvider->query->Where(['roleid' => 3]);
-                $dataProvider->query->orWhere(['roleid' => 4]);
-            }
-            if ($role == 'student') {
-                $dataProvider->query->Where(['roleid' => 5]);
-            }
-        }
+        $dataProvider->sort->defaultOrder = [
+            'course' => SORT_ASC,
+        ];
+        $countDataProvider = $dataProvider->getTotalCount();
+        $dataProvider->pagination = ['pageSize' => $countDataProvider];
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -84,32 +70,8 @@ class MdlroleassignmentsController extends Controller
         ]);
     }
 
-
-    public function actionMdlenrolsync()
-    {
-        return $this->render('_mdl_enrol_sync');
-    }
-
-
-    public function actionLogs()
-    {
-        return $this->render('_mdl_enrol_logs');
-    }
-
-
-    public function actionMdlcourseview()
-    {
-        return $this->render('_mdl_course_view');
-    }
-
-
-    public function actionMdlcoursesync()
-    {
-        return $this->render('_mdl_course_sync');
-    }
-
     /**
-     * Displays a single MdlRoleAssignments model.
+     * Displays a single MdlAttendance model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -122,13 +84,13 @@ class MdlroleassignmentsController extends Controller
     }
 
     /**
-     * Creates a new MdlRoleAssignments model.
+     * Creates a new MdlAttendance model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new MdlRoleAssignments();
+        $model = new MdlAttendance();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -140,7 +102,7 @@ class MdlroleassignmentsController extends Controller
     }
 
     /**
-     * Updates an existing MdlRoleAssignments model.
+     * Updates an existing MdlAttendance model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -160,7 +122,7 @@ class MdlroleassignmentsController extends Controller
     }
 
     /**
-     * Deletes an existing MdlRoleAssignments model.
+     * Deletes an existing MdlAttendance model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -174,19 +136,18 @@ class MdlroleassignmentsController extends Controller
     }
 
     /**
-     * Finds the MdlRoleAssignments model based on its primary key value.
+     * Finds the MdlAttendance model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return MdlRoleAssignments the loaded model
+     * @return MdlAttendance the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = MdlRoleAssignments::findOne($id)) !== null) {
+        if (($model = MdlAttendance::findOne($id)) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
-
 }

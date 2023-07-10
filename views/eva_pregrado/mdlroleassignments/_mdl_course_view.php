@@ -21,6 +21,7 @@ $mdl_courses = \app\models\eva_pregrado\MdlCourse::find()
             <th bgcolor="#EEEEEE" style="text-align: center">Nombre Curso</th>
             <th bgcolor="#EEEEEE" style="text-align: center">idnumber</th>
             <th bgcolor="#EEEEEE" style="text-align: center">Codigo SIAD</th>
+            <th bgcolor="#EEEEEE" style="text-align: center">Docente (SIAD)</th>
         </tr>
         <?php $i=0;
         foreach ($mdl_courses as $mdl_course) { ?>
@@ -41,6 +42,10 @@ $mdl_courses = \app\models\eva_pregrado\MdlCourse::find()
                     ->one();
                 if (isset($dpa)) {
                     $dpa_id = $dpa->dpa_id;
+                    $CIInfPer = $dpa->CIInfPer;
+                    if (($CIInfPer != NULL) or ($CIInfPer != '')) {
+                        $docente = \app\models\siad_pregrado\Docentes::findOne($CIInfPer);
+                    }
                 } else {
                     $dpa_id = '-';
                 }
@@ -59,6 +64,11 @@ $mdl_courses = \app\models\eva_pregrado\MdlCourse::find()
                 <?php } else { ?>
                     <th style="text-align: center"><?= $mdl_course->idnumber ?></th>
                     <th style="text-align: center"><?= $dpa_id ?></th>
+                <?php } ?>
+                <?php if (isset($docente)) { ?>
+                    <th style="text-align: center"><?= $docente->ApellInfPer.' '.$docente->ApellMatInfPer.' '.$docente->NombInfPer ?></th>
+                <?php } else { ?>
+                    <th style="text-align: center">-</th>
                 <?php } ?>
             </tr>
         <?php } ?>

@@ -103,6 +103,7 @@ AppAsset::register($this);
                     'items' => [
                         ['label' => '.. Gestión TI', 'url' => 'index.php?r=site/management'],
                         '<li class="divider"></li>',
+                        ['label' => 'OpenAI', 'url' => ['/site/openai']],
                         ['label' => 'Bienes', 'url' => 'index.php?r=invpurchaseitem/index'],
                         ['label' => 'Compras', 'url' => 'index.php?r=invpurchase/index'],
                         ['label' => 'Proveedores', 'url' => 'index.php?r=ccppproveedor/index'],
@@ -146,7 +147,7 @@ AppAsset::register($this);
                         //'<li class="divider"></li>',
                         //['label' => 'SIAD - Docente::Asignatura', 'url' => 'index.php?r=siad_pregrado/docenteasignatura/index&idper=37'],
                         //['label' => 'SIAD - Estudiantes::Asignatura', 'url' => 'index.php?r=siad_pregrado/notasalumno/index&idper=37'],
-                        ['label' => 'SIAD >> EVA Pregrado', 'url' => 'index.php?r=eva_pregrado/mdlroleassignments'],
+                        ['label' => 'SIAD >> EVA Pregrado', 'url' => 'index.php?r=evapregrado'],
                     ],
                 ],
                 //['label' => 'Acerca de', 'url' => ['/site/about']],

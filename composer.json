@@ -56,7 +56,8 @@
         "onmotion/yii2-telegram": "^0.8.6",
         "yii2assets/yii2-pdfjs": ">=1.0",
         "yiister/yii2-advanced-grid": "~1.0",
-        "vgrem/php-spo": "^2.4"
+        "vgrem/php-spo": "^2.4",
+        "orhanerday/open-ai": "^4.8"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
