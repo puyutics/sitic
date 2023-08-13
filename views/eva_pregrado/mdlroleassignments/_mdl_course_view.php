@@ -35,6 +35,7 @@ $mdl_courses = \app\models\eva_pregrado\MdlCourse::find()
                     $idAsig = $codigo[1].'-'.$codigo[2].'-'.$codigo[3];
                     $idParalelo = $codigo[4];
                 }
+                $CIInfPer=$docente='';
                 $dpa = \app\models\siad_pregrado\DocenteAsignatura::find()
                     ->where(['idPer' => Yii::$app->params['siad_periodo']])
                     ->andWhere(['idAsig' => $idAsig])
@@ -65,7 +66,7 @@ $mdl_courses = \app\models\eva_pregrado\MdlCourse::find()
                     <th style="text-align: center"><?= $mdl_course->idnumber ?></th>
                     <th style="text-align: center"><?= $dpa_id ?></th>
                 <?php } ?>
-                <?php if (isset($docente)) { ?>
+                <?php if ((isset($docente)) and ($docente != '')) { ?>
                     <th style="text-align: center"><?= $docente->ApellInfPer.' '.$docente->ApellMatInfPer.' '.$docente->NombInfPer ?></th>
                 <?php } else { ?>
                     <th style="text-align: center">-</th>

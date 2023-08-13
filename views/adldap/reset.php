@@ -60,10 +60,17 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ?>
                             <?php } ?>
 
-                            <div class="alert alert-danger">
-                                <?= 'Su nueva contraseña debe contener al menos 8 dígitos
-                                         entre mayúsculas, minúsculas y números. 
-                                         NO UTILICE SUS NOMBRES, APELLIDOS y/o NOMBRE DE USUARIO' ?>
+                            <div class="alert alert-info" align="left">
+                                <h4 align="center">
+                                    <code>Recomendaciones para su nueva contraseña</code>
+                                </h4>
+                                <hr>
+                                <h5> - No puede incluir su número de cédula / pasaporte</h5>
+                                <h5> - No puede incluir sus nombres / apellidos</h5>
+                                <h5> - Mínimo 8 caracteres</h5>
+                                <h5> - Mínimo 1 MAYÚSCULA</h5>
+                                <h5> - Mínimo 1 minúscula</h5>
+                                <h5> - Mínimo 1 número</h5>
                             </div>
 
                             <?php if (Yii::$app->session->hasFlash('errorReset')) { ?>
@@ -74,14 +81,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
                             <?= $form->field($model, 'newPassword')->widget(PasswordInput::classname(), [
                                 'pluginOptions' => [
-                                    'showMeter' => false,
+                                    'showMeter' => true,
                                     'toggleMask' => true
                                 ]])
                             ?>
 
                             <?= $form->field($model, 'verifyNewPassword')->widget(PasswordInput::classname(), [
                                 'pluginOptions' => [
-                                    'showMeter' => false,
+                                    'showMeter' => true,
                                     'toggleMask' => true
                                 ]])
                             ?>

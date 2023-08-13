@@ -23,10 +23,10 @@ class MdlattendancelogController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','delete','index','update','view'],
+                'only' => ['create','delete','index','update','view','sync'],
                 'rules' => [
                     [
-                        'actions' => ['index'],
+                        'actions' => ['index','sync'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
@@ -73,6 +73,11 @@ class MdlattendancelogController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+
+    public function actionSync()
+    {
+        return $this->render('_sync');
     }
 
     /**

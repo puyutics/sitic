@@ -96,4 +96,8 @@ return [
     'o365_api_client_id' => 'ENTER CLIENT ID HERE',
     'o365_api_client_secret' => 'ENTER CLIENT SECRET HERE',
 
+    //OpenAI API Key
+    'openai_api_key' => 'ENTER OPENAI API KEY',
+    'openai_org_key' => 'ENTER OPENAI ORG KEY',
+
 ];

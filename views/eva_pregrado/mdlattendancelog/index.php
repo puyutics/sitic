@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             //'id',
-            //'sessionid',
+            'sessionid',
             [
                 'label' => 'Curso',
                 'value' => function($model) {
@@ -60,10 +60,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Estado',
                 'value' => function($model) {
                     $statusid = $model->statusid;
-                    if (($statusid == 597) or ($statusid == 677)) return 'Presente ('.$statusid.')';
-                    if (($statusid == 598) or ($statusid == 678)) return 'Falta Injustificada ('.$statusid.')';
-                    if (($statusid == 599) or ($statusid == 679)) return 'Retraso ('.$statusid.')';
-                    if (($statusid == 600) or ($statusid == 680)) return 'Falta Justificada ('.$statusid.')';
+                    $statusset = $model->statusset;
+                    $statusset_array = @explode(',',$statusset);
+                    if ($statusid == $statusset_array[0]) return 'Presente ('.$statusid.')';
+                    if ($statusid == $statusset_array[1]) return 'Falta Injustificada ('.$statusid.')';
+                    if ($statusid == $statusset_array[2]) return 'Retraso ('.$statusid.')';
+                    if ($statusid == $statusset_array[3]) return 'Falta Justificada ('.$statusid.')';
                     return $statusid;
                 },
             ],
@@ -130,31 +132,60 @@ $this->params['breadcrumbs'][] = $this->title;
                             ->where(['CIInfPer' => $CIInfPer])
                             ->andWhere(['dpa_id' => $dpa_id])
                             ->one();
-                        $idnaa = $naa->idnaa;
 
-                        //Tipo de asistencia Moodle
-                        $statusid = $model->statusid;
-                        $presente=$ausente=$atraso=$justificada=0;
-                        if (($statusid == 597) or ($statusid == 677)) $presente = 1;
-                        if (($statusid == 598) or ($statusid == 678)) $ausente = 1;
-                        if (($statusid == 599) or ($statusid == 679)) $atraso = 1;
-                        if (($statusid == 600) or ($statusid == 680)) $justificada=1;
+                        if (isset($naa)) {
+                            $idnaa = $naa->idnaa;
+                            $sessdate = $mdl_attendance_session->sessdate;
+                            $duration = $mdl_attendance_session->duration;
 
-                        //Revisar si se ha transferido o existe el registro de asistencia
-                        $asistencia = \app\models\siad_pregrado\AsistenciaAlumno::find()
-                            ->where(['ciinfper' => $CIInfPer])
-                            ->andWhere(['idnaa' => $idnaa])
-                            ->andWhere(['presente' => $presente])
-                            ->andWhere(['ausente' => $ausente])
-                            ->andWhere(['atraso' => $atraso])
-                            ->andWhere(['justificada' => $justificada])
-                            ->one();
-                        if (isset($asistencia)) {
-                            $id_asist = $asistencia->id_asist;
-                            return 'OK ('.$id_asist.')';
+                            //Buscar si existe clase planificada en SIAD
+                            $fecha = date("Y-m-d", $sessdate);
+                            $hora_ini_planif = date("H:i:s", $sessdate);
+                            $hora_fin_planif = date("H:i:s", $sessdate + $duration);
+
+                            $planasig = \app\models\siad_pregrado\PlanificacionAsignatura::find()
+                                ->select('id_plasig')
+                                ->where(['dpa_id' => $dpa_id])
+                                ->andWhere(['fecha' => $fecha])
+                                ->andWhere(['hora_ini_planif' => $hora_ini_planif])
+                                ->andWhere(['hora_fin_planif' => $hora_fin_planif])
+                                ->one();
+
+                            if (isset($planasig)) {
+                                $id_plasig = $planasig->id_plasig;
+
+                                //Tipo de asistencia Moodle
+                                $statusid = $model->statusid;
+                                $statusset = $model->statusset;
+                                $presente=$ausente=$atraso=$justificada=0;
+                                $statusset_array = @explode(',',$statusset);
+                                if ($statusid == $statusset_array[0]) $presente = 1;
+                                if ($statusid == $statusset_array[1]) $ausente = 1;
+                                if ($statusid == $statusset_array[2]) $atraso = 1;
+                                if ($statusid == $statusset_array[3]) $justificada = 1;
+
+                                //Revisar si se ha transferido o existe el registro de asistencia
+                                $asistencia = \app\models\siad_pregrado\AsistenciaAlumno::find()
+                                    ->where(['ciinfper' => $CIInfPer])
+                                    ->andWhere(['idnaa' => $idnaa])
+                                    ->andWhere(['id_plasig' => $id_plasig])
+                                    ->andWhere(['presente' => $presente])
+                                    ->andWhere(['ausente' => $ausente])
+                                    ->andWhere(['atraso' => $atraso])
+                                    ->andWhere(['justificada' => $justificada])
+                                    ->one();
+                                if (isset($asistencia)) {
+                                    $id_asist = $asistencia->id_asist;
+                                    return 'OK ('.$id_asist.')';
+                                } else {
+                                    return '(SIAD) No se ha registrado o transferido la asistencia';
+                                }
+                            }
                         } else {
-                            return 'No existe';
+                            return '(SIAD) No se ha encontrado matricula en el curso';
                         }
+                    } else {
+                        return '(SIAD) No existe estudiante';
                     }
                     return '-';
                 },

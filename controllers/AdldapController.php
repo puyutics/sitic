@@ -2192,61 +2192,68 @@ class AdldapController extends Controller
 
             if (isset($user)) {
 
-                $mail = $user->getAttribute('mail',0);
-                $dni = $user->getAttribute(Yii::$app->params['dni'],0);
-                $personalmail = $user->getAttribute(Yii::$app->params['personalmail'],0);
-                $fullname = $user->getAttribute('cn',0);
+                //Verificar si la cuenta se encuentra activa
+                $uac = $user->getUserAccountControl();
+                if (($uac == 512) or ($uac == 66048)) {
+                    $mail = $user->getAttribute('mail',0);
+                    $dni = $user->getAttribute(Yii::$app->params['dni'],0);
+                    $personalmail = $user->getAttribute(Yii::$app->params['personalmail'],0);
+                    $fullname = $user->getAttribute('cn',0);
 
-                if (Yii::$app->request->post('sendToken')==='sendToken') {
+                    if (Yii::$app->request->post('sendToken')==='sendToken') {
 
-                    //Crear un Reset TOKEN
-                    $resetToken = hash(Yii::$app->params['algorithm'], Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $mail);
-                    //$resetToken = str_shuffle($resetToken);
-                    $resetToken = substr(hexdec($resetToken), 2, 6);
+                        //Crear un Reset TOKEN
+                        $resetToken = hash(Yii::$app->params['algorithm'], Yii::$app->params['saltKey'] . Yii::$app->params['tokenDateFormat'] . $mail);
+                        //$resetToken = str_shuffle($resetToken);
+                        $resetToken = substr(hexdec($resetToken), 2, 6);
 
-                    //Enviar Reset TOKEN por email
-                    $this->sendToken($dni,$fullname,$mail,$personalmail,$resetToken);
+                        //Enviar Reset TOKEN por email
+                        $this->sendToken($dni,$fullname,$mail,$personalmail,$resetToken);
 
-                    //Crear Registro de Log en la base de datos
-                    $description =
-                        'Envío de Token para el usuario: ' . $sAMAccountname
-                        . ', al correo electrónico personal: ' . $personalmail
-                    ;
-                    $this->saveLog('sendToken', $sAMAccountname, $description, $sAMAccountname,'adldap');
+                        //Crear Registro de Log en la base de datos
+                        $description =
+                            'Envío de Token para el usuario: ' . $sAMAccountname
+                            . ', al correo electrónico personal: ' . $personalmail
+                        ;
+                        $this->saveLog('sendToken', $sAMAccountname, $description, $sAMAccountname,'adldap');
 
-                    //Mensaje de email enviado
-                    Yii::$app->session->setFlash('successMail', $personalmail);
+                        //Mensaje de email enviado
+                        Yii::$app->session->setFlash('successMail', $personalmail);
 
-                    return $this->render('forgetpass', [
-                        'model'=>$model]); //Success
+                        return $this->render('forgetpass', [
+                            'model'=>$model]); //Success
+                    }
+
+                    if (($post_mail == $mail) and ($post_dni == $dni)) {
+
+                        $model->dni = $dni;
+                        $model->commonname = $fullname;
+                        $model->mail = $mail;
+                        $model->personalmail = $personalmail;
+
+                        Yii::$app->session->setFlash('personalmail', $model->personalmail);
+
+                        return $this->render('forgetpass', [
+                            'model'=>$model]); //Success
+
+                    }
+
+                    //
+                    Yii::$app->session->setFlash('error','DNI, Cédula o Pasaporte incorrecto');
+
+                    return $this->render('forgetpass',
+                        ['model'=>$model]); //DNI incorrecto
+
+                } else {
+                    Yii::$app->session->setFlash('error','La cuenta ha sido desactivada. No puede realizar un cambio de contraseña');
+                    return $this->render('forgetpass',
+                        ['model'=>$model]); //Cuenta desactivada
                 }
-
-                if (($post_mail == $mail) and ($post_dni == $dni)) {
-
-                    $model->dni = $dni;
-                    $model->commonname = $fullname;
-                    $model->mail = $mail;
-                    $model->personalmail = $personalmail;
-
-                    Yii::$app->session->setFlash('personalmail', $model->personalmail);
-
-                    return $this->render('forgetpass', [
-                        'model'=>$model]); //Success
-
-                }
-
-                //
-                Yii::$app->session->setFlash('error','DNI, Cédula o Pasaporte incorrecto');
-
-                return $this->render('forgetpass',
-                    ['model'=>$model]); //DNI incorrecto
             } else {
                 Yii::$app->session->setFlash('error','Usuario o Correo institucional incorrecto');
-
                 return $this->render('forgetpass',
                     ['model'=>$model]); //Mail incorrecto
             }
-
         } else {
             return $this->render('forgetpass', [
                 'model' => $model,

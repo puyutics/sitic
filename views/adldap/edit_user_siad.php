@@ -460,7 +460,7 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
                     'label' => 'Asignaturas',
                     'value' => function($model) {
                         $naas = \app\models\siad_pregrado\NotasAlumno::find()
-                            ->select('idAsig, dpa_id')
+                            ->select('idAsig, dpa_id, aprobada, anulada, retirado')
                             ->andWhere(['CIInfPer' => $model->CIInfPer])
                             ->andWhere(['idper' => $model->idPer])
                             ->andWhere(['idMatricula' => $model->idMatricula])
@@ -470,7 +470,11 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
                             $i=0;$echo = '';
                             foreach ($naas as $naa) {
                                 $i=$i+1;
+                                $aprobada=$anulada=$retirado=0;
                                 $idAsig = $naa->idAsig;
+                                $aprobada = $naa->aprobada;
+                                $anulada = $naa->anulada;
+                                $retirado = $naa->retirado;
                                 $dpa_id = $naa->dpa_id;
                                 $asignatura = \app\models\siad_pregrado\Asignatura::find()
                                     ->select('nombAsig')
@@ -481,22 +485,29 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
                                     ->select('idParalelo')
                                     ->where(['dpa_id' => $dpa_id])
                                     ->one();
+                                $echo = $echo.$i.'. ';
+                                if ($aprobada == 1) {
+                                    $echo = $echo.'<font color="green">Aprobada</font> - ';
+                                } elseif ($anulada == 1) {
+                                    $echo = $echo.'<code>Anulada</code> - ';
+                                } elseif ($retirado == 1) {
+                                    $echo = $echo.'<code>Retirado</code> - ';
+                                }
                                 if (isset($dpa)) {
                                     $idParalelo = $dpa->idParalelo;;
-                                    $echo =  $echo .
+                                    $echo = $echo.
                                         $i.'. '.
                                         $idAsig.
                                         ' -- '.
-                                        $nombAsig.' ('.$idParalelo.')'.
-                                        '<br>';
+                                        $nombAsig.' ('.$idParalelo.')';
                                 } else {
-                                    $echo =  $echo .
+                                    $echo = $echo.
                                         $i.'. '.
                                         $idAsig.
                                         ' -- '.
-                                        $nombAsig. ' (<code>Sin paralelo</code>)'.
-                                        '<br>';
+                                        $nombAsig. ' (<code>Sin paralelo</code>)';
                                 }
+                                $echo = $echo.'<br>';
                             }
                             return $echo;
                         } else {
@@ -665,7 +676,7 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
                     'label' => 'Asignaturas',
                     'value' => function($model) {
                         $naas = \app\models\siad_pregrado\NotasAlumno::find()
-                            ->select('idAsig, dpa_id')
+                            ->select('idAsig, dpa_id, aprobada, anulada, retirado')
                             ->andWhere(['CIInfPer' => $model->CIInfPer])
                             ->andWhere(['idper' => $model->idPer])
                             ->andWhere(['idMatricula' => $model->idMatricula])
@@ -675,7 +686,11 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
                             $i=0;$echo = '';
                             foreach ($naas as $naa) {
                                 $i=$i+1;
+                                $aprobada=$anulada=$retirado=0;
                                 $idAsig = $naa->idAsig;
+                                $aprobada = $naa->aprobada;
+                                $anulada = $naa->anulada;
+                                $retirado = $naa->retirado;
                                 $dpa_id = $naa->dpa_id;
                                 $asignatura = \app\models\siad_pregrado\Asignatura::find()
                                     ->select('nombAsig')
@@ -686,22 +701,27 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
                                     ->select('idParalelo')
                                     ->where(['dpa_id' => $dpa_id])
                                     ->one();
+                                $echo = $echo.$i.'. ';
+                                if ($aprobada == 1) {
+                                    $echo = $echo.'<font color="green">Aprobada</font> - ';
+                                } elseif ($anulada == 1) {
+                                    $echo = $echo.'<code>Anulada</code> - ';
+                                } elseif ($retirado == 1) {
+                                    $echo = $echo.'<code>Retirado</code> - ';
+                                }
                                 if (isset($dpa)) {
                                     $idParalelo = $dpa->idParalelo;;
-                                    $echo =  $echo .
-                                        $i.'. '.
+                                    $echo = $echo.
                                         $idAsig.
                                         ' -- '.
-                                        $nombAsig.' ('.$idParalelo.')'.
-                                        '<br>';
+                                        $nombAsig.' ('.$idParalelo.')';
                                 } else {
-                                    $echo =  $echo .
-                                        $i.'. '.
+                                    $echo = $echo.
                                         $idAsig.
                                         ' -- '.
-                                        $nombAsig. ' (<code>Sin paralelo</code>)'.
-                                        '<br>';
+                                        $nombAsig. ' (<code>Sin paralelo</code>)';
                                 }
+                                $echo = $echo.'<br>';
                             }
                             return $echo;
                         } else {
