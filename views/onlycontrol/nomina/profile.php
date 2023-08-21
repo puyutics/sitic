@@ -115,6 +115,17 @@ if (isset($oc_user)) {
                 'label' => 'Medio Aut.',
                 'attribute' => 'NOMINA_TIPONOM',
             ],
+            [
+                'label' => 'Estado',
+                'attribute' => 'NOMINA_ES',
+                'value' => function($model) {
+                    if($model->NOMINA_ES == 0) return '<code>INACTIVO</code>';
+                    if($model->NOMINA_ES == 1) return '<font color="green">ACTIVO</font>';
+                    if($model->NOMINA_ES == -1) return '<font color="green">ACTIVO</font> ('.$model->NOMINA_ES.')';
+                    return $model->NOMINA_ES;
+                },
+                'format' => 'raw',
+            ],
         ],
     ]) ?>
 

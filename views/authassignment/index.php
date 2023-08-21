@@ -75,9 +75,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template' => '{delete}',
                 'buttons'=>[
                     'delete' => function ($url, $model) {
-                        if ($model->user_id != 1){
-                            return Html::a('<span class="btn btn-danger center-block">' . Icon::show('trash') . '</span>',
-                                $url, [
+                        if ($model->user_id != 1) {
+                            return Html::a('<span class="glyphicon glyphicon-ban-circle"></span>', $url, [
                                 'title' => Yii::t('app', 'Delete'),
                                 'data-confirm' => Yii::t('yii', '¿Está seguro de eliminar este elemento?'),
                                 'data-method' => 'post', 'data-pjax' => '0',

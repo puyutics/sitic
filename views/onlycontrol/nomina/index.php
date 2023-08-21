@@ -62,11 +62,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
             ],
-            [
+            /*[
                 'label' => 'Código',
                 'attribute' => 'NOMINA_ID',
                 'width' => '100px',
-            ],
+            ],*/
             [
                 'label' => 'Usuario',
                 'attribute' => 'NOMINA_COD',
@@ -89,8 +89,38 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'NOMINA_TIPO',
                 'filter'=>['USUARIO'=>'USUARIO','ADMINISTRADOR'=>'ADMINISTRADOR'],
             ],
+            [
+                'label' => 'Estado',
+                'attribute' => 'NOMINA_ES',
+                'value' => function($model) {
+                    if($model->NOMINA_ES == 0) return '<code>INACTIVO</code>';
+                    if($model->NOMINA_ES == 1) return '<font color="green">ACTIVO</font>';
+                    if($model->NOMINA_ES == -1) return '<font color="green">ACTIVO</font> ('.$model->NOMINA_ES.')';
+                    return $model->NOMINA_ES;
+                },
+                'format' => 'raw',
+            ],
+            [
+                'label' => 'Acciones',
+                'value' => function ($model) {
+                    return Html::a(Icon::show('eye') . 'Perfil',
+                        ['onlycontrol/nomina/profile', 'oc_user_id'=>base64_encode($model->NOMINA_ID)],
+                        ['class' => 'btn btn-primary','target' => '_blank']
+                    ).' | '.Html::a(Icon::show('door-closed') . 'Puertas',
+                        ['onlycontrol/nompuerta/indexuser', 'oc_user_id'=>base64_encode($model->NOMINA_ID)],
+                        ['class' => 'btn btn-primary','target' => '_blank']
+                    ).Html::a(Icon::show('fingerprint') . 'Accesos',
+                            ['onlycontrol/asistnow/indexuser', 'oc_user_id'=>base64_encode($model->NOMINA_ID)],
+                            ['class' => 'btn btn-primary','target' => '_blank']
+                    ).' | '.Html::a(Icon::show('clipboard-list') . 'Logs',
+                        ['onlycontrol/puertasta/indexuser', 'oc_user_id'=>base64_encode($model->NOMINA_ID)],
+                        ['class' => 'btn btn-success','target' => '_blank']
+                    );
+                },
+                'format' => 'raw',
+            ],
 
-            ['class' => 'kartik\grid\ActionColumn',
+            /*['class' => 'kartik\grid\ActionColumn',
                 'template'=>'{profile}',
                 'buttons'=>[
                     'profile' => function ($url, $model) {
@@ -100,8 +130,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         );
                     },
                 ]
-            ],
-            ['class' => 'kartik\grid\ActionColumn',
+            ],*/
+            /*['class' => 'kartik\grid\ActionColumn',
                 'template'=>'{doors}',
                 'buttons'=>[
                     'doors' => function ($url, $model) {
@@ -111,8 +141,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         );
                     },
                 ]
-            ],
-            ['class' => 'kartik\grid\ActionColumn',
+            ],*/
+            /*['class' => 'kartik\grid\ActionColumn',
                 'template'=>'{access}',
                 'buttons'=>[
                     'access' => function ($url, $model) {
@@ -122,8 +152,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         );
                     },
                 ]
-            ],
-            ['class' => 'kartik\grid\ActionColumn',
+            ],*/
+            /*['class' => 'kartik\grid\ActionColumn',
                 'template'=>'{logs}',
                 'buttons'=>[
                     'logs' => function ($url, $model) {
@@ -133,7 +163,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         );
                     },
                 ]
-            ],
+            ],*/
 
 
             //'NOMINA_FING',
@@ -152,7 +182,6 @@ $this->params['breadcrumbs'][] = $this->title;
             //'NOMINA_SUEL',
             //'NOMINA_COM',
             //'NOMINA_AUTI',
-            //'NOMINA_ES',
             //'NOMINA_OBS',
             //'NOMINA_EMP',
             //'NOMINA_FINGER',
@@ -227,6 +256,20 @@ $this->params['breadcrumbs'][] = $this->title;
             //'NOMINA_STATUSAPB',
 
             //['class' => 'yii\grid\ActionColumn'],
+        ],
+        'containerOptions' => ['style'=>'overflow: auto'],
+        'toolbar' =>  [
+            '{export}',
+            '{toggleData}'
+        ],
+        'pjax' => false,
+        'bordered' => true,
+        'striped' => false,
+        'condensed' => false,
+        'responsive' => true,
+        'hover' => true,
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY
         ],
     ]); ?>
 </div>

@@ -109,5 +109,19 @@ $dataProviderNomPuertaLog->pagination = ['pageSize' => $countDataProvider];
 
             //['class' => 'yii\grid\ActionColumn'],
         ],
+        'containerOptions' => ['style'=>'overflow: auto'],
+        'toolbar' =>  [
+            '{export}',
+            '{toggleData}'
+        ],
+        'pjax' => false,
+        'bordered' => true,
+        'striped' => false,
+        'condensed' => false,
+        'responsive' => true,
+        'hover' => true,
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY
+        ],
     ]); ?>
 </div>

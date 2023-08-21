@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\onlycontrol\NomPuertalogSearch */
@@ -36,6 +36,20 @@ $this->params['breadcrumbs'][] = $this->title;
             'TURN_DELNOW',
 
             //['class' => 'yii\grid\ActionColumn'],
+        ],
+        'containerOptions' => ['style'=>'overflow: auto'],
+        'toolbar' =>  [
+            '{export}',
+            '{toggleData}'
+        ],
+        'pjax' => false,
+        'bordered' => true,
+        'striped' => false,
+        'condensed' => false,
+        'responsive' => true,
+        'hover' => true,
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY
         ],
     ]); ?>
 </div>
