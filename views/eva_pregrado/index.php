@@ -62,8 +62,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 <br>
                 <br>
             </h5>
+            <?= Html::a('Ver Logs', ['eva_pregrado/mdlattendancelog/logs'], ['class' => 'btn btn-md btn-primary', 'target' => '_blank']) ?>
+            <?= Html::a('Sincronizar Asistencia', ['eva_pregrado/mdlattendancelog/sync_web'], ['class' => 'btn btn-md btn-danger', 'target' => '_blank']) ?>
+            <br><br>
             <?= Html::a('Ver Asistencia', ['eva_pregrado/mdlattendance/index'], ['class' => 'btn btn-md btn-primary', 'target' => '_blank']) ?>
-            <?= Html::a('Sincronizar Asistencia', ['eva_pregrado/mdlattendancelog/sync'], ['class' => 'btn btn-md btn-danger', 'target' => '_blank']) ?>
         </div>
     </div>
     <hr>

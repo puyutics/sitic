@@ -133,8 +133,13 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
 
             ['class' => 'kartik\grid\ActionColumn',
-                'template'=>'{logs}',
+                'template'=>'{update}{logs}',
                 'buttons'=>[
+                    'update' => function ($url, $model) {
+                        return Html::a('<span class="btn btn-danger center-block">'.Icon::show('edit') . 'Editar'.'</span>',
+                            Url::to(['onlycontrol/puerta/update', 'id'=>base64_encode($model->PRT_COD)]),
+                            ['title' => Yii::t('yii', 'EDITAR'),'target' => '_blank']);
+                    },
                     'logs' => function ($url, $model) {
                         return Html::a('<span class="btn btn-success center-block">'.Icon::show('clipboard-list') . 'Logs'.'</span>',
                             Url::to(['onlycontrol/puertasta/indexpuerta', 'oc_zona'=>base64_encode($model->PRT_COD)]),

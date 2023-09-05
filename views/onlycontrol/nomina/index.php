@@ -18,7 +18,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="alert alert-info" align="center">
         <h3 align="center"><?= $this->title ?></h3>
     </div>
-
+    <div align="center">
+        <?= Html::a('Depurar Estudiantes', ['clearstudents'], ['class' => 'btn btn-md btn-danger', 'target' => '_blank']) ?>
+    </div>
+    <br>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -62,11 +65,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
             ],
-            /*[
+            [
                 'label' => 'Código',
                 'attribute' => 'NOMINA_ID',
                 'width' => '100px',
-            ],*/
+            ],
             [
                 'label' => 'Usuario',
                 'attribute' => 'NOMINA_COD',

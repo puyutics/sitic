@@ -5,6 +5,7 @@ namespace app\controllers\onlycontrol;
 use Yii;
 use app\models\onlycontrol\Puerta;
 use app\models\onlycontrol\PuertaSearch;
+use yii\debug\models\search\Base;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -111,6 +112,7 @@ class PuertaController extends Controller
      */
     public function actionUpdate($id)
     {
+        $id = base64_decode($id);
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

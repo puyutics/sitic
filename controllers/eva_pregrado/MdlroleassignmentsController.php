@@ -90,7 +90,6 @@ class MdlroleassignmentsController extends Controller
         return $this->render('_mdl_enrol_sync');
     }
 
-
     public function actionLogs()
     {
         return $this->render('_mdl_enrol_logs');

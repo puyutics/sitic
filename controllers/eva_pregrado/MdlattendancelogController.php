@@ -23,10 +23,11 @@ class MdlattendancelogController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','delete','index','update','view','sync'],
+                'only' => ['create','delete','index','update','view',
+                    'sync_web','logs'],
                 'rules' => [
                     [
-                        'actions' => ['index','sync'],
+                        'actions' => ['index','sync_web','logs'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
@@ -75,9 +76,14 @@ class MdlattendancelogController extends Controller
         ]);
     }
 
-    public function actionSync()
+    public function actionSync_web()
     {
-        return $this->render('_sync');
+        return $this->render('_sync_web');
+    }
+
+    public function actionLogs()
+    {
+        return $this->render('_sync_logs');
     }
 
     /**

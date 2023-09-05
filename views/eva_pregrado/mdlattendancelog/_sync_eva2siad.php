@@ -38,9 +38,7 @@ $eva_command = $eva_connection->createCommand("
             AND mdl_c.id = mdl_at.course
             AND	mdl_ats.id = mdl_atl.sessionid
             AND mdl_at.id = mdl_ats.attendanceid
-            #AND mdl_atl.sessionid = 4830
-            #AND mdl_atl.sessionid = 1149
-            AND mdl_c.shortname LIKE '2323-UEA-L-UFB-026-A'
+            AND mdl_c.shortname LIKE '2323-UEA-L-UFB-026%'
             ");
 $eva_attendance_logs = $eva_command->queryAll();
 
@@ -77,7 +75,8 @@ foreach ($eva_attendance_logs as $eva_attendance_log) {
         //Obtener codigo matrícula en el curso en SIAD
         $siad_command = $siad_connection->createCommand("
             SELECT
-                    idnaa
+                    idnaa,
+                    idPer
             FROM
                     notasalumnoasignatura
             WHERE
@@ -88,7 +87,7 @@ foreach ($eva_attendance_logs as $eva_attendance_log) {
 
         if (isset($naa['idnaa'])) {
             $idnaa = $naa['idnaa'];
-
+            $idPer = $naa['idPer'];
             //Buscar si existe clase planificada en SIAD
             $fecha = date("Y-m-d", $sessdate);
             $hora_ini_planif = date("H:i:s", $sessdate);
@@ -96,7 +95,8 @@ foreach ($eva_attendance_logs as $eva_attendance_log) {
 
             $siad_command = $siad_connection->createCommand("
             SELECT
-                    id_plasig
+                    id_plasig,
+                    num_periodos
             FROM
                     planificacion_asignatura
             WHERE
@@ -109,45 +109,72 @@ foreach ($eva_attendance_logs as $eva_attendance_log) {
 
             if (isset($planasig['id_plasig'])) {
                 $id_plasig = $planasig['id_plasig'];
+                $num_periodos = $planasig['num_periodos'];
 
                 //Tipo de asistencia Moodle
-                $presente=$ausente=$atraso=$justificada=0;
+                $presente=$atraso=$justificada=$ausente=0;
                 $statusset_array = @explode(',',$statusset);
                 if ($statusid == $statusset_array[0]) $presente = 1;
-                if ($statusid == $statusset_array[1]) $ausente = 1;
-                if ($statusid == $statusset_array[2]) $atraso = 1;
-                if ($statusid == $statusset_array[3]) $justificada = 1;
+                if ($statusid == $statusset_array[1]) $atraso = 1;
+                if ($statusid == $statusset_array[2]) $justificada = 1;
+                if ($statusid == $statusset_array[3]) $ausente = 1;
 
                 //Verificar si se ha transferido o existe el registro de asistencia
                 $siad_command = $siad_connection->createCommand("
                     SELECT
-                            id_asist
+                            id_asist,
+                            presente,
+                            ausente,
+                            atraso,
+                            justificada
                     FROM
                             asistencia_alumno
                     WHERE
                             ciinfper LIKE '".$CIInfPer."'
                             AND idnaa = ".$idnaa."
                             AND id_plasig = ".$id_plasig."
-                            AND presente = ".$presente."
-                            AND ausente = ".$ausente."
-                            AND atraso = ".$atraso."
-                            AND atraso = ".$atraso."
                             ");
                 $asistencia = $siad_command->queryOne();
 
                 if (isset($asistencia['id_asist'])) {
                     $id_asist = $asistencia['id_asist'];
-                    print_r($i.'. '.$mdl_atl_id.' - (SIAD) OK. Se ha registrado o transferido la asistencia correctamente ('.$id_asist.')'.'<br>');
-                    //print_r($i.'. '.$mdl_atl_id.' - (SIAD) OK. Se ha registrado o transferido la asistencia correctamente'.'<br>');
+                    if (($presente == 1 AND $asistencia['presente'] == 1)
+                        OR ($atraso == 1 AND $asistencia['atraso'] == 1)
+                        OR ($justificada == 1 AND $asistencia['justificada'] == 1)
+                        OR ($ausente == 1 AND $asistencia['ausente'] == 1)
+                    ) {
+                        print_r($i.'. '.$mdl_atl_id.' - (SIAD) OK. Se encuentra previamente registrada o transferida la asistencia de manera correcta ('.$id_asist.')'.'<br>');
+                    } else {
+                        $asistencia_update = \app\models\siad_pregrado\AsistenciaAlumno::findOne($id_asist);
+                        $asistencia_update->presente = $presente;
+                        $asistencia_update->atraso = $atraso;
+                        $asistencia_update->justificada = $justificada;
+                        $asistencia_update->ausente = $ausente;
+                        $asistencia_update->fecha_modif = date('Y-m-d H:i:s');
+                        if ($asistencia_update->save(false)) {
+                            print_r($i.'. '.$mdl_atl_id.' - (SIAD) OK (Update). Se ha actualizado el registro de asistencia existente de manera correcta ('.$id_asist.')'.'<br>');
+                        }
+                    }
                 } else {
-                    print_r($i.'. '.$mdl_atl_id.' - (SIAD) No se ha registrado o transferido la asistencia'.'<br>');
-
                     //Registrar asistencia en la BD-SIAD Pregrado
-                    //$model_asistencia = New \app\models\siad_pregrado\AsistenciaAlumno();
+                    $model_asistencia = New \app\models\siad_pregrado\AsistenciaAlumno();
+                    $model_asistencia->ciinfper = $CIInfPer;
+                    $model_asistencia->fecha_asal = $fecha;
+                    $model_asistencia->hora_asal = $hora_ini_planif;
+                    $model_asistencia->idPer = $idPer;
+                    $model_asistencia->idnaa = $idnaa;
+                    $model_asistencia->observacion_asal = 'siad2eva - Transferencia automática';
+                    $model_asistencia->numsesion_asal = $num_periodos;
+                    $model_asistencia->presente = $presente;
+                    $model_asistencia->ausente = $ausente;
+                    $model_asistencia->atraso = $atraso;
+                    $model_asistencia->justificada = $justificada;
+                    $model_asistencia->fecha_creacion = date("Y-m-d H:i:s", $timetaken);
+                    $model_asistencia->fecha_modif = date("Y-m-d H:i:s", $timetaken);
+                    $model_asistencia->id_plasig = $id_plasig;
 
-
-
-
+                    $model_asistencia->save(false);
+                    print_r($i.'. '.$mdl_atl_id.' - (SIAD) Se ha transferido el registro correctamente','<br>');
                 }
             } else {
                 print_r($i.'. '.$mdl_atl_id.' - (SIAD) No se ha encontrado una clase planificada'.'<br>');
@@ -158,16 +185,14 @@ foreach ($eva_attendance_logs as $eva_attendance_log) {
     } else {
         print_r($i.'. '.$mdl_atl_id.' - (SIAD) No existe estudiante'.'<br>');
     }
-
 }
-
-
 
 
 $tiempoFinal = microtimeFloat();
 $tiempoEjecucion = round($tiempoFinal - $tiempoInicial,2) . ' segundos';
 
 print_r('<br>'.'Tiempo: ' . $tiempoEjecucion);
+print_r('<br>'.'Fecha y hora: ' . date('Y-m-d H:i:s'));
 
 fwrite($file_web_output, 'Tiempo: ' . $tiempoEjecucion . PHP_EOL);
 fwrite($file_web_output, 'Fecha y hora: ' . date('Y-m-d H:i:s') . PHP_EOL);

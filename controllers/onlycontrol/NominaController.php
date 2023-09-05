@@ -24,10 +24,10 @@ class NominaController extends Controller
             'access' => [
                 'class' => AccessControl::className(),
                 'only' => ['create','delete','index','update','view',
-                    'profile'],
+                    'profile','clearstudents'],
                 'rules' => [
                     [
-                        'actions' => ['index','view','profile'],
+                        'actions' => ['index','view','profile','clearstudents'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
@@ -83,6 +83,12 @@ class NominaController extends Controller
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
+    }
+
+
+    public function actionClearstudents()
+    {
+        return $this->render('clear_students');
     }
 
     public function actionProfile($oc_user_id)
