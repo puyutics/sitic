@@ -51,13 +51,13 @@ $this->params['breadcrumbs'][] = $this->title;
         <div align="center" class="col-lg-4">
             <h5 class="alert alert-info">
                 <b>Características</b><br>
-                <br>- Asistencia de Estudiantes
-                <br>- Revisar sincronización con SIAD
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
+                <br>- Transfiere Asistencia de Estudiantes
+                <br>- Transferencia desde Moodle
+                <br>- Se validan transferencias correctas
+                <br>- Se actualizan asistencias con inconsistencias
+                <br>- Se crean registro de asistencia nuevos
+                <br>- Se crean registros de inasistencia
+                <br>- Se identifican clases no planificadas
                 <br>
                 <br>
                 <br>

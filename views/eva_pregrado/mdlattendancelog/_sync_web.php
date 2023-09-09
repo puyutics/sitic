@@ -267,8 +267,8 @@ foreach ($siad_estudiantes_asignaturas as $sea) {
                     //Registrar asistencia en la BD - SIAD Pregrado
                     $asistencia_create = New \app\models\siad_pregrado\AsistenciaAlumno();
                     $asistencia_create->ciinfper = $sea_CIInfPer;
-                    $asistencia_create->fecha_asal = $saa_fecha_asal;
-                    $asistencia_create->hora_asal = $saa_hora_asal;
+                    $asistencia_create->fecha_asal = $spa_fecha;
+                    $asistencia_create->hora_asal = $spa_hora_ini_planif;
                     $asistencia_create->idPer = $sea_idPer;
                     $asistencia_create->idnaa = $sea_idnaa;
                     $asistencia_create->observacion_asal = 'siad2eva - Transferencia automática';
@@ -291,8 +291,8 @@ foreach ($siad_estudiantes_asignaturas as $sea) {
                     //Registrar inasistencia en la BD - SIAD Pregrado
                     $asistencia_create = New \app\models\siad_pregrado\AsistenciaAlumno();
                     $asistencia_create->ciinfper = $sea_CIInfPer;
-                    $asistencia_create->fecha_asal = $saa_fecha_asal;
-                    $asistencia_create->hora_asal = $saa_hora_asal;
+                    $asistencia_create->fecha_asal = $spa_fecha;
+                    $asistencia_create->hora_asal = $spa_hora_ini_planif;
                     $asistencia_create->idPer = $sea_idPer;
                     $asistencia_create->idnaa = $sea_idnaa;
                     $asistencia_create->observacion_asal = 'siad2eva - Transferencia automática';
@@ -301,7 +301,7 @@ foreach ($siad_estudiantes_asignaturas as $sea) {
                     $asistencia_create->ausente = $ausente;
                     $asistencia_create->atraso = $atraso;
                     $asistencia_create->justificada = $justificada;
-                    $asistencia_create->fecha_creacion = date("Y-m-d H:i:s");
+                    $asistencia_create->fecha_creacion = date($spa_fecha.' '.$spa_hora_fin_planif);
                     $asistencia_create->fecha_modif = date("Y-m-d H:i:s");
                     $asistencia_create->id_plasig = $spa_id_plasig;
 
@@ -320,7 +320,7 @@ foreach ($siad_estudiantes_asignaturas as $sea) {
                 .$spa_fecha.' >> '.$spa_hora_ini_planif.' >> '.$spa_hora_fin_planif
                 .' >> Estado: '.$status .'<br>');
         }
-        if ($i == 1) break;
+        //if ($i == 2) break;
     } else {
         fwrite($file_web_output, '-- (SIAD) Error. No existen clases planificadas'.PHP_EOL);
         print_r('-- <code>(SIAD) Error. No existen clases planificadas</code><br>');
