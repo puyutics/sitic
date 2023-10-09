@@ -1611,7 +1611,7 @@ class AdldapController extends Controller
                     ->orWhereContains('samaccountname', $search)
                     ->orWhereContains('cn', $search)
                     ->orWhereContains('mobile', $search)
-                    ->orWhereContains('personalmail', $search)
+                    ->orWhereContains(Yii::$app->params['personalmail'], $search)
                     ->orWhereEquals(Yii::$app->params['dni'], $search)
                     ->sortBy('samaccountname', 'asc')
                     ->get();
@@ -2245,7 +2245,7 @@ class AdldapController extends Controller
                         ['model'=>$model]); //DNI incorrecto
 
                 } else {
-                    Yii::$app->session->setFlash('error','La cuenta ha sido desactivada. No puede realizar un cambio de contraseña');
+                    Yii::$app->session->setFlash('error','La cuenta ha sido desactivada. No poadrá realizar un cambio de contraseña');
                     return $this->render('forgetpass',
                         ['model'=>$model]); //Cuenta desactivada
                 }
