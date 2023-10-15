@@ -5,16 +5,18 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\onlycontrol\Nomina */
 
-$this->title = 'Update Nomina: ' . $model->NOMINA_ID;
+$this->title = 'Editar Usuario: ' . $model->NOMINA_APE .' '. $model->NOMINA_NOM;
 $this->params['breadcrumbs'][] = ['label' => 'Nominas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->NOMINA_ID, 'url' => ['view', 'id' => $model->NOMINA_ID]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="nomina-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="alert alert-info" align="center">
+        <h3 align="center"><?= Html::encode($this->title) ?></h3>
+    </div>
 
-    <?= $this->render('_form', [
+    <?= $this->render('_update', [
         'model' => $model,
     ]) ?>
 

@@ -27,7 +27,7 @@ class PuertaController extends Controller
                 'only' => ['create','delete','index','update','view'],
                 'rules' => [
                     [
-                        'actions' => ['index','view'],
+                        'actions' => ['index','view','update'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],

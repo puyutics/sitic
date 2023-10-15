@@ -5,6 +5,7 @@ namespace app\controllers\onlycontrol;
 use Yii;
 use app\models\onlycontrol\Nomina;
 use app\models\onlycontrol\NominaSearch;
+use yii\debug\components\search\matchers\Base;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -27,7 +28,8 @@ class NominaController extends Controller
                     'profile','clearstudents'],
                 'rules' => [
                     [
-                        'actions' => ['index','view','profile','clearstudents'],
+                        'actions' => ['index','update','view','profile',
+                            'clearstudents'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
@@ -126,10 +128,11 @@ class NominaController extends Controller
      */
     public function actionUpdate($id)
     {
+        $id = base64_decode($id);
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->NOMINA_ID]);
+            return $this->redirect(['profile', 'oc_user_id' => base64_encode($model->NOMINA_ID)]);
         }
 
         return $this->render('update', [

@@ -22,6 +22,12 @@ if (isset($oc_user)) {
     $oc_user_admin_bio = $oc_user->NOMINA_ADMIN_BIO;
 }
 
+//MIME Type Fotografia
+$finfo    = new finfo(FILEINFO_MIME);
+$mimeType = $finfo->buffer($oc_user->NOMINA_F1);
+$mimeType = explode('; ',$mimeType);
+$mimeType = $mimeType[0];
+
 ?>
 <div class="nom-puerta-index">
 
@@ -32,9 +38,11 @@ if (isset($oc_user)) {
     <?php } else { ?>
         <div class="alert alert-info" align="center">
             <h3 align="center"><?= $this->title ?></h3>
+            <h3 align="center"><?= '<img style="border:1px solid black;" height="138" src="data:'.$mimeType.';base64,'.base64_encode($oc_user->NOMINA_F1).'"/>' ?></h3>
             <h3 align="center"><?= $oc_user->NOMINA_APE .' '. $oc_user->NOMINA_NOM ?></h3>
             <h4 align="center" style="color:palevioletred">Tipo: <?php if ($oc_user_admin_bio == 1) echo 'Administrador'; else echo 'Usuario'; ?></h4>
             <h4 align="center" style="color:palevioletred">Cédula: <?= $oc_user->NOMINA_COD ?></h4>
+            <h4 align="center" style="color:palevioletred">Tarjeta RF: <?= $oc_user->NOMINA_CARD ?></h4>
             <h4 align="center" style="color:palevioletred">Código: <?= $oc_user->NOMINA_ID ?></h4>
             <?= Html::a(Icon::show('plus'). ' Puerta ' .Icon::show('door-closed'),
                 ['onlycontrol/nompuerta/create', 'oc_user_id'=>base64_encode($oc_user_id)],
