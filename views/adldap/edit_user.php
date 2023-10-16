@@ -217,6 +217,12 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
                                     'model' => $model,
                                 ])
                             ],
+                            [
+                                'label'=>' Parking Control',
+                                'content' => $this->render('edit_user_parkingcontrol', [
+                                    'model' => $model,
+                                ])
+                            ],
                         ],
                     ],
                     [

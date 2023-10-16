@@ -32,6 +32,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
             ],
             [
+                'label'=>'<i class="glyphicon glyphicon-list-alt"></i> BD ParkingControl',
+                'content' => $this->render('index_parkingcontrol')
+
+            ],
+            [
                 'label'=>'<i class="glyphicon glyphicon-list-alt"></i> BD Biométrico',
                 'content' => $this->render('index_biometrico')
 

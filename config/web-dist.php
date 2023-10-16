@@ -11,6 +11,7 @@ $db_siad_posgrado = require __DIR__ . '/db_siad_posgrado.php';
 $db_eva_pregrado = require __DIR__ . '/db_eva_pregrado.php';
 $db_eva_posgrado = require __DIR__ . '/db_eva_posgrado.php';
 $db_onlycontrol = require __DIR__ . '/db_onlycontrol.php';
+$db_parkingcontrol = require __DIR__ . '/db_parkingcontrol.php';
 use kartik\mpdf\Pdf;
 
 $config = [
@@ -152,6 +153,7 @@ $config = [
         'db_eva_pregrado' => $db_eva_pregrado,
         'db_eva_posgrado' => $db_eva_posgrado,
         'db_onlycontrol' => $db_onlycontrol,
+        'db_parkingcontrol' => $db_parkingcontrol,
         /*
         'urlManager' => [
             'enablePrettyUrl' => true,

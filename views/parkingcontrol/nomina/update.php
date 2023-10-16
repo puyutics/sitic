@@ -3,9 +3,9 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\onlycontrol\Nomina */
+/* @var $model app\models\parkingcontrol\Nomina */
 
-$this->title = 'Editar Usuario: ' . $model->NOMINA_APE .' '. $model->NOMINA_NOM;
+$this->title = 'Editar Vehículo: ' . $model->NOMINA_PLACA;
 $this->params['breadcrumbs'][] = ['label' => 'Nominas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->NOMINA_ID, 'url' => ['view', 'id' => $model->NOMINA_ID]];
 $this->params['breadcrumbs'][] = 'Editar';
