@@ -35,7 +35,7 @@ class LoginForm extends Model
                 // password is validated by validatePassword()
                 ['password', 'validatePassword'],
                 [['username'], 'match',
-                    'pattern' => '/^[a-z0-9@.]+$/u',
+                    'pattern' => '/^[a-z0-9@.-]+$/u',
                     'message'=>'{attribute} no debe contener espacios en blancos, caracteres especiales, ni mayúsculas'],
             ];
     }

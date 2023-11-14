@@ -16,14 +16,17 @@ use yii\helpers\Url;
 
     <div class="col-sm-offset-2 col-sm-8"><?php $form = ActiveForm::begin(); ?>
 
-        <?= $form->field($model, 'PUER_ID')->widget(Select2::classname(), [
+        <?= $form->field($model, 'nomPuertas')->widget(Select2::classname(), [
             'data' =>ArrayHelper::map(\app\models\onlycontrol\Puerta::find()
                 ->all(),
                 'PRT_COD',
                 'datosCompletos'),
-            'options' => ['placeholder' => 'Seleccionar'],
+            'options' => [
+                'placeholder' => 'Seleccionar',
+                'multiple' => true,
+            ],
             'pluginOptions' => [
-                'allowClear' => true
+                'allowClear' => true,
             ],
         ]); ?>
 

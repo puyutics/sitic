@@ -21,8 +21,9 @@ $this->title = Yii::t('app', 'Crear estudiante');
 //$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Usuarios'), 'url' => ['adldap/index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-$fecha_inicio = Yii::$app->params['senecyt_apertura'];
-$fecha_fin = Yii::$app->params['senecyt_cierre'];
+$fecha_actual = date('Y-m-d H:i:s');
+$fecha_inicio = Yii::$app->params['senescyt_apertura'];
+$fecha_fin = Yii::$app->params['senescyt_cierre'];
 
 if (strtotime(date("Y-m-d H:i:s",time())) > strtotime($fecha_inicio)
     AND strtotime(date("Y-m-d H:i:s",time())) < strtotime($fecha_fin)
@@ -37,6 +38,7 @@ if (isset($_GET['test'])) {
         $system_status = true;
     }
 }
+
 ?>
 
 <?php if ($system_status == true) { ?>
@@ -437,7 +439,7 @@ if (isset($_GET['test'])) {
                     <div class="panel-body">
 
                         <div class="alert alert-success" align="center">
-                            <h4>Etapa 1: Cuenta creada correctamente</h4>
+                            <h3>1. Cuenta creada correctamente</h3>
                         </div>
 
                         <?= $form->field($model, 'step')->hiddenInput()->label(false) ?>
@@ -502,10 +504,21 @@ if (isset($_GET['test'])) {
                             <?php } ?>
 
                             <div class="alert alert-success" align="center">
-                                <h4>Etapa 2: Actualización de Datos Académicos</h4>
-                                <h5>Ingrese al Sistema Académico SIAD Pregrado y actualice su ficha de datos personales. La Secretaria Académica de la UEA, procederá a realizar su matrícula de forma manual.</h5>
-                                <?php echo Html::a('SIAD Pregrado', 'https://www.uea.edu.ec/siad2', [
-                                    'class'=>'btn btn-primary',
+                                <h3><code>2. Ficha PsicoBioSocial</code></h3>
+                                <h4>Ingrese al Sistema de Bienestar Universitario y complete su Ficha PsicoBioSocial</h4>
+                                <?php echo Html::a(Icon::show('clipboard-list').' Ficha PsicoBioSocial', 'https://www.uea.edu.ec/becas/index.php?r=fichas/proceso_fichabio', [
+                                    'class'=>'btn btn-lg btn-primary',
+                                    'target'=>'_blank',
+                                    'data-toggle'=>'tooltip',
+                                    'title'=>'Llenar Ficha PsicoBioSocial'
+                                ]); ?>
+                            </div>
+
+                            <div class="alert alert-success" align="center">
+                                <h3><code>3. Actualización de Datos Académicos</code></h3>
+                                <h4>Ingrese al Sistema Académico SIAD Pregrado, actualice su ficha de datos personales y suba los documentos requeridos para la matrícula</h4>
+                                <?php echo Html::a(Icon::show('user-graduate').' SIAD Pregrado', 'https://www.uea.edu.ec/siad2', [
+                                    'class'=>'btn btn-lg btn-primary',
                                     'target'=>'_blank',
                                     'data-toggle'=>'tooltip',
                                     'title'=>'Matricúlate - SIAD Pregrado'
@@ -533,11 +546,22 @@ if (isset($_GET['test'])) {
 
 <?php } else { ?>
     <div class="alert alert-info" align="center">
+        <div align="center">
+            <?= Html::img('images/uea_banner.png',['width'=>700]);?>
+        </div>
+        <br>
         <h3 align="center">
             <code>EL SISTEMA NO ESTÁ HABILITADO</code>
             <br>
             <br>
-            Manténgase informado por nuestro canales oficiales donde se informará de manera oportuna el inicio del proceso de aceptación de cupos y creación de cuenta institucional.
+            Manténgase informado por nuestros canales oficiales donde se informará de manera oportuna el inicio del proceso de aceptación de cupos y creación de cuenta institucional.
+            <br>
+            <br>
+            <br>
+            <b>Fecha de Apertura: </b><?= $fecha_inicio ?>
+            <br>
+            <br>
+            <b>Fecha de Cierre: </b><?= $fecha_fin ?>
             <br>
             <br>
             <br>

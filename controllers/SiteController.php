@@ -21,10 +21,10 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout','openai','estcom'],
+                'only' => ['logout','openai','estcom','test'],
                 'rules' => [
                     [
-                        'actions' => ['openai','estcom'],
+                        'actions' => ['openai','estcom','test'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
@@ -75,10 +75,14 @@ class SiteController extends Controller
         return $this->render('estcom');
     }
 
-
     public function actionOpenai()
     {
         return $this->render('openai');
+    }
+
+    public function actionTest()
+    {
+        return $this->render('test');
     }
 
     /**

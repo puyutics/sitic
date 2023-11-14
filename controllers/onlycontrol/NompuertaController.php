@@ -123,88 +123,81 @@ class NompuertaController extends Controller
     public function actionCreate($oc_user_id)
     {
         $oc_user_id = base64_decode($oc_user_id);
-
         $model = new NomPuerta();
-        $model->NOM_ID = $oc_user_id;
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            //Check registro existente
-            $nomPuerta = \app\models\onlycontrol\NomPuerta::find()
-                ->where(['NOM_ID' => $model->NOM_ID])
-                ->andWhere(['PUER_ID' => $model->PUER_ID])
-                ->one();
+        if ($model->load(Yii::$app->request->post())) {
+            $puertas_id = $model->nomPuertas;
+            foreach ($puertas_id as $puerta_id) {
+                $model_new = new NomPuerta();
+                $model_new->NOM_ID = $oc_user_id;
+                $model_new->PUER_ID = $puerta_id;
 
-            if (!isset($nomPuerta)) {
-                $oc_user = \app\models\onlycontrol\Nomina::findOne($oc_user_id);
-                $nomina_fing = $oc_user->NOMINA_FING;
-                $nomina_fsal = $oc_user->NOMINA_FSAL;
-                $model->TURN_ID = 0;
-                if ($nomina_fing != NULL) {
-                    $model->TURN_FECI = date('Ymd 00:00:00.000', strtotime($nomina_fing));
-                } else {
-                    $model->TURN_FECI = date('Ymd 00:00:00.000');
-                }
-                if ($nomina_fsal != NULL) {
-                    $model->TURN_FECF = date('Ymd 00:00:00.000', strtotime($nomina_fsal));
-                } else {
-                    $fecha_actual = date('Ymd 00:00:00.000');
-                    $model->TURN_FECF = date('Ymd 00:00:00.000', strtotime($fecha_actual."+ 1 year"));
-                }
-                $model->TURN_TIPO = 1;
-                $model->TURN_STA = 0; //0 Control Activo 1 Sin Control
-                $model->TURN_NOW = date('Ymd H:i:s.000');
-                $model->TURN_MARCA = 8; //4 PyC - 8 RF
-                $model->TURN_TCOD = 'RF'; //4 PyC - 8 RF
-                $model->TURN_SEL = '0';
-                $model->TURN_ESTADO_UP = 0;
-                $model->TURN_FECHA_UP = NULL;
-                $model->ES_SINCRONIZADO = 0;
-                $model->ES_UPDATE = 1;
-                $model->TURN_CONFSIMILAR = 0;
-                try {
-                    if ($model->save()) {
+                //Check registro existente
+                $nomPuerta = \app\models\onlycontrol\NomPuerta::find()
+                    ->where(['NOM_ID' => $model_new->NOM_ID])
+                    ->andWhere(['PUER_ID' => $model_new->PUER_ID])
+                    ->one();
+
+                if (!isset($nomPuerta)) {
+                    $oc_user = \app\models\onlycontrol\Nomina::findOne($oc_user_id);
+                    $nomina_fing = $oc_user->NOMINA_FING;
+                    $nomina_fsal = $oc_user->NOMINA_FSAL;
+                    $model_new->TURN_ID = 0;
+                    if ($nomina_fing != NULL) {
+                        $model_new->TURN_FECI = date('Ymd 00:00:00.000', strtotime($nomina_fing));
+                    } else {
+                        $model_new->TURN_FECI = date('Ymd 00:00:00.000');
+                    }
+                    if ($nomina_fsal != NULL) {
+                        $model_new->TURN_FECF = date('Ymd 00:00:00.000', strtotime($nomina_fsal));
+                    } else {
+                        $fecha_actual = date('Ymd 00:00:00.000');
+                        $model_new->TURN_FECF = date('Ymd 00:00:00.000', strtotime($fecha_actual."+ 1 year"));
+                    }
+                    $model_new->TURN_TIPO = 1;
+                    $model_new->TURN_STA = 0; //0 Control Activo 1 Sin Control
+                    $model_new->TURN_NOW = date('Ymd H:i:s.000');
+                    $model_new->TURN_MARCA = 8; //4 PyC - 8 RF
+                    $model_new->TURN_TCOD = 'RF'; //4 PyC - 8 RF
+                    $model_new->TURN_SEL = '0';
+                    $model_new->TURN_ESTADO_UP = 0;
+                    $model_new->TURN_FECHA_UP = NULL;
+                    $model_new->ES_SINCRONIZADO = 0;
+                    $model_new->ES_UPDATE = 1;
+                    $model_new->TURN_CONFSIMILAR = 0;
+
+                    if ($model_new->save(false)) {
                         //Agregar log al servidor OnlyControl
                         $modelPuertaSta = new PuertaSta();
-                        $fecha_inicio = date('d/m/Y',strtotime($model->TURN_FECI));
-                        $fecha_fin = date('d/m/Y',strtotime($model->TURN_FECF));
+                        $fecha_inicio = date('d/m/Y',strtotime($model_new->TURN_FECI));
+                        $fecha_fin = date('d/m/Y',strtotime($model_new->TURN_FECF));
                         $modelPuertaSta->P_ID = $_SERVER['SERVER_ADDR'];
-                        $modelPuertaSta->P_Fecha = $model->TURN_NOW ;
-                        $modelPuertaSta->P_Status = 'Otorga Acceso Zona: '.$model->PUER_ID.' Usuario: '.$model->NOM_ID.' -> Tipo Permiso: LIBRE / Rango de Fechas: '.$fecha_inicio.' - '.$fecha_fin.' / Modo Marcacion: '.$model->TURN_TCOD.' / Horario: LIBRE 00:00 - 23:59';
+                        $modelPuertaSta->P_Fecha = $model_new->TURN_NOW ;
+                        $modelPuertaSta->P_Status = 'Otorga Acceso Zona: '.$model_new->PUER_ID.' Usuario: '.$model_new->NOM_ID.' -> Tipo Permiso: LIBRE / Rango de Fechas: '.$fecha_inicio.' - '.$fecha_fin.' / Modo Marcacion: '.$model_new->TURN_TCOD.' / Horario: LIBRE 00:00 - 23:59';
                         $modelPuertaSta->P_User = '999998';
                         $modelPuertaSta->P_Maq = 'sitic';
                         $modelPuertaSta->save();
 
                         //Eliminar puerta eliminada
                         $nomPuertaDel = \app\models\onlycontrol\NomPuertaDel::find()
-                            ->where(['NOM_ID' => $model->NOM_ID])
-                            ->andWhere(['PUER_ID' => $model->PUER_ID])
+                            ->where(['NOM_ID' => $model_new->NOM_ID])
+                            ->andWhere(['PUER_ID' => $model_new->PUER_ID])
                             ->one();
                         if (isset($nomPuertaDel)) {
                             $nomPuertaDel->delete();
                         }
 
                         //Crear Registro de Log en la base de datos
-                        $external_id = $model->NOM_ID.'@'.$model->PUER_ID;
+                        $external_id = $model_new->NOM_ID.'@'.$model_new->PUER_ID;
                         $description = $modelPuertaSta->P_Status;
                         $username = Yii::$app->user->identity->username;
                         $this->saveLog('onlycontrolNompuertaCreate', $username, $description, $external_id,'onlycontrol/nompuerta');
-
-                        return $this->redirect(['onlycontrol/nompuerta/indexuser',
-                            'oc_user_id' => base64_encode($model->NOM_ID),
-                        ]);
-
                     }
-                } catch (Exception $e) {
-                    Yii::$app->session->setFlash('error',
-                        'Excepción capturada: ',  $e->getMessage());
                 }
-            } else {
-                Yii::$app->session->setFlash('error',
-                    'Ya existe un permiso registrado');
-                return $this->render('create', [
-                    'model' => $model,
-                ]);
             }
+            return $this->redirect(['onlycontrol/nompuerta/indexuser',
+                'oc_user_id' => base64_encode($model_new->NOM_ID),
+            ]);
         }
         return $this->render('create', [
             'model' => $model,

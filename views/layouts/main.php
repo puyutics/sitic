@@ -104,6 +104,7 @@ AppAsset::register($this);
                         ['label' => '.. Gestión TI', 'url' => 'index.php?r=site/management'],
                         '<li class="divider"></li>',
                         ['label' => 'OpenAI', 'url' => ['/site/openai']],
+                        ['label' => 'DINARP', 'url' => ['/site/test']],
                         ['label' => 'Bienes', 'url' => 'index.php?r=invpurchaseitem/index'],
                         ['label' => 'Compras', 'url' => 'index.php?r=invpurchase/index'],
                         ['label' => 'Proveedores', 'url' => 'index.php?r=ccppproveedor/index'],

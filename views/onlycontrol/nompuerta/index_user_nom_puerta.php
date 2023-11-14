@@ -128,7 +128,9 @@ $dataProviderNomPuerta->pagination = ['pageSize' => $countDataProvider];
                         if ($model->TURN_ESTADO_UP == 0 ) {
                             return Html::a('<span class="btn btn-danger center-block">'.Icon::show('trash').' Revocar'.'</span>',
                                 Url::to(['onlycontrol/nompuerta/revoca', 'oc_user_id'=>base64_encode($model->NOM_ID), 'oc_puerta_id'=>base64_encode($model->PUER_ID)]),
-                                ['title' => Yii::t('yii', 'Revocar Acceso'),'target' => '_blank']);
+                                ['title' => Yii::t('yii', 'Revocar Acceso'),
+                                    //'target' => '_blank'
+                                ]);
                         }
                     },
                 ]

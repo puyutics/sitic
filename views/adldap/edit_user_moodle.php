@@ -400,7 +400,11 @@ $dataProviderMdlRAposgrado->sort->defaultOrder = [
                             ->where(['id' => $mdl_context->instanceid])
                             ->one();
 
-                        return Html::a($mdl_course->id,Yii::$app->params['moodle_posgrado_course_url'] . $mdl_course->id,['target'=>'_blank', 'data-pjax'=>"0"]);
+                        if (isset($mdl_course)) {
+                            return Html::a($mdl_course->id,Yii::$app->params['moodle_posgrado_course_url'] . $mdl_course->id,['target'=>'_blank', 'data-pjax'=>"0"]);
+                        } else {
+                            return '-';
+                        }
                     },
                     'format' => 'raw',
                 ],
@@ -418,7 +422,7 @@ $dataProviderMdlRAposgrado->sort->defaultOrder = [
                             ->where(['id' => $mdl_context->instanceid])
                             ->one();
 
-                        if ($mdl_course->idnumber != NULL) {
+                        if (isset($mdl_course) AND $mdl_course->idnumber != NULL) {
                             return Html::a($mdl_course->idnumber,Yii::$app->params['moodle_posgrado_course_url'] . $mdl_course->id,['target'=>'_blank', 'data-pjax'=>"0"]);
                         } else {
                             return '-';
@@ -440,7 +444,11 @@ $dataProviderMdlRAposgrado->sort->defaultOrder = [
                             ->where(['id' => $mdl_context->instanceid])
                             ->one();
 
-                        return Html::a($mdl_course->shortname,Yii::$app->params['moodle_posgrado_course_url'] . $mdl_course->id,['target'=>'_blank', 'data-pjax'=>"0"]);
+                        if (isset($mdl_course)) {
+                            return Html::a($mdl_course->shortname,Yii::$app->params['moodle_posgrado_course_url'] . $mdl_course->id,['target'=>'_blank', 'data-pjax'=>"0"]);
+                        } else {
+                            return '-';
+                        }
                     },
                     'format' => 'raw',
                 ],
@@ -458,7 +466,12 @@ $dataProviderMdlRAposgrado->sort->defaultOrder = [
                             ->where(['id' => $mdl_context->instanceid])
                             ->one();
 
-                        return Html::a($mdl_course->fullname,Yii::$app->params['moodle_posgrado_course_url'] . $mdl_course->id,['target'=>'_blank', 'data-pjax'=>"0"]);
+                        if (isset($mdl_course)) {
+                            return Html::a($mdl_course->fullname,Yii::$app->params['moodle_posgrado_course_url'] . $mdl_course->id,['target'=>'_blank', 'data-pjax'=>"0"]);
+                        } else {
+                            return '-';
+                        }
+
                     },
                     'format' => 'raw',
                 ],
@@ -513,68 +526,72 @@ $dataProviderMdlRAposgrado->sort->defaultOrder = [
                             ->where(['id' => $mdl_context->instanceid])
                             ->one();
 
-                        $codigo = explode('-', $mdl_course->shortname);
-
-                        if ($codigo[0] == Yii::$app->params['course_code'] and isset($codigo[4])) {
-                            $userid = $model->userid;
-                            $mdl_user = \app\models\eva_posgrado\MdlUserPosgrado::find()
-                                ->select('idnumber, username')
-                                ->where(['id' => $userid])
-                                ->one();
-
-                            $roleid = $model->roleid;
-                            $mdl_role = \app\models\eva_posgrado\MdlRolePosgrado::find()
-                                ->select('shortname')
-                                ->where(['id' => $roleid])
-                                ->one();
-
-                            if ($mdl_role->shortname == 'student') {
-                                $estudiante = \app\models\siad_posgrado\EstudiantesPosgrado::find()
-                                    ->select('CIInfPer, mailInst')
-                                    ->where(['mailInst' => $mdl_user->username])
+                        if (isset($mdl_course)) {
+                            $codigo = explode('-', $mdl_course->shortname);
+                            if ($codigo[0] == Yii::$app->params['course_code'] and isset($codigo[4])) {
+                                $userid = $model->userid;
+                                $mdl_user = \app\models\eva_posgrado\MdlUserPosgrado::find()
+                                    ->select('idnumber, username')
+                                    ->where(['id' => $userid])
                                     ->one();
 
-                                $docenteAsignatura = \app\models\siad_posgrado\DocenteAsignaturaPosgrado::find()
-                                    ->select('dpa_id')
-                                    ->where(['idPer' => Yii::$app->params['siad_periodo']])
-                                    ->andWhere(['idAsig' => $codigo[1] . '-' . $codigo[2] . '-' . $codigo[3]])
-                                    ->andWhere(['idParalelo' => $codigo[4]])
+                                $roleid = $model->roleid;
+                                $mdl_role = \app\models\eva_posgrado\MdlRolePosgrado::find()
+                                    ->select('shortname')
+                                    ->where(['id' => $roleid])
                                     ->one();
 
-                                $notasAlumno = \app\models\siad_posgrado\NotasAlumnoPosgrado::find()
-                                    ->select('dpa_id')
-                                    ->where(['CIInfPer' => $estudiante->CIInfPer])
-                                    ->andWhere(['dpa_id' => $docenteAsignatura->dpa_id])
-                                    ->one();
+                                if ($mdl_role->shortname == 'student') {
+                                    $estudiante = \app\models\siad_posgrado\EstudiantesPosgrado::find()
+                                        ->select('CIInfPer, mailInst')
+                                        ->where(['mailInst' => $mdl_user->username])
+                                        ->one();
 
-                                if (isset($notasAlumno)) {
-                                    return "Correcto. ($notasAlumno->dpa_id)";
-                                } else {
-                                    return 'del, student, '.$estudiante->mailInst.', '.$docenteAsignatura->dpa_id;
-                                }
-                            } elseif ($mdl_role->shortname == 'teacher'
-                                or $mdl_role->shortname == 'editingteacher') {
-                                $docenteAsignatura = \app\models\siad_posgrado\DocenteAsignaturaPosgrado::find()
-                                    ->select('CIInfPer, dpa_id')
-                                    ->where(['idPer' => Yii::$app->params['siad_periodo']])
-                                    ->andWhere(['idAsig' => $codigo[1] . '-' . $codigo[2] . '-' . $codigo[3]])
-                                    ->andWhere(['idParalelo' => $codigo[4]])
-                                    ->one();
+                                    $docenteAsignatura = \app\models\siad_posgrado\DocenteAsignaturaPosgrado::find()
+                                        ->select('dpa_id')
+                                        ->where(['idPer' => Yii::$app->params['siad_periodo']])
+                                        ->andWhere(['idAsig' => $codigo[1] . '-' . $codigo[2] . '-' . $codigo[3]])
+                                        ->andWhere(['idParalelo' => $codigo[4]])
+                                        ->one();
 
-                                $docente = \app\models\siad_posgrado\DocentesPosgrado::find()
-                                    ->select('mailInst')
-                                    ->where(['CIInfPer' => $docenteAsignatura->CIInfPer])
-                                    ->one();
+                                    $notasAlumno = \app\models\siad_posgrado\NotasAlumnoPosgrado::find()
+                                        ->select('dpa_id')
+                                        ->where(['CIInfPer' => $estudiante->CIInfPer])
+                                        ->andWhere(['dpa_id' => $docenteAsignatura->dpa_id])
+                                        ->one();
 
-                                if (isset($docente)) {
-                                    if ($docente->mailInst == $mdl_user->username) {
-                                        return "Correcto. ($docenteAsignatura->dpa_id)";
+                                    if (isset($notasAlumno)) {
+                                        return "Correcto. ($notasAlumno->dpa_id)";
+                                    } else {
+                                        return 'del, student, '.$estudiante->mailInst.', '.$docenteAsignatura->dpa_id;
                                     }
+                                } elseif ($mdl_role->shortname == 'teacher'
+                                    or $mdl_role->shortname == 'editingteacher') {
+                                    $docenteAsignatura = \app\models\siad_posgrado\DocenteAsignaturaPosgrado::find()
+                                        ->select('CIInfPer, dpa_id')
+                                        ->where(['idPer' => Yii::$app->params['siad_periodo']])
+                                        ->andWhere(['idAsig' => $codigo[1] . '-' . $codigo[2] . '-' . $codigo[3]])
+                                        ->andWhere(['idParalelo' => $codigo[4]])
+                                        ->one();
+
+                                    $docente = \app\models\siad_posgrado\DocentesPosgrado::find()
+                                        ->select('mailInst')
+                                        ->where(['CIInfPer' => $docenteAsignatura->CIInfPer])
+                                        ->one();
+
+                                    if (isset($docente)) {
+                                        if ($docente->mailInst == $mdl_user->username) {
+                                            return "Correcto. ($docenteAsignatura->dpa_id)";
+                                        }
+                                    }
+                                    return 'del, ' . $mdl_role->shortname . ', ' . $mdl_user->idnumber.', '.$mdl_course->idnumber;
                                 }
-                                return 'del, ' . $mdl_role->shortname . ', ' . $mdl_user->idnumber.', '.$mdl_course->idnumber;
+                            } else {
+                                return '-';
                             }
+                        } else {
+                            return '-';
                         }
-                        return '-';
                     }
                 ],
                 //'timemodified:datetime',

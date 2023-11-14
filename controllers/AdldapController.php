@@ -845,7 +845,7 @@ class AdldapController extends Controller
                     }
                 } else {
                     Yii::$app->session->setFlash('errorNoBd',
-                        "Es posible que sus datos sean incorrectos o que usted no conste en los listados enviados por la SENESCYT para el Proceso ".Yii::$app->params['senescyt_proceso'].". <br><br> Recuerde que debe esperar a que se cumplan todas las etapas de postulación dispuestas por SENESCYT");
+                        "Es posible que sus datos sean incorrectos o que usted no haya completado el proceso de Admisión ".Yii::$app->params['senescyt_proceso'].". <br><br> Recuerde que debe esperar a que se cumplan todas las etapas de postulación dispuestas por la UEA");
                     return $this->render('create_student',
                         ['model' => $model]);
                 }
@@ -2727,13 +2727,13 @@ class AdldapController extends Controller
             "Céd/Pasaporte/Código: " . $dni . "\n" .
             "Nombres/Apellidos:       " . $fullname . "\n" .
             "Cuenta institucional:     " . $mail . "\n" .
-            "Proceso/SENESCYT:     " . $mtn . "\n\n" .
+            "Proceso Admisión:     " . $mtn . "\n\n" .
             "--------------------------------------------------------------------------------------" . "\n" .
             "Ingrese al Sistema Académico SIAD Pregrado y actualice su ficha de datos personales." . "\n" .
             "https://www.uea.edu.ec/siad2" . "\n\n" .
             //"La Secretaria Académica de la UEA, procederá a realizar su matrícula de forma manual." . "\n\n" .
             //"Una vez culminada su matrícula, usted recibirá un correo de confirmación." . "\n" .
-            "--------------------------------------------------------------------------------------" . "\n" .
+            //"--------------------------------------------------------------------------------------" . "\n" .
             "Guarde estos datos. Si olvidó su contraseña ingrese en el siguiente enlace:" . "\n" .
             "https://password.uea.edu.ec" . "\n" .
             "--------------------------------------------------------------------------------------" . "\n" .

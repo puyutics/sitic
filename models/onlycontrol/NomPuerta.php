@@ -31,6 +31,7 @@ use Yii;
 class NomPuerta extends \yii\db\ActiveRecord
 {
     public $revocar_puerta;
+    public $nomPuertas = NULL;
 
     /**
      * {@inheritdoc}
@@ -67,6 +68,8 @@ class NomPuerta extends \yii\db\ActiveRecord
             [['PUER_ID'], 'exist', 'skipOnError' => true, 'targetClass' => Puerta::className(), 'targetAttribute' => ['PUER_ID' => 'PRT_COD']],
             [['TURN_ID'], 'exist', 'skipOnError' => true, 'targetClass' => TblmodTurno::className(), 'targetAttribute' => ['TURN_ID' => 'MOD_ID']],
             [['revocar_puerta'], 'safe'],
+            [['nomPuertas'], 'safe'],
+            [['nomPuertas'], 'required'],
         ];
     }
 
@@ -92,7 +95,8 @@ class NomPuerta extends \yii\db\ActiveRecord
             'ES_SINCRONIZADO' => 'Es Sincronizado',
             'ES_UPDATE' => 'Es Update',
             'TURN_CONFSIMILAR' => 'Turn Confsimilar',
-            'revocar_puerta' => 'Revocar Permiso Puerta'
+            'revocar_puerta' => 'Revocar Permiso Puerta',
+            'nomPuertas' => 'Puertas',
         ];
     }
 

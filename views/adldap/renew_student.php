@@ -18,7 +18,7 @@ use kartik\password\PasswordInput;
 $this->title = Yii::t('app', 'Reingreso de estudiantes');
 $this->params['breadcrumbs'][] = $this->title;
 
-if (strtotime(date("Y-m-d H:i:s",time())) > strtotime("2023-10-09 00:00:00")) {
+if (strtotime(date("Y-m-d H:i:s",time())) > strtotime("2024-12-31 00:00:00")) {
     $system_status = true;
 } else {
     $system_status = false;
