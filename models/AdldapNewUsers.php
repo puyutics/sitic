@@ -21,6 +21,8 @@ use Yii;
  */
 class AdldapNewUsers extends \yii\db\ActiveRecord
 {
+    public $whatsapp = NULL;
+
     /**
      * {@inheritdoc}
      */
@@ -51,6 +53,9 @@ class AdldapNewUsers extends \yii\db\ActiveRecord
             [['celular'], 'match',
                 'pattern' => '/^[0-9]+$/u',
                 'message'=>'{attribute} no puede contener letras, espacios en blanco o caracteres especiales'],
+            [['whatsapp'], 'match',
+                'pattern' => '/^[0-9+]+$/u',
+                'message'=>'{attribute} no debe contener caracteres alfabéticos o espacios en blanco'],
         ];
     }
 
@@ -69,6 +74,7 @@ class AdldapNewUsers extends \yii\db\ActiveRecord
             'carrera' => 'CARRERA',
             'email_personal' => 'EMAIL PERSONAL',
             'celular' => 'CELULAR',
+            'whatsapp' => 'WHATSAPP',
             'proceso' => 'PROCESO',
             'status' => 'ESTADO',
         ];

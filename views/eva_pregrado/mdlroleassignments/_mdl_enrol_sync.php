@@ -10,6 +10,17 @@ fwrite($file_web_output, 'Usuario: ' . $username . PHP_EOL);
 fwrite($file_web_output, 'Fecha y hora: ' . date('Y-m-d H:i:s') . PHP_EOL . PHP_EOL);
 
 $eva_connection = Yii::$app->get('db_eva_pregrado');
+
+//Actualizar EVA IDnumber (Usuarios)
+$eva_command = $eva_connection->createCommand("
+    UPDATE mdl_user 
+    SET idnumber = username 
+    WHERE
+        idnumber = '' 
+        AND username LIKE '%@uea.edu.ec'");
+$eva_mdl_user_idnumber_update = $eva_command->queryAll();
+
+//Verificar EVA Matriculados
 $eva_command = $eva_connection->createCommand("
     SELECT
             mdl_ra.id as mdl_ra_id,

@@ -19,6 +19,7 @@ class AdldapCreateForm extends Model
     public $commonname;
     public $displayname;
     public $mobile;
+    public $whatsapp;
     public $uac;
     public $groups;
     public $dn;
@@ -43,6 +44,9 @@ class AdldapCreateForm extends Model
             [['mail'], 'match',
                 'pattern' => '/^[a-z0-9@.-]+$/u',
                 'message'=>'{attribute} no debe contener caracteres especiales, ni mayùscula'],
+            [['whatsapp'], 'match',
+                'pattern' => '/^[0-9+]+$/u',
+                'message'=>'{attribute} no debe contener caracteres alfabéticos o espacios en blanco'],
         ];
     }
 
@@ -61,6 +65,7 @@ class AdldapCreateForm extends Model
             'displayname'       => 'Nombre para mostrar',
             'personalmail'      => 'Correo personal',
             'mobile'            => 'Celular',
+            'whatsapp'          => 'WhatsApp',
             'department'        => 'Departamento',
             'title'             => 'Puesto',
             'dn'                => 'Unidad Organizativa',

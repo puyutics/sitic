@@ -39,7 +39,7 @@ $eva_command = $eva_connection->createCommand("
             AND	mdl_ats.id = mdl_atl.sessionid
             AND mdl_at.id = mdl_ats.attendanceid
             AND mdl_c.shortname LIKE '%UEA-L-%'
-            #AND mdl_c.shortname LIKE '%UEA-L-UFB-026%'
+            #AND mdl_c.shortname LIKE '%UEA-L-UFB-005%'
             ");
 $eva_attendance_logs = $eva_command->queryAll();
 
@@ -66,7 +66,7 @@ $siad_command = $siad_connection->createCommand("
             AND ipe.CIInfPer = naa.CIInfPer
             AND ipe.mailInst LIKE '%@uea.edu.ec'
             AND naa.idAsig LIKE 'UEA-L-%'
-            #AND naa.idAsig LIKE 'UEA-L-UFB-026%'
+            #AND naa.idAsig LIKE 'UEA-L-UFB-005%'
     ORDER BY
             #ipe.CIInfPer ASC,
             dpa.idAsig ASC,
@@ -93,7 +93,7 @@ $siad_command = $siad_connection->createCommand("
             pa.dpa_id = dpa.dpa_id
             AND dpa.idPer = ".Yii::$app->params['siad_periodo']."
             AND dpa.idAsig LIKE 'UEA-L-%'
-            #AND dpa.idAsig LIKE 'UEA-L-UFB-026%'
+            #AND dpa.idAsig LIKE 'UEA-L-UFB-005%'
             ");
 $siad_planificacion_asignatura = $siad_command->queryAll();
 
@@ -124,7 +124,7 @@ $siad_command = $siad_connection->createCommand("
             AND naa.idnaa = aa.idnaa
             AND dpa.dpa_id = naa.dpa_id
             AND dpa.idAsig LIKE 'UEA-L-%'
-            #AND dpa.idAsig LIKE 'UEA-L-UFB-026%'
+            #AND dpa.idAsig LIKE 'UEA-L-UFB-005%'
             ");
 $siad_alumnos_asistencias = $siad_command->queryAll();
 
@@ -172,7 +172,7 @@ foreach ($siad_estudiantes_asignaturas as $sea) {
             $spa_hora_fin_planif = $spa['hora_fin_planif'];
 
             //Validar asistencia en Moodle
-            $check_eal = false;
+            $check_eal = 0;
             foreach ($sea_eals as $sea_eal) {
                 $eal_mu_idnumber = $sea_eal['mdl_user_idnumber'];
                 $eal_mc_idnumber = $sea_eal['mdl_course_idnumber'];
@@ -192,7 +192,7 @@ foreach ($siad_estudiantes_asignaturas as $sea) {
                 $eal_hora_ini_planif = date("H:i:s", $eal_sessdate);
 
                 if ($eal_fecha == $spa_fecha AND $eal_hora_ini_planif == $spa_hora_ini_planif) {
-                    $check_eal = true;
+                    $check_eal = 1;
                     break;
                 }
             }
@@ -220,7 +220,8 @@ foreach ($siad_estudiantes_asignaturas as $sea) {
                     $saa_ausente = $saa['ausente'];
                     break;
                 }
-                if ($check_eal == true) {
+
+                if ($check_eal == 1) {
                     $presente=$atraso=$justificada=0;$ausente=0;
                     //Tipo de asistencia Moodle
                     $statusset_array = @explode(',',$eal_statusset);
@@ -256,7 +257,7 @@ foreach ($siad_estudiantes_asignaturas as $sea) {
                     if ($saa_ausente == 1) $status = '(SIAD) Registro existente (Ausente). '.$saa_observacion_asal;
                 }
             } else {
-                if ($check_eal == true) {
+                if ($check_eal == 1) {
                     $presente=$atraso=$justificada=0;$ausente=0;
                     //Tipo de asistencia Moodle
                     $statusset_array = @explode(',',$eal_statusset);

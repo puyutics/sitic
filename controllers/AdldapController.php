@@ -272,12 +272,14 @@ class AdldapController extends Controller
                         if (isset($checkuser) == 1) {
                             $user = \Yii::$app->ad->search()->findBy('sAMAccountname', $model->samaccountname);
                             $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
+                            $user->setAttribute(Yii::$app->params['whatsapp'],$model->whatsapp);
                             $user->setUserAccountControl($model->uac);
                             $user->setDepartment($model->department);
                             $user->setTitle($model->title);
                             $log = $log . 'Cédula: ' . $model->dni . '. ';
                             $log = $log . 'Correo personal: ' . $model->personalmail . '. ';
                             $log = $log . 'Celular: ' . $model->mobile . '. ';
+                            $log = $log . 'WhatsApp: ' . $model->whatsapp . '. ';
                             $log = $log . 'Departamento: ' . $model->department . '. ';
                             $log = $log . 'Titulo: ' . $model->title . '.';
 
@@ -324,6 +326,7 @@ class AdldapController extends Controller
                         $security = new Security();
                         $user->setPassword($security->generateRandomString(8));
                         $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
+                        $user->setAttribute(Yii::$app->params['whatsapp'],$model->whatsapp);
                         $user->setUserAccountControl($model->uac);
                         $user->setDepartment($model->department);
                         $user->setTitle($model->title);
@@ -337,6 +340,7 @@ class AdldapController extends Controller
                         $log = $log . 'Cédula: ' . $model->dni . '. ';
                         $log = $log . 'Correo personal: ' . $model->personalmail . '. ';
                         $log = $log . 'Celular: ' . $model->mobile . '. ';
+                        $log = $log . 'WhatsApp: ' . $model->whatsapp . '. ';
                         $log = $log . 'Departamento: ' . $model->department . '. ';
                         $log = $log . 'Titulo: ' . $model->title . '.';
 
@@ -747,6 +751,7 @@ class AdldapController extends Controller
                                 $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                                 $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                                 $model->mobile = $adldapnewuser->celular;
+                                $model->whatsapp = $adldapnewuser->whatsapp;
                                 $model->title = 'Estudiante';
                                 $model->department = $adldapnewuser->carrera;
                                 $model->token = hash(Yii::$app->params['algorithm'],
@@ -765,6 +770,7 @@ class AdldapController extends Controller
                         $model->displayname = $user->getDisplayName();
                         $model->personalmail = $user->getAttribute(Yii::$app->params['personalmail'],0);
                         $model->mobile = $user->getAttribute(Yii::$app->params['mobile'],0);
+                        $model->whatsapp = $user->getAttribute(Yii::$app->params['whatsapp'],0);
                         $model->groups = $user->getGroups();
                         $model->dn = $user->getDn();
                         $model->uac = $user->getUserAccountControl();
@@ -782,6 +788,7 @@ class AdldapController extends Controller
                     $model->lastname = $adldapnewuser->apellidos;
                     $model->personalmail = $adldapnewuser->email_personal;
                     $model->mobile = $adldapnewuser->celular;
+                    $model->whatsapp = $adldapnewuser->whatsapp;
 
                     if ($adldapnewuser->status == 1) {
                         $model->step = 2;
@@ -795,6 +802,7 @@ class AdldapController extends Controller
                         $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->mobile = $adldapnewuser->celular;
+                        $model->whatsapp = $adldapnewuser->whatsapp;
                         $model->title = 'Estudiante';
                         $model->department = $adldapnewuser->carrera;
                         $model->token = hash(Yii::$app->params['algorithm'],
@@ -815,6 +823,7 @@ class AdldapController extends Controller
                         $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->mobile = $adldapnewuser->celular;
+                        $model->whatsapp = $adldapnewuser->whatsapp;
                         $model->title = 'Estudiante';
                         $model->department = $adldapnewuser->carrera;
                         $model->token = hash(Yii::$app->params['algorithm'],
@@ -835,6 +844,7 @@ class AdldapController extends Controller
                         $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->mobile = $adldapnewuser->celular;
+                        $model->whatsapp = $adldapnewuser->whatsapp;
                         $model->title = 'Estudiante';
                         $model->department = $adldapnewuser->carrera;
                         $model->token = hash(Yii::$app->params['algorithm'],
@@ -865,6 +875,7 @@ class AdldapController extends Controller
                     $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                     $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                     $model->mobile = $adldapnewuser->celular;
+                    $model->whatsapp = $adldapnewuser->whatsapp;
                     $model->title = 'Estudiante';
                     $model->department = $adldapnewuser->carrera;
 
@@ -907,6 +918,7 @@ class AdldapController extends Controller
                         $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->mobile = $adldapnewuser->celular;
+                        $model->whatsapp = $adldapnewuser->whatsapp;
                         $model->title = 'Estudiante';
                         $model->department = $adldapnewuser->carrera;
                         $model->token = hash(Yii::$app->params['algorithm'],
@@ -926,6 +938,7 @@ class AdldapController extends Controller
                         $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->mobile = $adldapnewuser->celular;
+                        $model->whatsapp = $adldapnewuser->whatsapp;
                         $model->title = 'Estudiante';
                         $model->department = $adldapnewuser->carrera;
                         $model->token = hash(Yii::$app->params['algorithm'],
@@ -945,6 +958,7 @@ class AdldapController extends Controller
                         $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->mobile = $adldapnewuser->celular;
+                        $model->whatsapp = $adldapnewuser->whatsapp;
                         $model->title = 'Estudiante';
                         $model->department = $adldapnewuser->carrera;
                         $model->token = hash(Yii::$app->params['algorithm'],
@@ -970,6 +984,7 @@ class AdldapController extends Controller
                     $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                     $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                     $model->mobile = $adldapnewuser->celular;
+                    $model->whatsapp = $adldapnewuser->whatsapp;
                     $model->title = 'Estudiante';
                     $model->department = $adldapnewuser->carrera;
 
@@ -1001,6 +1016,7 @@ class AdldapController extends Controller
                         $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->mobile = $adldapnewuser->celular;
+                        $model->whatsapp = $adldapnewuser->whatsapp;
                         $model->title = 'Estudiante';
                         $model->department = $adldapnewuser->carrera;
                         $model->token = hash(Yii::$app->params['algorithm'],
@@ -1020,6 +1036,7 @@ class AdldapController extends Controller
                         $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->mobile = $adldapnewuser->celular;
+                        $model->whatsapp = $adldapnewuser->whatsapp;
                         $model->title = 'Estudiante';
                         $model->department = $adldapnewuser->carrera;
                         $model->token = hash(Yii::$app->params['algorithm'],
@@ -1039,6 +1056,7 @@ class AdldapController extends Controller
                         $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->mobile = $adldapnewuser->celular;
+                        $model->whatsapp = $adldapnewuser->whatsapp;
                         $model->title = 'Estudiante';
                         $model->department = $adldapnewuser->carrera;
                         $model->token = hash(Yii::$app->params['algorithm'],
@@ -1064,6 +1082,7 @@ class AdldapController extends Controller
                     $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                     $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                     $model->mobile = $adldapnewuser->celular;
+                    $model->whatsapp = $adldapnewuser->whatsapp;
                     $model->title = 'Estudiante';
                     $model->department = $adldapnewuser->carrera;
                     $model->dn = $adldapnewuser->campus;
@@ -1174,6 +1193,7 @@ class AdldapController extends Controller
                             $log = $log . 'Cédula: ' . $model->dni . '. ';
                             $log = $log . 'Correo personal: ' . $model->personalmail . '. ';
                             $log = $log . 'Celular: ' . $model->mobile . '. ';
+                            $log = $log . 'Whatsapp: ' . $model->whatsapp . '. ';
                             $log = $log . 'Departamento: ' . $model->department . '. ';
                             $log = $log . 'Titulo: ' . $model->title . '.';
 
@@ -1228,6 +1248,7 @@ class AdldapController extends Controller
                         $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->mobile = $adldapnewuser->celular;
+                        $model->whatsapp = $adldapnewuser->whatsapp;
                         $model->title = 'Estudiante';
                         $model->department = $adldapnewuser->carrera;
                         $model->token = hash(Yii::$app->params['algorithm'],
@@ -1247,6 +1268,7 @@ class AdldapController extends Controller
                         $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->mobile = $adldapnewuser->celular;
+                        $model->whatsapp = $adldapnewuser->whatsapp;
                         $model->title = 'Estudiante';
                         $model->department = $adldapnewuser->carrera;
                         $model->token = hash(Yii::$app->params['algorithm'],
@@ -1272,6 +1294,7 @@ class AdldapController extends Controller
                     $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                     $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                     $model->mobile = $adldapnewuser->celular;
+                    $model->whatsapp = $adldapnewuser->whatsapp;
                     $model->title = 'Estudiante';
                     $model->department = $adldapnewuser->carrera;
                     $model->dn = $adldapnewuser->campus;
@@ -1305,6 +1328,7 @@ class AdldapController extends Controller
                                 $user->setAttribute(Yii::$app->params['dni'],$model->dni);
                                 $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);
                                 $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
+                                $user->setAttribute(Yii::$app->params['whatsapp'],$model->whatsapp);
                                 $user->setUserAccountControl($model->uac);
                                 $user->setDepartment($model->department);
                                 $user->setTitle($model->title);
@@ -1556,6 +1580,7 @@ class AdldapController extends Controller
                         $model->commonname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->displayname = $adldapnewuser->apellidos . ' ' . $adldapnewuser->nombres;
                         $model->mobile = $adldapnewuser->celular;
+                        $model->whatsapp = $adldapnewuser->whatsapp;
                         $model->title = 'Estudiante';
                         $model->department = $adldapnewuser->carrera;
                         $model->token = hash(Yii::$app->params['algorithm'],
@@ -1627,6 +1652,7 @@ class AdldapController extends Controller
                 $model->displayname = $user->getDisplayName();
                 $model->personalmail = $user->getAttribute(Yii::$app->params['personalmail'],0);
                 $model->mobile = $user->getAttribute(Yii::$app->params['mobile'],0);
+                $model->whatsapp = $user->getAttribute(Yii::$app->params['whatsapp'],0);
                 $model->groups = $user->getGroups();
                 $model->dn = $user->getDn();
                 $model->uac = $user->getUserAccountControl();
@@ -1731,6 +1757,10 @@ class AdldapController extends Controller
                             $log = $log . 'Celular: ' . $user->getAttribute(Yii::$app->params['mobile'], 0)
                                 . ' -> ' . $model->mobile . '. ';
                         }
+                        if ($model->whatsapp != $user->getAttribute(Yii::$app->params['whatsapp'], 0)) {
+                            $log = $log . 'WhatsApp: ' . $user->getAttribute(Yii::$app->params['whatsapp'], 0)
+                                . ' -> ' . $model->whatsapp . '. ';
+                        }
                         if ($model->title != $user->getTitle()) {
                             $log = $log . 'Puesto: ' . $user->getTitle()
                                 . ' -> ' . $model->title . '. ';
@@ -1779,6 +1809,7 @@ class AdldapController extends Controller
                         $user->setDisplayName($model->displayname);
                         $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);
                         $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
+                        $user->setAttribute(Yii::$app->params['whatsapp'],$model->whatsapp);
                         $user->setUserAccountControl($model->uac);
                         $user->setDepartment($model->department);
                         $user->setTitle($model->title);
@@ -2037,6 +2068,7 @@ class AdldapController extends Controller
                 $model->displayname = $user->getDisplayName();
                 $model->personalmail = $user->getAttribute(Yii::$app->params['personalmail'], 0);
                 $model->mobile = $user->getAttribute(Yii::$app->params['mobile'], 0);
+                $model->whatsapp = $user->getAttribute(Yii::$app->params['whatsapp'],0);
                 $model->groups = $user->getGroups();
                 $model->dn = $user->getDn();
                 $model->uac = $user->getUserAccountControl();
@@ -2129,6 +2161,7 @@ class AdldapController extends Controller
             $model->mail = $user->getEmail();
             $model->personalmail = $user->getAttribute(Yii::$app->params['personalmail'], 0);
             $model->mobile = $user->getAttribute(Yii::$app->params['mobile'], 0);
+            $model->whatsapp = $user->getAttribute(Yii::$app->params['whatsapp'],0);
             $model->groups = $user->getGroups();
             $model->dn = $user->getDn();
             $model->uac = $user->getUserAccountControl();
@@ -2143,9 +2176,14 @@ class AdldapController extends Controller
                     $log = $log . 'Celular: ' . $user->getAttribute(Yii::$app->params['mobile'], 0)
                         . ' -> ' . $model->mobile . '. ';
                 }
+                if ($model->whatsapp != $user->getAttribute(Yii::$app->params['whatsapp'], 0)) {
+                    $log = $log . 'WhatsApp: ' . $user->getAttribute(Yii::$app->params['whatsapp'], 0)
+                        . ' -> ' . $model->whatsapp . '. ';
+                }
 
                 $user->setAttribute(Yii::$app->params['personalmail'],$model->personalmail);
                 $user->setAttribute(Yii::$app->params['mobile'],$model->mobile);
+                $user->setAttribute(Yii::$app->params['whatsapp'],$model->whatsapp);
                 if ($user->save()){
 
                     Yii::$app->session->setFlash('success', "Actualizado Correctamente");

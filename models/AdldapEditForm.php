@@ -19,6 +19,7 @@ class AdldapEditForm extends Model
     public $commonname;
     public $displayname;
     public $mobile;
+    public $whatsapp;
     public $title;
     public $department;
     public $uac;
@@ -41,6 +42,9 @@ class AdldapEditForm extends Model
             [['mobile','uac'],'number'],
             [['mail','personalmail'], 'email'],
             [['search','addGroup'], 'safe'],
+            [['whatsapp'], 'match',
+                'pattern' => '/^[0-9+]+$/u',
+                'message'=>'{attribute} no debe contener caracteres alfabéticos o espacios en blanco'],
         ];
     }
 
@@ -59,13 +63,13 @@ class AdldapEditForm extends Model
             'mail'           => 'Correo institucional',
             'personalmail'   => 'Correo personal',
             'mobile'         => 'Celular',
+            'whatsapp'       => 'WhatsApp',
             'title'          => 'Puesto',
             'department'     => 'Departamento',
             'dn'             => 'Unidad Organizativa',
             'groups'         => 'Grupo(s)',
             'uac'            => 'Estado',
             'samaccountname' => 'Usuario del dominio',
-
             'addGroup'       => 'Agregar Grupo',
             'deleteGroup'    => 'Eliminar Grupo',
         ];

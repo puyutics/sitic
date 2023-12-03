@@ -20,6 +20,7 @@ class AdldapCreateStudentForm extends Model
     public $commonname;
     public $displayname;
     public $mobile;
+    public $whatsapp;
     public $uac;
     public $groups;
     public $dn;
@@ -63,6 +64,9 @@ class AdldapCreateStudentForm extends Model
                 'pattern' => '/^[0-9A-Z]+$/u',
                 'message'=>'Ingrese solo números y/o letras mayúsculas. {attribute} no puede contener caracteres especiales, ni espacios en blanco'],
             [['status'],'safe'],
+            [['whatsapp'], 'match',
+                'pattern' => '/^[0-9+]+$/u',
+                'message'=>'{attribute} no debe contener caracteres alfabéticos o espacios en blanco'],
         ];
     }
 
@@ -81,6 +85,7 @@ class AdldapCreateStudentForm extends Model
             'displayname'       => 'Nombre para mostrar',
             'personalmail'      => 'Correo personal',
             'mobile'            => 'Celular',
+            'whatsapp'          => 'WhatsApp',
             'department'        => 'Departamento',
             'title'             => 'Puesto',
             'dn'                => 'Unidad Organizativa',

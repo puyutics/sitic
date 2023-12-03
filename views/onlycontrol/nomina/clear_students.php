@@ -94,60 +94,63 @@ foreach ($estudiantes_habilitados as $estudiante) {
         ->where(['NOMINA_COD' => $dni])
         ->one();
     if (isset($oc_nomina)) {
-        if ($oc_nomina->NOMINA_F1 == NULL) {
+        //if ($oc_nomina->NOMINA_F1 == NULL) {
             //DESCARGAR FOTO DINARP
             $dni = $estudiante['cedula_pasaporte'];
-            $api_url = Yii::$app->params['api_url_biometrico'].$dni;
-            $api_token = Yii::$app->params['api_token'];
-            $response = \app\models\Dinarp::biometrico($api_url, $api_token);
-            if ($response === false) {
-                echo 'Error en la solicitud cURL';
-            } else {
-                $data = json_decode($response, true);
-                if ($data === null) {
-                    echo 'Error al decodificar JSON.';
+            //VALIDAR SI EXISTE FOTO
+            $filefolder = 'run/tmp/';
+            $filename = $dni.'.jpg';
+            if (!file_exists($filefolder.$filename)) {
+                $api_url = Yii::$app->params['api_url_biometrico'].$dni;
+                $api_token = Yii::$app->params['api_token'];
+                $response = \app\models\Dinarp::biometrico($api_url, $api_token);
+                if ($response === false) {
+                    echo 'Error en la solicitud cURL';
                 } else {
-                    $foto = NULL;
-                    foreach ($data as $key => $val) {
-                        if ($key == 'foto') {
-                            //$foto = base64_decode($val);
-                            $foto = $val;
+                    $data = json_decode($response, true);
+                    if ($data === null) {
+                        echo 'Error al decodificar JSON.';
+                    } else {
+                        $foto = NULL;
+                        foreach ($data as $key => $val) {
+                            if ($key == 'foto') {
+                                //$foto = base64_decode($val);
+                                $foto = $val;
 
-                            $filefolder = 'run/tmp/';
-                            $filename = 'biometrico_tmp.jpg';
-                            if (!file_exists($filefolder)) {
-                                mkdir($filefolder, 0755, true);
+                                //$filefolder = 'run/tmp/';
+                                //$filename = $dni.'.jpg';
+                                if (!file_exists($filefolder)) {
+                                    mkdir($filefolder, 0755, true);
+                                }
+                                $output_file = $filefolder.$filename;
+                                $ifp = fopen($output_file, 'wb');
+                                $data = explode( ',', $foto);
+                                fwrite($ifp, base64_decode($data[0]));
+                                fclose($ifp);
+
+                                //$filename = 'dummy.jpg';
+                                //$output_file = $filefolder.$filename;
+
+                                //$handle = imagecreatefromstring(base64_decode($val));
+                                //imagejpeg($handle,$output_file,100);
+
+                                //$foto = file_get_contents($output_file);
+                                //$foto = mb_convert_encoding($foto,'UCS-2','UTF-8');
                             }
-                            $output_file = $filefolder.$filename;
-                            $ifp = fopen($output_file, 'wb');
-                            $data = explode( ',', $foto);
-                            fwrite($ifp, base64_decode($data[0]));
-                            fclose($ifp);
-
-                            $filename = 'dummy.jpg';
-                            $output_file = $filefolder.$filename;
-
-                            //$handle = imagecreatefromstring(base64_decode($val));
-                            //imagejpeg($handle,$output_file,100);
-
-                            $foto = file_get_contents($output_file);
-                            //$foto = mb_convert_encoding($foto,'UCS-2','UTF-8');
-
                         }
                     }
                 }
+                if ($foto != NULL) {
+                    //$oc_nomina->NOMINA_F1 = $foto;
+                    //$oc_nomina->save();
+                    print_r('NOMINA_ID: '.$oc_nomina->NOMINA_ID.' >> '.$dni.' >> El Registro ya ha sido creado correctamente. Foto DINARP descargada <br>');
+                } else {
+                    print_r('NOMINA_ID: '.$oc_nomina->NOMINA_ID.' >> '.$dni.' >> El Registro ya ha sido creado correctamente. No existe Foto DINARP <br>');
+                }
             }
-            if ($foto != NULL) {
-                $oc_nomina->NOMINA_F1 = $foto;
-                $oc_nomina->save();
-                print_r('NOMINA_ID: '.$oc_nomina->NOMINA_ID.' >> '.$dni.' >> El Registro ya ha sido creado correctamente. Foto DINARP descargada <br>');
-            } else {
-                print_r('NOMINA_ID: '.$oc_nomina->NOMINA_ID.' >> '.$dni.' >> El Registro ya ha sido creado correctamente. No existe Foto DINARP <br>');
-            }
-        }
-        print_r('NOMINA_ID: '.$oc_nomina->NOMINA_ID.' >> '.$dni.' >> El Registro ya ha sido creado correctamente <br>');
-    }
-    else {
+        //}
+        //print_r('NOMINA_ID: '.$oc_nomina->NOMINA_ID.' >> '.$dni.' >> El Registro ya ha sido creado correctamente <br>');
+    } else {
         //Consultar NOMINA_ID
         $oc_nomina = \app\models\onlycontrol\Nomina::find()
             ->select('NOMINA_ID')
@@ -291,7 +294,19 @@ foreach ($estudiantes_habilitados as $estudiante) {
                 $foto = NULL;
                 foreach ($data as $key => $val) {
                     if ($key == 'foto') {
-                        $foto = base64_decode($val);
+                        //$foto = base64_decode($val);
+                        $foto = $val;
+
+                        $filefolder = 'run/tmp/';
+                        $filename = $dni.'.jpg';
+                        if (!file_exists($filefolder)) {
+                            mkdir($filefolder, 0755, true);
+                        }
+                        $output_file = $filefolder.$filename;
+                        $ifp = fopen($output_file, 'wb');
+                        $data = explode( ',', $foto);
+                        fwrite($ifp, base64_decode($data[0]));
+                        fclose($ifp);
                     }
                 }
             }
@@ -314,7 +329,7 @@ foreach ($estudiantes_habilitados as $estudiante) {
             print_r($i.'. '.$dni.' >> No existe. <code>Error al crear el registro</code> <br>');
         }
     }
-    if ($xyz==1) break;
+    //if ($xyz==1) break;
 }
 ?>
 <br>

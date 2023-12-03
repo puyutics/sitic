@@ -58,6 +58,9 @@ if (isset($_GET['search'])) { ?>
                         <div class="col-md-6">
                             <?= $form->field($model, 'mobile')->textInput(['maxlength' => true]) ?>
                         </div>
+                        <div class="col-md-6">
+                            <?= $form->field($model, 'whatsapp')->textInput(['maxlength' => true]) ?>
+                        </div>
                     </div>
 
                     <?= $form->field($model, 'title')->textInput() ?>
