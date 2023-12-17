@@ -16,8 +16,8 @@ $eva_command = $eva_connection->createCommand("
     UPDATE mdl_user 
     SET idnumber = username 
     WHERE
-        idnumber = '' 
-        AND username LIKE '%@uea.edu.ec'");
+        username LIKE '%@uea.edu.ec'
+        #AND idnumber = ''");
 $eva_mdl_user_idnumber_update = $eva_command->queryAll();
 
 //Verificar EVA Matriculados

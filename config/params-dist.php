@@ -6,6 +6,7 @@ return [
     'dni'          => 'dni',
     'personalmail' => 'personalmail',
     'mobile'       => 'mobile',
+    'whatsapp'     => 'whatsapp',
 
     //Para agregar los atributos personalizados en Active Directory lea los siguientes enlaces:
     //https://windowserver.wordpress.com/2014/10/09/active-directory-agregar-atributos-personalizados/
