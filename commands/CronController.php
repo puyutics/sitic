@@ -33,6 +33,132 @@ class CronController extends Controller
         return ExitCode::OK;
     }
 
+    public function actionMoodle_emails()
+    {
+        $hora_actual = date('H:i:s');
+
+        $tiempoInicial = $this->microtimeFloat();
+        $file_console_output = fopen("/var/www/web_apps/sitic.uea.edu.ec/web/moodle/console_output.txt", "w") or die("Unable to open file!");
+        fwrite($file_console_output, 'Usuario: root' . PHP_EOL);
+        fwrite($file_console_output, 'Fecha y hora: ' . date('Y-m-d H:i:s') . PHP_EOL . PHP_EOL);
+
+        if ($hora_actual >= '00:00:00' and $hora_actual <= '02:59:59') {
+            //Conexión SSH
+            $connection = ssh2_connect(Yii::$app->params['moodle_host'], 22);
+            if (ssh2_auth_password($connection, Yii::$app->params['moodle_user'], Yii::$app->params['moodle_pass'])) {
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=smtpuser --set="'.Yii::$app->params['moodle_email_0_1_username'].'"');
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=smtppass --set="'.Yii::$app->params['moodle_email_0_1_password'].'"');
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=noreplyaddress --set="'.Yii::$app->params['moodle_email_0_1_username'].'"');
+                fwrite($file_console_output, 'Configuración correcta.'. PHP_EOL .'Usuario ' . Yii::$app->params['moodle_email_0_1_username'] . ' configurado correctamente' . PHP_EOL);
+
+            } else {
+                fwrite($file_console_output, 'Error 1: Conexión no generada. Usuario: '.Yii::$app->params['moodle_user'].' no configurado.'. PHP_EOL);
+            }
+        } elseif ($hora_actual >= '03:00:00' and $hora_actual <= '05:59:59') {
+            //Conexión SSH
+            $connection = ssh2_connect(Yii::$app->params['moodle_host'], 22);
+            if (ssh2_auth_password($connection, Yii::$app->params['moodle_user'], Yii::$app->params['moodle_pass'])) {
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=smtpuser --set="'.Yii::$app->params['moodle_email_0_2_username'].'"');
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=smtppass --set="'.Yii::$app->params['moodle_email_0_2_password'].'"');
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=noreplyaddress --set="'.Yii::$app->params['moodle_email_0_2_username'].'"');
+                fwrite($file_console_output, 'Configuración correcta.'. PHP_EOL .'Usuario ' . Yii::$app->params['moodle_email_0_2_username'] . ' configurado correctamente' . PHP_EOL);
+            } else {
+                fwrite($file_console_output, 'Error 2: Conexión no generada. Usuario: '.Yii::$app->params['moodle_user'].' no configurado.'. PHP_EOL);
+            }
+        } elseif ($hora_actual >= '06:00:00' and $hora_actual <= '08:59:59') {
+            //Conexión SSH
+            $connection = ssh2_connect(Yii::$app->params['moodle_host'], 22);
+            if (ssh2_auth_password($connection, Yii::$app->params['moodle_user'], Yii::$app->params['moodle_pass'])) {
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=smtpuser --set="'.Yii::$app->params['moodle_email_0_3_username'].'"');
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=smtppass --set="'.Yii::$app->params['moodle_email_0_3_password'].'"');
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=noreplyaddress --set="'.Yii::$app->params['moodle_email_0_3_username'].'"');
+                fwrite($file_console_output, 'Configuración correcta.'. PHP_EOL .'Usuario ' . Yii::$app->params['moodle_email_0_3_username'] . ' configurado correctamente' . PHP_EOL);
+            } else {
+                fwrite($file_console_output, 'Error 3: Conexión no generada. Usuario: '.Yii::$app->params['moodle_user'].' no configurado.'. PHP_EOL);
+            }
+        } elseif ($hora_actual >= '09:00:00' and $hora_actual <= '11:59:59') {
+            //Conexión SSH
+            $connection = ssh2_connect(Yii::$app->params['moodle_host'], 22);
+            if (ssh2_auth_password($connection, Yii::$app->params['moodle_user'], Yii::$app->params['moodle_pass'])) {
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=smtpuser --set="'.Yii::$app->params['moodle_email_0_4_username'].'"');
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=smtppass --set="'.Yii::$app->params['moodle_email_0_4_password'].'"');
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=noreplyaddress --set="'.Yii::$app->params['moodle_email_0_4_username'].'"');
+                fwrite($file_console_output, 'Configuración correcta.'. PHP_EOL .'Usuario ' . Yii::$app->params['moodle_email_0_4_username'] . ' configurado correctamente' . PHP_EOL);
+            } else {
+                fwrite($file_console_output, 'Error 4: Conexión no generada. Usuario: '.Yii::$app->params['moodle_user'].' no configurado.'. PHP_EOL);
+            }
+        } elseif ($hora_actual >= '12:00:00' and $hora_actual <= '14:59:59') {
+            //Conexión SSH
+            $connection = ssh2_connect(Yii::$app->params['moodle_host'], 22);
+            if (ssh2_auth_password($connection, Yii::$app->params['moodle_user'], Yii::$app->params['moodle_pass'])) {
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=smtpuser --set="'.Yii::$app->params['moodle_email_0_5_username'].'"');
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=smtppass --set="'.Yii::$app->params['moodle_email_0_5_password'].'"');
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=noreplyaddress --set="'.Yii::$app->params['moodle_email_0_5_username'].'"');
+                fwrite($file_console_output, 'Configuración correcta.'. PHP_EOL .'Usuario ' . Yii::$app->params['moodle_email_0_5_username'] . ' configurado correctamente' . PHP_EOL);
+            } else {
+                fwrite($file_console_output, 'Error 5: Conexión no generada. Usuario: '.Yii::$app->params['moodle_user'].' no configurado.'. PHP_EOL);
+            }
+        } elseif ($hora_actual >= '15:00:00' and $hora_actual <= '17:59:59') {
+            //Conexión SSH
+            $connection = ssh2_connect(Yii::$app->params['moodle_host'], 22);
+            if (ssh2_auth_password($connection, Yii::$app->params['moodle_user'], Yii::$app->params['moodle_pass'])) {
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=smtpuser --set="'.Yii::$app->params['moodle_email_0_6_username'].'"');
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=smtppass --set="'.Yii::$app->params['moodle_email_0_6_password'].'"');
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=noreplyaddress --set="'.Yii::$app->params['moodle_email_0_6_username'].'"');
+                fwrite($file_console_output, 'Configuración correcta.'. PHP_EOL .'Usuario ' . Yii::$app->params['moodle_email_0_6_username'] . ' configurado correctamente' . PHP_EOL);
+            } else {
+                fwrite($file_console_output, 'Error 6: Conexión no generada. Usuario: '.Yii::$app->params['moodle_user'].' no configurado.'. PHP_EOL);
+            }
+        } elseif ($hora_actual >= '18:00:00' and $hora_actual <= '20:59:59') {
+            //Conexión SSH
+            $connection = ssh2_connect(Yii::$app->params['moodle_host'], 22);
+            if (ssh2_auth_password($connection, Yii::$app->params['moodle_user'], Yii::$app->params['moodle_pass'])) {
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=smtpuser --set="'.Yii::$app->params['moodle_email_0_7_username'].'"');
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=smtppass --set="'.Yii::$app->params['moodle_email_0_7_password'].'"');
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=noreplyaddress --set="'.Yii::$app->params['moodle_email_0_7_username'].'"');
+                fwrite($file_console_output, 'Configuración correcta.'. PHP_EOL .'Usuario ' . Yii::$app->params['moodle_email_0_7_username'] . ' configurado correctamente' . PHP_EOL);
+            } else {
+                fwrite($file_console_output, 'Error 7: Conexión no generada. Usuario: '.Yii::$app->params['moodle_user'].' no configurado.'. PHP_EOL);
+            }
+        } elseif ($hora_actual >= '21:00:00' and $hora_actual <= '23:59:59') {
+            //Conexión SSH
+            $connection = ssh2_connect(Yii::$app->params['moodle_host'], 22);
+            if (ssh2_auth_password($connection, Yii::$app->params['moodle_user'], Yii::$app->params['moodle_pass'])) {
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=smtpuser --set="'.Yii::$app->params['moodle_email_0_8_username'].'"');
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=smtppass --set="'.Yii::$app->params['moodle_email_0_8_password'].'"');
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=noreplyaddress --set="'.Yii::$app->params['moodle_email_0_8_username'].'"');
+                fwrite($file_console_output, 'Configuración correcta.'. PHP_EOL .'Usuario ' . Yii::$app->params['moodle_email_0_8_username'] . ' configurado correctamente' . PHP_EOL);
+            } else {
+                fwrite($file_console_output, 'Error 8: Conexión no generada. Usuario: '.Yii::$app->params['moodle_user'].' no configurado.'. PHP_EOL);
+            }
+        } else {
+            //Conexión SSH
+            $connection = ssh2_connect(Yii::$app->params['moodle_host'], 22);
+            if (ssh2_auth_password($connection, Yii::$app->params['moodle_user'], Yii::$app->params['moodle_pass'])) {
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=smtpuser --set="'.Yii::$app->params['moodle_email_username'].'"');
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=smtppass --set="'.Yii::$app->params['moodle_email_password'].'"');
+                ssh2_exec($connection, 'php /var/www/web_apps/eva2324.uea.edu.ec/web/admin/cli/cfg.php --name=noreplyaddress --set="'.Yii::$app->params['moodle_email_username'].'"');
+                fwrite($file_console_output, 'Configuración correcta.'. PHP_EOL .'Usuario ' . Yii::$app->params['moodle_email_0_1_username'] . ' configurado correctamente' . PHP_EOL);
+            } else {
+                fwrite($file_console_output, 'Error 9: Conexión no generada. Usuario: '.Yii::$app->params['moodle_email_username'].' no configurado.'. PHP_EOL);
+            }
+        }
+
+        $tiempoFinal = $this->microtimeFloat();
+        $tiempoEjecucion = round($tiempoFinal - $tiempoInicial,2) . ' segundos';
+
+        fwrite($file_console_output, PHP_EOL);
+        fwrite($file_console_output, 'Tiempo: ' . $tiempoEjecucion . PHP_EOL);
+        fwrite($file_console_output, 'Fecha y hora: ' . date('Y-m-d H:i:s') . PHP_EOL);
+        fclose($file_console_output);
+
+        $srcFile = '/var/www/web_apps/sitic.uea.edu.ec/web/moodle/console_output.txt';
+        $bckFile = '/var/www/web_apps/sitic.uea.edu.ec/web/moodle/'.Yii::$app->params['course_code'].'/console_moodle_email_' . date('YmdHis') . '.txt';
+        rename($srcFile, $bckFile);
+    }
+
+
+
     public function actionSiad2eva()
     {
         $message = $this->consolemdlenrolsync();
@@ -77,7 +203,7 @@ class CronController extends Controller
                     mdl_ra.id ASC");
             $eva_matriculas = $eva_command->queryAll();
 
-            //Verificar EVA Matriculas duplicadas
+            //Verificar EVA Matrículas duplicadas
             $eva_duplicados=0;
             $eva_ra_command = $eva_connection->createCommand("
             SELECT
@@ -148,6 +274,7 @@ class CronController extends Controller
                     AND naa.retirado = 0
                     AND ipe.CIInfPer = naa.CIInfPer
                     AND ipe.mailInst LIKE '%@uea.edu.ec'
+                    AND ipe.statusper = 1
                     AND m.idMatricula = naa.idMatricula
                     AND m.statusMatricula = 'APROBADA'
             ORDER BY
@@ -263,7 +390,7 @@ class CronController extends Controller
                                     $siad_estudiantes_ok = $siad_estudiantes_ok + 1;
                                     $comprobar = 'none';
                                 } else {
-                                    fwrite($file_console_output, 'Error 2: Cuenta Estudiante Inactiva: ' . $siad_mu_idnumber . ', ' . $siad_mc_idnumber . PHP_EOL);
+                                    fwrite($file_console_output, 'Error 2: Cuenta Estudiante Inactiva: ' . $siad_mu_idnumber . ', ' . $siad_mc_idnumber . ' >> (SIAD) StatusPer: ' . $siad_statusper . PHP_EOL);
                                 }
                                 break;
                             }
@@ -340,7 +467,7 @@ class CronController extends Controller
                                         fwrite($file_console_output, $comprobar . ', student, ' . $siad_mu_idnumber . ', ' . $siad_mc_idnumber . PHP_EOL);
                                         fwrite($file_siad_pregrado, $comprobar . ', student, ' . $siad_mu_idnumber . ', ' . $siad_mc_idnumber . PHP_EOL);
                                     } else {
-                                        fwrite($file_console_output, 'Error 3: Cuenta Estudiante Inactiva: ' . $siad_mu_idnumber . ', ' . $siad_mc_idnumber . PHP_EOL);
+                                        fwrite($file_console_output, 'Error 3: Cuenta Estudiante Inactiva: ' . $siad_mu_idnumber . ', ' . $siad_mc_idnumber . ' >> (SIAD) StatusPer: ' . $siad_statusper . PHP_EOL);
                                     }
                                 } else {
                                     fwrite($file_console_output, 'Error 4: Estudiante no matriculado: ' . $siad_mu_idnumber . ', ' . $siad_mc_idnumber . PHP_EOL);
@@ -416,38 +543,37 @@ class CronController extends Controller
         if (filesize($srcFile) > 0) {
             //Copiar el archivo mediante varios métodos de conexión
             try {
-                //Conexión FTP
-                $ftp_connect = ftp_connect(Yii::$app->params['moodle_host'],21);
-                if (ftp_login($ftp_connect, Yii::$app->params['moodle_ftpuser'], Yii::$app->params['moodle_pass'])) {
-                    ftp_pasv($ftp_connect, true);
-                    $contents_on_server = ftp_nlist($ftp_connect, '/var/www/web_apps/eva'.Yii::$app->params['course_code'].'.uea.edu.ec/enrol/');
-                    if (!in_array($dstFile, $contents_on_server)) {
-                        if (ftp_put($ftp_connect, $dstFile, $srcFile, FTP_BINARY)){
-                            ftp_chmod($ftp_connect, 0777, $dstFile);
-                            rename($srcFile, $bckFile);
-                            $message = $message . PHP_EOL.'Conexion FTP - Se ha cargado el archivo '.$dstFile.' con exito'.PHP_EOL;
-                        }
-                    } else {
-                        $message = $message . PHP_EOL.'Conexion FTP - El archivo '.$dstFile.' existe'.PHP_EOL;
-                    }
+                //Conexión SSH
+                $connection = ssh2_connect(Yii::$app->params['moodle_host'], 22);
+                if (ssh2_auth_password($connection, Yii::$app->params['moodle_user'], Yii::$app->params['moodle_pass'])) {
+                    ssh2_scp_send($connection, $srcFile, $dstFile, 0644);
+                    ssh2_exec($connection, 'chown apache:apache ' . $dstFile);
+                    rename($srcFile, $bckFile);
+                    $message = $message . PHP_EOL.'Conexion SSH - Se ha cargado el archivo '.$dstFile.' con exito'.PHP_EOL;
                 }
-                ftp_close($ftp_connect);
             } catch (Exception $e) {
-                $message = $message . PHP_EOL.'Conexion FTP - Excepcion capturada: '.$e->getMessage().PHP_EOL;
+                $message = $message . PHP_EOL.'Conexion SSH - Excepcion capturada: '.$e->getMessage().PHP_EOL;
                 try {
-                    //Conexión SSH
-                    $connection = ssh2_connect(Yii::$app->params['moodle_host'], 22);
-                    if (ssh2_auth_password($connection, Yii::$app->params['moodle_user'], Yii::$app->params['moodle_pass'])) {
-                        ssh2_scp_send($connection, $srcFile, $dstFile, 0644);
-                        ssh2_exec($connection, 'chown apache:apache ' . $dstFile);
-                        rename($srcFile, $bckFile);
-                        $message = $message . PHP_EOL.'Conexion SSH - Se ha cargado el archivo '.$dstFile.' con exito'.PHP_EOL;
+                    //Conexión FTP
+                    $ftp_connect = ftp_connect(Yii::$app->params['moodle_host'],21);
+                    if (ftp_login($ftp_connect, Yii::$app->params['moodle_ftpuser'], Yii::$app->params['moodle_pass'])) {
+                        ftp_pasv($ftp_connect, true);
+                        $contents_on_server = ftp_nlist($ftp_connect, '/var/www/web_apps/eva'.Yii::$app->params['course_code'].'.uea.edu.ec/enrol/');
+                        if (!in_array($dstFile, $contents_on_server)) {
+                            if (ftp_put($ftp_connect, $dstFile, $srcFile, FTP_BINARY)){
+                                ftp_chmod($ftp_connect, 0777, $dstFile);
+                                rename($srcFile, $bckFile);
+                                $message = $message . PHP_EOL.'Conexion FTP - Se ha cargado el archivo '.$dstFile.' con exito'.PHP_EOL;
+                            }
+                        } else {
+                            $message = $message . PHP_EOL.'Conexion FTP - El archivo '.$dstFile.' existe'.PHP_EOL;
+                        }
                     }
+                    ftp_close($ftp_connect);
                 } catch (Exception $e) {
-                    $message = $message . PHP_EOL.'Conexion SSH - Excepcion capturada: '.$e->getMessage().PHP_EOL;
+                    $message = $message . PHP_EOL.'Conexion FTP - Excepcion capturada: '.$e->getMessage().PHP_EOL;
                 }
             }
-
         }
         rename($srcFileConsole, $bckFileConsole);
         return $message;
@@ -511,7 +637,8 @@ class CronController extends Controller
                         AND mdl_c.id = mdl_at.course
                         AND	mdl_ats.id = mdl_atl.sessionid
                         AND mdl_at.id = mdl_ats.attendanceid
-                        AND mdl_c.shortname LIKE '%UEA-L-%'
+                        AND mdl_c.shortname LIKE '%UEA-%'
+                        #AND mdl_c.shortname LIKE '%UEA-L-%'
                         #AND mdl_c.shortname LIKE '%UEA-L-UFB-026%'
                         ");
             $eva_attendance_logs = $eva_command->queryAll();
@@ -531,13 +658,17 @@ class CronController extends Controller
                 FROM
                         notasalumnoasignatura naa,
                         docenteperasig dpa,
-                        informacionpersonal ipe
+                        informacionpersonal ipe,
+                        malla_curricular mc
                 WHERE
                         naa.idPer = ".Yii::$app->params['siad_periodo']."
                         AND dpa.dpa_id = naa.dpa_id
                         AND ipe.CIInfPer = naa.CIInfPer
                         AND ipe.mailInst LIKE '%@uea.edu.ec'
-                        AND naa.idAsig LIKE 'UEA-L-%'
+                        AND ipe.statusper = 1
+                        AND mc.idMC = dpa.idMc
+                        AND mc.en_linea = 1
+                        #AND naa.idAsig LIKE 'UEA-L-%'
                         #AND naa.idAsig LIKE 'UEA-L-UFB-026%'
                 ORDER BY
                         #ipe.CIInfPer ASC,
@@ -559,11 +690,14 @@ class CronController extends Controller
                         pa.hora_fin_planif
                 FROM
                         planificacion_asignatura pa,
-                        docenteperasig dpa
+                        docenteperasig dpa,
+                        malla_curricular mc
                 WHERE
                         pa.dpa_id = dpa.dpa_id
                         AND dpa.idPer = ".Yii::$app->params['siad_periodo']."
-                        AND dpa.idAsig LIKE 'UEA-L-%'
+                        AND mc.idMC = dpa.idMc
+                        AND mc.en_linea = 1
+                        #AND dpa.idAsig LIKE 'UEA-L-%'
                         #AND dpa.idAsig LIKE 'UEA-L-UFB-026%'
                         ");
             $siad_planificacion_asignatura = $siad_command->queryAll();
@@ -588,12 +722,15 @@ class CronController extends Controller
                 FROM
                         asistencia_alumno aa,
                         notasalumnoasignatura naa,
-                        docenteperasig dpa
+                        docenteperasig dpa,
+                        malla_curricular mc
                 WHERE
                         aa.idPer = ".Yii::$app->params['siad_periodo']."
                         AND naa.idnaa = aa.idnaa
                         AND dpa.dpa_id = naa.dpa_id
-                        AND dpa.idAsig LIKE 'UEA-L-%'
+                        AND mc.idMC = dpa.idMc
+                        AND mc.en_linea = 1
+                        #AND dpa.idAsig LIKE 'UEA-L-%'
                         #AND dpa.idAsig LIKE 'UEA-L-UFB-026%'
                         ");
             $siad_alumnos_asistencias = $siad_command->queryAll();

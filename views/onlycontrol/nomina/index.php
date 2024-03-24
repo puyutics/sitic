@@ -93,6 +93,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter'=>['USUARIO'=>'USUARIO','ADMINISTRADOR'=>'ADMINISTRADOR'],
             ],
             [
+                'label' => 'Tarjeta RF',
+                'attribute' => 'NOMINA_CARD',
+            ],
+            [
                 'label' => 'Estado',
                 'attribute' => 'NOMINA_ES',
                 'value' => function($model) {
@@ -171,7 +175,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
             //'NOMINA_FING',
             //'NOMINA_FSAL',
-            //'NOMINA_CARD',
             //'NOMINA_FCARD',
             //'NOMINA_NOW',
             //'NOMINA_CONTROLAPB',

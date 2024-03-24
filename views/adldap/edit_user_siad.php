@@ -10,7 +10,7 @@ use yii\helpers\Url;
 $dni = $model->dni;
 $CIInfPer = $dni;
 $estudiante_nivelacion = \app\models\siad_pregrado\Estudiantes::find()
-    ->select('CIInfPer, cedula_pasaporte, ApellInfPer, ApellMatInfPer, NombInfPer, FechNacimPer, StatusPer, mailInst')
+    ->select('CIInfPer, cedula_pasaporte, ApellInfPer, ApellMatInfPer, NombInfPer, FechNacimPer, StatusPer, mailInst, fotografia')
     ->where(['CIInfPer' => $dni])
     ->orWhere(['cedula_pasaporte' => $dni])
     ->one();
@@ -18,7 +18,7 @@ if (isset($estudiante_nivelacion)) {
     $CIInfPer = $estudiante_nivelacion->CIInfPer;
 }
 $estudiante_pregrado = \app\models\siad_pregrado\Estudiantes::find()
-    ->select('CIInfPer, cedula_pasaporte, ApellInfPer, ApellMatInfPer, NombInfPer, FechNacimPer, StatusPer, mailInst')
+    ->select('CIInfPer, cedula_pasaporte, ApellInfPer, ApellMatInfPer, NombInfPer, FechNacimPer, StatusPer, mailInst, fotografia, fotografia_reg_civil')
     ->where(['CIInfPer' => $dni])
     ->orWhere(['cedula_pasaporte' => $dni])
     ->one();
@@ -543,6 +543,24 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
             <h3 align="center"> SIAD PREGRADO - Información Estudiante </h3>
         </div>
 
+        <div align="center">
+            <?php $estudiante_pregrado = \app\models\siad_pregrado\Estudiantes::find()
+                ->orWhere(['CIInfPer' => $model->dni])
+                ->orWhere(['cedula_pasaporte' => $model->dni])
+                ->one();
+            if ($estudiante_pregrado->fotografia_reg_civil != NULL) {
+                $foto = $estudiante_pregrado->fotografia_reg_civil;
+            } else {
+                $foto = base64_encode($estudiante_pregrado->fotografia);
+            }
+            $finfo = new finfo(FILEINFO_MIME);
+            $mimeType = $finfo->buffer(base64_decode($foto));
+            $mimeType = explode('; ',$mimeType);
+            $mimeType = $mimeType[0];
+            echo '<img style="border:1px solid black;" height="138" src="data:' . $mimeType . ';base64,' . $foto . '"/>';
+            ?>
+        </div>
+        <br>
         <?= GridView::widget([
             'dataProvider' => $dataProviderPregrado,
             //'filterModel' => $searchModelPregrado,
@@ -698,10 +716,11 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
                                     ->one();
                                 $nombAsig = $asignatura->nombAsig;
                                 $dpa = \app\models\siad_pregrado\DocenteAsignatura::find()
-                                    ->select('idParalelo')
+                                    ->select('CIInfPer,idParalelo')
                                     ->where(['dpa_id' => $dpa_id])
                                     ->one();
-                                $echo = $echo.$i.'. ';
+                                if ($i == 1)  $echo = $echo.$i.'. ';
+                                else  $echo = $echo.'<br>'.$i.'. ';
                                 if ($aprobada == 1) {
                                     $echo = $echo.'<font color="green">Aprobada</font> - ';
                                 } elseif ($anulada == 1) {
@@ -715,6 +734,13 @@ $dataProviderAsignaturasDocentePregrado->sort->defaultOrder = [
                                         $idAsig.
                                         ' -- '.
                                         $nombAsig.' ('.$idParalelo.')';
+                                    $CIInfPer = $dpa->CIInfPer;
+                                    if ($CIInfPer != '') {
+                                        $docente = \app\models\siad_pregrado\Docentes::findOne($CIInfPer);
+                                        $echo = $echo.
+                                            ' -- '.
+                                            $docente->ApellInfPer.' '.$docente->ApellMatInfPer.' '.$docente->NombInfPer;
+                                    }
                                 } else {
                                     $echo = $echo.
                                         $idAsig.

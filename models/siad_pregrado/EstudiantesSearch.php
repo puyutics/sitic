@@ -18,8 +18,8 @@ class EstudiantesSearch extends Estudiantes
     public function rules()
     {
         return [
-            [['CIInfPer', 'cedula_pasaporte', 'TipoDocInfPer', 'ApellInfPer', 'ApellMatInfPer', 'NombInfPer', 'NacionalidadPer', 'FechNacimPer', 'LugarNacimientoPer', 'GeneroPer', 'EstadoCivilPer', 'CiudadPer', 'DirecDomicilioPer', 'Telf1InfPer', 'CelularInfPer', 'TipoInfPer', 'mailPer', 'mailInst', 'tipo_discapacidad', 'carnet_conadis', 'num_carnet_conadis', 'fotografia', 'codigo_dactilar', 'huella_dactilar', 'ultima_actualizacion', 'codigo_verificacion'], 'safe'],
-            [['EtniaPer', 'statusper', 'GrupoSanguineo', 'porcentaje_discapacidad', 'hd_posicion', 'deshabilita_edicion'], 'integer'],
+            [['CIInfPer', 'num_expediente', 'cedula_pasaporte', 'TipoDocInfPer', 'ApellInfPer', 'ApellMatInfPer', 'NombInfPer', 'NacionalidadPer', 'FechNacimPer', 'LugarNacimientoPer', 'GeneroPer', 'EstadoCivilPer', 'paisCNE', 'provinciaCNE', 'habilitadoTPublicoCNE', 'domicilioRegCivil', 'CiudadPer', 'DirecDomicilioPer', 'Telf1InfPer', 'CelularInfPer', 'TipoInfPer', 'mailPer', 'mailInst', 'tipo_discapacidad', 'carnet_conadis', 'num_carnet_conadis', 'lateralidad', 'fotografia', 'fotografia_reg_civil', 'codigo_dactilar', 'huella_dactilar', 'usu_alta', 'ultima_actualizacion', 'codigo_verificacion', 'archivo', 'observacion', 'actualizado_x_api_usuario'], 'safe'],
+            [['EtniaPer', 'statusper', 'GrupoSanguineo', 'porcentaje_discapacidad', 'hd_posicion', 'actualizado', 'deshabilita_edicion', 'cambia_nombres', 'residente_amazonico', 'actualizado_x_api'], 'integer'],
         ];
     }
 
@@ -62,11 +62,16 @@ class EstudiantesSearch extends Estudiantes
             'GrupoSanguineo' => $this->GrupoSanguineo,
             'porcentaje_discapacidad' => $this->porcentaje_discapacidad,
             'hd_posicion' => $this->hd_posicion,
+            'actualizado' => $this->actualizado,
             'ultima_actualizacion' => $this->ultima_actualizacion,
             'deshabilita_edicion' => $this->deshabilita_edicion,
+            'cambia_nombres' => $this->cambia_nombres,
+            'residente_amazonico' => $this->residente_amazonico,
+            'actualizado_x_api' => $this->actualizado_x_api,
         ]);
 
         $query->andFilterWhere(['like', 'CIInfPer', $this->CIInfPer])
+            ->andFilterWhere(['like', 'num_expediente', $this->num_expediente])
             ->andFilterWhere(['like', 'cedula_pasaporte', $this->cedula_pasaporte])
             ->andFilterWhere(['like', 'TipoDocInfPer', $this->TipoDocInfPer])
             ->andFilterWhere(['like', 'ApellInfPer', $this->ApellInfPer])
@@ -76,6 +81,11 @@ class EstudiantesSearch extends Estudiantes
             ->andFilterWhere(['like', 'LugarNacimientoPer', $this->LugarNacimientoPer])
             ->andFilterWhere(['like', 'GeneroPer', $this->GeneroPer])
             ->andFilterWhere(['like', 'EstadoCivilPer', $this->EstadoCivilPer])
+            ->andFilterWhere(['like', 'paisCNE', $this->paisCNE])
+            ->andFilterWhere(['like', 'provinciaCNE', $this->provinciaCNE])
+            ->andFilterWhere(['like', 'habilitadoTPublicoCNE', $this->habilitadoTPublicoCNE])
+            ->andFilterWhere(['like', 'domicilioRegCivil', $this->domicilioRegCivil])
+            ->andFilterWhere(['like', 'domicilioRegCivil', $this->domicilioRegCivil])
             ->andFilterWhere(['like', 'CiudadPer', $this->CiudadPer])
             ->andFilterWhere(['like', 'DirecDomicilioPer', $this->DirecDomicilioPer])
             ->andFilterWhere(['like', 'Telf1InfPer', $this->Telf1InfPer])
@@ -86,10 +96,17 @@ class EstudiantesSearch extends Estudiantes
             ->andFilterWhere(['like', 'tipo_discapacidad', $this->tipo_discapacidad])
             ->andFilterWhere(['like', 'carnet_conadis', $this->carnet_conadis])
             ->andFilterWhere(['like', 'num_carnet_conadis', $this->num_carnet_conadis])
+            ->andFilterWhere(['like', 'lateralidad', $this->lateralidad])
             ->andFilterWhere(['like', 'fotografia', $this->fotografia])
+            ->andFilterWhere(['like', 'fotografia_reg_civil', $this->fotografia_reg_civil])
             ->andFilterWhere(['like', 'codigo_dactilar', $this->codigo_dactilar])
             ->andFilterWhere(['like', 'huella_dactilar', $this->huella_dactilar])
-            ->andFilterWhere(['like', 'codigo_verificacion', $this->codigo_verificacion]);
+            ->andFilterWhere(['like', 'usu_alta', $this->usu_alta])
+            ->andFilterWhere(['like', 'codigo_verificacion', $this->codigo_verificacion])
+            ->andFilterWhere(['like', 'archivo', $this->archivo])
+            ->andFilterWhere(['like', 'observacion', $this->observacion])
+            ->andFilterWhere(['like', 'actualizado_x_api_usuario', $this->actualizado_x_api_usuario])
+        ;
 
         return $dataProvider;
     }

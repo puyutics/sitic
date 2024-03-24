@@ -38,7 +38,8 @@ $eva_command = $eva_connection->createCommand("
             AND mdl_c.id = mdl_at.course
             AND	mdl_ats.id = mdl_atl.sessionid
             AND mdl_at.id = mdl_ats.attendanceid
-            AND mdl_c.shortname LIKE '%UEA-L-%'
+            AND mdl_c.shortname LIKE '%UEA-%'
+            #AND mdl_c.shortname LIKE '%UEA-L-%'
             #AND mdl_c.shortname LIKE '%UEA-L-UFB-005%'
             ");
 $eva_attendance_logs = $eva_command->queryAll();
@@ -59,13 +60,16 @@ $siad_command = $siad_connection->createCommand("
     FROM
             notasalumnoasignatura naa,
             docenteperasig dpa,
-            informacionpersonal ipe
+            informacionpersonal ipe,
+            malla_curricular mc
     WHERE
             naa.idPer = ".Yii::$app->params['siad_periodo']."
             AND dpa.dpa_id = naa.dpa_id
             AND ipe.CIInfPer = naa.CIInfPer
             AND ipe.mailInst LIKE '%@uea.edu.ec'
-            AND naa.idAsig LIKE 'UEA-L-%'
+            AND mc.idMC = dpa.idMc
+            AND mc.en_linea = 1
+            #AND naa.idAsig LIKE 'UEA-L-%'
             #AND naa.idAsig LIKE 'UEA-L-UFB-005%'
     ORDER BY
             #ipe.CIInfPer ASC,
@@ -88,11 +92,14 @@ $siad_command = $siad_connection->createCommand("
             pa.hora_fin_planif
     FROM
             planificacion_asignatura pa,
-            docenteperasig dpa
+            docenteperasig dpa,
+            malla_curricular mc
     WHERE
             pa.dpa_id = dpa.dpa_id
             AND dpa.idPer = ".Yii::$app->params['siad_periodo']."
-            AND dpa.idAsig LIKE 'UEA-L-%'
+            AND mc.idMC = dpa.idMc
+            AND mc.en_linea = 1
+            #AND dpa.idAsig LIKE 'UEA-L-%'
             #AND dpa.idAsig LIKE 'UEA-L-UFB-005%'
             ");
 $siad_planificacion_asignatura = $siad_command->queryAll();
@@ -118,12 +125,15 @@ $siad_command = $siad_connection->createCommand("
     FROM
             asistencia_alumno aa,
             notasalumnoasignatura naa,
-            docenteperasig dpa
+            docenteperasig dpa,
+            malla_curricular mc
     WHERE
             aa.idPer = ".Yii::$app->params['siad_periodo']."
             AND naa.idnaa = aa.idnaa
             AND dpa.dpa_id = naa.dpa_id
-            AND dpa.idAsig LIKE 'UEA-L-%'
+            AND mc.idMC = dpa.idMc
+            AND mc.en_linea = 1
+            #AND dpa.idAsig LIKE 'UEA-L-%'
             #AND dpa.idAsig LIKE 'UEA-L-UFB-005%'
             ");
 $siad_alumnos_asistencias = $siad_command->queryAll();

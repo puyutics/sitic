@@ -10,14 +10,28 @@ use yii\helpers\Url;
 $this->title = 'Carnet Digital';
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+
 ?>
 <div class="carnetizacion-view">
 
-    <div class="alert alert-info" align="center">
-        <h3 align="center"><?= Html::encode($this->title) ?></h3>
-    </div>
+    <?php $fecha_actual = date('Y-m-d');
+    $estudiante = \app\models\siad_pregrado\Estudiantes::findOne($model->CIInfPer);
+    $matricula = \app\models\siad_pregrado\Matricula::findOne($model->idMatricula);
+    if ($matricula->statusMatricula == 'APROBADA'
+        AND $estudiante->statusper == 1
+        AND $fecha_actual < $model->fechfinalperlec) {?>
+        <div class="alert alert-success" align="center">
+            <h3 align="center">Carnet Digital Vigente</h3>
+        </div>
+    <?php } else { ?>
+        <div class="alert alert-danger" align="center">
+            <h3 align="center">Carnet Digital Caducado</h3>
+        </div>
+    <?php } ?>
 
     <?= \yii2assets\pdfjs\PdfJs::widget([
+        'width'=>'100%',
+        'height'=> '810px',
         'url'=> Url::to($model->filefolder . $model->filename . $model->filetype)
     ]); ?>
 

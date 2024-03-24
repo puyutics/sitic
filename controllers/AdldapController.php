@@ -1637,7 +1637,8 @@ class AdldapController extends Controller
                     ->orWhereContains('cn', $search)
                     ->orWhereContains('mobile', $search)
                     ->orWhereContains(Yii::$app->params['personalmail'], $search)
-                    ->orWhereEquals(Yii::$app->params['dni'], $search)
+                    ->orWhereContains(Yii::$app->params['dni'], $search)
+                    //->orWhereEquals(Yii::$app->params['dni'], $search)
                     ->sortBy('samaccountname', 'asc')
                     ->get();
             }
@@ -2053,7 +2054,8 @@ class AdldapController extends Controller
                 $users = Yii::$app->ad->getProvider('default')->search()->users()
                     ->orWhereContains('samaccountname', $search)
                     ->orWhereContains('cn', $search)
-                    ->orWhereEquals(Yii::$app->params['dni'], $search)
+                    ->orWhereContains(Yii::$app->params['dni'], $search)
+                    //->orWhereEquals(Yii::$app->params['dni'], $search)
                     ->sortBy('samaccountname', 'asc')
                     ->get();
             }

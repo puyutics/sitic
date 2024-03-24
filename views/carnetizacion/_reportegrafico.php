@@ -23,48 +23,15 @@ $carnets = \app\models\Carnetizacion::find()
     ->where(['idPer' => $periodo])
     ->all();
 
-///////////////////REPORTE GRÁFICO////////////////////
-$data_fecregistro = \app\models\Carnetizacion::find()
-    ->select(['date_format(fec_registro, "%Y-%m-%d") as fecha','count(date_format(fec_registro, "%Y-%m-%d")) as data'])
-    ->groupBy('fecha')
-    ->asArray()
-    ->all();
 
-$datatime_fecregistro = \app\models\Carnetizacion::find()
-    ->select(['date_format(fec_registro, "%Y-%m-%d %H:00") as fecha','count(date_format(fec_registro, "%Y-%m-%d %H:00")) as data'])
-    ->groupBy('fecha')
-    ->asArray()
-    ->all();
-
-$data_fecregistrototal = \app\models\Carnetizacion::findBySql(
-    "SELECT c.fecha, c.data, @running_total:=@running_total + c.data AS total
-         FROM (SELECT
-                 date(fec_registro) as fecha,
-                    count(fec_registro) as data
-                    FROM carnetizacion
-                    GROUP BY fecha ) c
-                JOIN (SELECT @running_total:=0) r
-                ORDER BY c.fecha")
-    ->asArray()
-    ->all();
-
-$data_carrera = \app\models\Carnetizacion::find()
-    ->select(['idCarr','count(id) as data'])
-    ->groupBy('idCarr')
-    ->asArray()
-    ->all();
-
-$dataProviderFecRegitro = new \yii\data\ArrayDataProvider(['allModels' => $data_fecregistro,'pagination' => false]);
-$datatimeProviderFecRegitro = new \yii\data\ArrayDataProvider(['allModels' => $datatime_fecregistro,'pagination' => false]);
-$dataProviderFecRegitroTotal = new \yii\data\ArrayDataProvider(['allModels' => $data_fecregistrototal,'pagination' => false]);
-$dataProviderCarrera = new \yii\data\ArrayDataProvider(['allModels' => $data_carrera,'pagination' => false]);
 ?>
 
 <htmlpageheader name="myheader">
     <div style="border-bottom: 1px solid #000000; text-align: center; padding-top: 3mm; ">
-        <h3><?= Html::img('images/uea_logo.png',['style' => 'width:40px;height: 40px']); ?>
-            <b>UNIVERSIDAD ESTATAL AMAZÓNICA</b></h3>
-        <h5><b>Sistema Integrado de Tecnologías de la Información y Comunicación</b></h5>
+        <?= Html::img('images/uea_banner.png',['style' => 'width:400px']); ?>
+        <br>
+        <br>
+        <h4><b>Dirección de Gestión de Tecnologías de la Información y Comunicación</b></h4>
     </div>
 </htmlpageheader>
 <sethtmlpageheader name="myheader" value="on" show-this-page="1" />
@@ -83,8 +50,25 @@ $dataProviderCarrera = new \yii\data\ArrayDataProvider(['allModels' => $data_car
     <br>
     <b>Período: <?php echo $periodoDescriptivo ?></b>
 </p>
-
+<br>
+<h3>
+    <div align="center">
+        <strong>DATOS CARNETIZACIÓN</strong>
+        <br>
+        CARNETS GENERADOS: <?= count($carnets) ?>
+    </div>
+</h3>
+<br>
+<br>
 <?php
+
+
+/*$datatime_fecregistro = \app\models\Carnetizacion::find()
+    ->select(['date_format(fec_registro, "%Y-%m-%d %H:00") as fecha','count(date_format(fec_registro, "%Y-%m-%d %H:00")) as data'])
+    ->groupBy('fecha')
+    ->asArray()
+    ->all();
+$datatimeProviderFecRegitro = new \yii\data\ArrayDataProvider(['allModels' => $datatime_fecregistro,'pagination' => false]);
 
 echo Highcharts::widget([
     'scripts' => [
@@ -112,7 +96,16 @@ echo Highcharts::widget([
         ],
         'credits' => array('enabled' => true),
     ]
-]);
+]);*/
+
+
+$data_fecregistro = \app\models\Carnetizacion::find()
+    ->select(['date_format(fec_registro, "%Y-%m") as fecha','count(date_format(fec_registro, "%Y-%m-%d")) as data'])
+    ->where(['idPer' => $periodo])
+    ->groupBy('fecha')
+    ->asArray()
+    ->all();
+$dataProviderFecRegitro = new \yii\data\ArrayDataProvider(['allModels' => $data_fecregistro,'pagination' => false]);
 
 echo Highcharts::widget([
     'scripts' => [
@@ -142,6 +135,21 @@ echo Highcharts::widget([
     ]
 ]);
 
+
+$data_fecregistrototal = \app\models\Carnetizacion::findBySql(
+    "SELECT c.fecha, c.data, @running_total:=@running_total + c.data AS total
+         FROM (SELECT
+                    date_format(fec_registro, '%Y-%m') as fecha,
+                    count(date_format(fec_registro, '%Y-%m')) as data
+                    FROM carnetizacion
+                    WHERE idPer = ".$periodo."
+                    GROUP BY fecha) c
+                JOIN (SELECT @running_total:=0) r
+                ORDER BY c.fecha")
+    ->asArray()
+    ->all();
+$dataProviderFecRegitroTotal = new \yii\data\ArrayDataProvider(['allModels' => $data_fecregistrototal,'pagination' => false]);
+
 echo Highcharts::widget([
     'scripts' => [
         'modules/exporting',
@@ -169,6 +177,23 @@ echo Highcharts::widget([
     ]
 ]);
 
+
+$data_carrera = \app\models\Carnetizacion::findBySql(
+    "SELECT
+            CONCAT(idCarr, '( ', COUNT(c.id), ' )') as idCarr,
+            COUNT(c.id) as data
+        FROM
+            carnetizacion c
+        WHERE
+            c.idPer = ".$periodo."
+        GROUP BY
+            c.idCarr
+        ORDER BY
+            idCarr ASC
+        ")
+    ->asArray()
+    ->all();
+$dataProviderCarrera = new \yii\data\ArrayDataProvider(['allModels' => $data_carrera,'pagination' => false]);
 
 echo Highcharts::widget([
     'scripts' => [

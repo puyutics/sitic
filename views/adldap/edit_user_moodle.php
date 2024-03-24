@@ -27,6 +27,7 @@ $searchModelMdlRApregrado = new MdlRoleAssignmentsSearch();
 $dataProviderMdlRApregrado = $searchModelMdlRApregrado->search(Yii::$app->request->queryParams);
 $dataProviderMdlRApregrado->query->Where(['userid' => $mdl_user_pregrado_id]);
 $dataProviderMdlRApregrado->sort->defaultOrder = [
+    'roleid' => SORT_ASC,
     'contextid' => SORT_ASC,
 ];
 
@@ -61,7 +62,18 @@ $dataProviderMdlRAposgrado->sort->defaultOrder = [
         'attributes' => [
             'id',
             'auth',
-            'username',
+            [
+                'attribute' => 'username',
+                'value' => function ($model) {
+                    $mdl_user = \app\models\eva_pregrado\MdlUser::find()
+                        ->select('id, username')
+                        ->where(['username' => $model->username])
+                        ->one();
+
+                    return Html::a($mdl_user->username,Yii::$app->params['moodle_user_url'] . $mdl_user->id,['target'=>'_blank', 'data-pjax'=>"0"]);
+                },
+                'format' => 'raw',
+            ],
             'idnumber',
             //'firstname',
             //'lastname',

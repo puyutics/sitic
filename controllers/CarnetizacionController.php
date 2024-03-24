@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Logs;
+use kartik\mpdf\Pdf;
 use Yii;
 use app\models\Carnetizacion;
 use app\models\CarnetizacionSearch;
@@ -26,11 +27,11 @@ class CarnetizacionController extends Controller
             'access' => [
                 'class' => AccessControl::className(),
                 'only' => ['create','delete','index','update','view',
-                    'fixcarnet','reportegrafico'],
+                    'fixcarnet','fixcarnets','reportegrafico'],
                 'rules' => [
                     [
                         'actions' => ['create','index','update','view',
-                            'fixcarnet','reportegrafico'],
+                            'fixcarnet','fixcarnets','reportegrafico'],
                         'allow' => true,
                         'roles' => ['rolAdministrador'],
                     ],
@@ -142,7 +143,11 @@ class CarnetizacionController extends Controller
                     $model->NombInfPer = $estudiante->NombInfPer;
                     $model->FechNacimPer = $estudiante->FechNacimPer;
                     $model->mailInst = $estudiante->mailInst;
-                    $model->fotografia = $estudiante->fotografia;
+                    if ($estudiante->fotografia_reg_civil != NULL) {
+                        $model->fotografia = $estudiante->fotografia_reg_civil;
+                    } else {
+                        $model->fotografia = base64_encode($estudiante->fotografia);
+                    }
                     $model->idMatricula = $matricula->idMatricula;
                     $model->idCarr = $matricula->idCarr;
                     $model->idPer = $matricula->idPer;
@@ -204,6 +209,17 @@ class CarnetizacionController extends Controller
     {
         $id = base64_decode($id);
         $model = \app\models\Carnetizacion::findOne($id);
+        $estudiante = \app\models\siad_pregrado\Estudiantes::find()
+            ->where(['CIInfPer' => $model->CIInfPer])
+            ->one();
+
+        if ($estudiante->fotografia_reg_civil != NULL) {
+            $model->fotografia = $estudiante->fotografia_reg_civil;
+        } else {
+            $model->fotografia = base64_encode($estudiante->fotografia);
+        }
+
+        $model->save();
 
         //Generar el carnet en PDF
         $this->generarCarnet($model);
@@ -214,6 +230,43 @@ class CarnetizacionController extends Controller
         return $this->redirect(['view', 'id' => base64_encode($model->id)]);
     }
 
+    public function actionFixcarnets($idPer)
+    {
+        $carnets = \app\models\Carnetizacion::find()
+            ->andWhere(['idPer' => $idPer])
+            ->andWhere(['status' => 1])
+            ->all();
+
+        $i=0;
+        foreach ($carnets as $model) {
+            $i+=1;
+            $estudiante = \app\models\siad_pregrado\Estudiantes::find()
+                ->where(['CIInfPer' => $model->CIInfPer])
+                ->one();
+
+            if ($estudiante->fotografia_reg_civil != NULL) {
+                $model->fotografia = $estudiante->fotografia_reg_civil;
+            } else {
+                $model->fotografia = base64_encode($estudiante->fotografia);
+            }
+
+            $model->save();
+
+            //Generar el carnet en PDF
+            $this->generarCarnet($model);
+
+            //Enviar carnet digital por email
+            $this->enviarCarnet($model);
+
+            $model->status = 2;
+            $model->save();
+
+            print_r($i.'. '.$model->cedula_pasaporte.' >> Carnet Generado y Enviado'.'<br>');
+
+            //if ($i == 1) break;
+        }
+    }
+
     public function actionReportegrafico()
     {
         return $this->render('_reportegrafico');
@@ -221,7 +274,13 @@ class CarnetizacionController extends Controller
 
     public function generarCarnet($model)
     {
-        $pdf = Yii::$app->pdf;
+        //$pdf = Yii::$app->pdf;
+        $pdf = new Pdf([
+            'mode' => Pdf::MODE_CORE,
+            'format' => Pdf::FORMAT_A4,
+            'orientation' => Pdf::ORIENT_PORTRAIT,
+            'destination' => Pdf::DEST_FILE,
+        ]);
         $pdf->filename = $model->filefolder . $model->filename . $model->filetype;
         $pdf->format = [100,160];
         $pdf->marginLeft = 0;

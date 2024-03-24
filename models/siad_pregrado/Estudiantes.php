@@ -12,6 +12,7 @@ use yii\web\IdentityInterface;
  * This is the model class for table "informacionpersonal".
  *
  * @property string $CIInfPer
+ * @property string $num_expediente
  * @property string $cedula_pasaporte
  * @property string $TipoDocInfPer
  * @property string $ApellInfPer
@@ -23,6 +24,10 @@ use yii\web\IdentityInterface;
  * @property string $LugarNacimientoPer
  * @property string $GeneroPer
  * @property string $EstadoCivilPer
+ * @property string $paisCNE
+ * @property string $provinciaCNE
+ * @property string $habilitadoTPublicoCNE
+ * @property string $domicilioRegCivil
  * @property string $CiudadPer
  * @property string $DirecDomicilioPer
  * @property string $Telf1InfPer
@@ -37,12 +42,21 @@ use yii\web\IdentityInterface;
  * @property string $num_carnet_conadis
  * @property integer $porcentaje_discapacidad
  * @property resource $fotografia
+ * @property resource $fotografia_reg_civil
  * @property string $codigo_dactilar
  * @property integer $hd_posicion
  * @property resource $huella_dactilar
+ * @property resource $usu_alta
+ * @property integer $actualizado
  * @property string $ultima_actualizacion
  * @property string $codigo_verificacion
  * @property integer $deshabilita_edicion
+ * @property string $archivo
+ * @property string $observacion
+ * @property integer $cambia_nombres
+ * @property integer $residente_amazonico
+ * @property integer $actualizado_x_api
+ * @property string $actualizado_x_api_usuario
  *
  * @property Matricula[] $matriculas
  * @property NotasAlumno[] $notasalumnoasignaturas
@@ -85,6 +99,7 @@ class Estudiantes extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return [
             'CIInfPer' => 'Ciinf Per',
+            'num_expediente' => 'Num Expediente',
             'cedula_pasaporte' => 'Cedula Pasaporte',
             'TipoDocInfPer' => 'Tipo Doc Inf Per',
             'ApellInfPer' => 'Ape. Paterno',
@@ -96,6 +111,10 @@ class Estudiantes extends \yii\db\ActiveRecord implements IdentityInterface
             'LugarNacimientoPer' => 'Lugar Nacimiento Per',
             'GeneroPer' => 'Genero Per',
             'EstadoCivilPer' => 'Estado Civil Per',
+            'paisCNE' => 'Pais CNE',
+            'provinciaCNE' => 'Provincia CNE',
+            'habilitadoTPublicoCNE' => 'Habilitado T. Publico CNE',
+            'domicilioRegCivil' => 'Domicilio Reg Civil',
             'CiudadPer' => 'Ciudad Per',
             'DirecDomicilioPer' => 'Direc Domicilio Per',
             'Telf1InfPer' => 'Telf1',
@@ -109,13 +128,23 @@ class Estudiantes extends \yii\db\ActiveRecord implements IdentityInterface
             'carnet_conadis' => 'Carnet Conadis',
             'num_carnet_conadis' => 'Num Carnet Conadis',
             'porcentaje_discapacidad' => 'Porcentaje Discapacidad',
+            'lateralidad' => 'Lateralidad',
             'fotografia' => 'Fotografia',
+            'fotografia_reg_civil' => 'Fotografia Reg Civil',
             'codigo_dactilar' => 'Codigo Dactilar',
             'hd_posicion' => 'Hd Posicion',
             'huella_dactilar' => 'Huella Dactilar',
+            'usu_alta' => 'Usu Alta',
+            'actualizado' => 'Actualizado',
             'ultima_actualizacion' => 'Ultima Actualizacion',
             'codigo_verificacion' => 'Codigo Verificacion',
             'deshabilita_edicion' => 'Deshabilita Edicion',
+            'archivo' => 'Archivo',
+            'observacion' => 'Observacion',
+            'cambia_nombres' => 'Cambia Nombres',
+            'residente_amazonico' => 'Residente Amazonico',
+            'actualizado_x_api' => 'Actualizado API',
+            'actualizado_x_api_usuario' => 'Actualizado API Usuario',
         ];
     }
 

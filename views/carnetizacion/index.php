@@ -36,6 +36,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'target'=>'_blank',
                 'data-pjax'=>"0",
             ]); ?>
+        <?= Html::a('<span class="btn btn-lg btn btn-danger">'.Icon::show("tools").' Fix Carnets (idPer = 42)</span>',
+            Url::to(['/carnetizacion/fixcarnets', 'idPer' => 42]), [
+                'title' => Yii::t('yii', 'Fix Carnets'),
+                'target'=>'_blank',
+                'data-pjax'=>"0",
+            ]); ?>
     </div>
 
     <?= GridView::widget([
@@ -127,8 +133,19 @@ $this->params['breadcrumbs'][] = $this->title;
             //'filefolder',
             //'filename',
             //'filetype',
+            /*[
+                'label' => 'Foto',
+                'value' => function($model) {
+                    $finfo = new finfo(FILEINFO_MIME);
+                    $mimeType = $finfo->buffer($model->fotografia);
+                    $mimeType = explode('; ',$mimeType);
+                    $mimeType = $mimeType[0];
+                    return 'data:'.$mimeType.';base64,'.base64_encode($model->fotografia);
+                    },
+                'format' => ['image', ['height' => '140']],
+            ],*/
             'fec_registro',
-            //'status',
+            'status',
 
             //['class' => 'yii\grid\ActionColumn'],
 

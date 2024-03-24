@@ -20,8 +20,8 @@ if (isset($_GET['test'])) {
     }
 }
 
-$finfo    = new finfo(FILEINFO_MIME);
-$mimeType = $finfo->buffer($model->fotografia);
+$finfo = new finfo(FILEINFO_MIME);
+$mimeType = $finfo->buffer(base64_decode($model->fotografia));
 $mimeType = explode('; ',$mimeType);
 $mimeType = $mimeType[0];
 
@@ -58,7 +58,7 @@ $mimeType = $mimeType[0];
                         //'username',
                         [
                             'attribute' => 'fotografia',
-                            'value' => 'data:'.$mimeType.';base64,'.base64_encode($model->fotografia),
+                            'value' => 'data:'.$mimeType.';base64,'.$model->fotografia,
                             'format' => ['image', ['height' => '140']],
                             'options'=>['class'=>'text-left',],
                         ],

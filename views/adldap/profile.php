@@ -4,6 +4,8 @@
 /* @var $model yii\models\user_profile */
 
 use kartik\tabs\TabsX;
+use kartik\icons\Icon;
+Icon::map($this);
 
 $username = Yii::$app->user->identity->username;
 $user = Yii::$app->ad->getProvider('default')->search()
@@ -26,23 +28,31 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
     'enableStickyTabs' => true,
     'items' => [
         [
-            'label'=>'<i class="glyphicon glyphicon-list-alt"></i> Mi Perfil',
+            'label' => Icon::show('user').' Perfil',
             'content' => $this->render('edit_profile', [
                 'model' => $model,
             ]),
+            'active' => true,
         ],
         [
+            'label' => Icon::show('cloud').' MS 365',
+            'content' => $this->render('profile_o365', [
+                'model' => $model,
+            ]),
+            'active' => false,
+        ],
+        /*[
             'label'=>'<i class="glyphicon glyphicon-list-alt"></i> Biométrico',
             'content' => $this->render('asistencia', [
                 'dni' => $dni
             ]),
-        ],
-        [
+        ],*/
+        /*[
             'label'=>'<i class="glyphicon glyphicon-list-alt"></i> Roles de Pago',
             'content' => $this->render('../roluser/_user', [
                 'username' => $username
             ]),
-        ],
+        ],*/
     ],
 ]);
 ?>

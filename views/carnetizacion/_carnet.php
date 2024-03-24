@@ -51,10 +51,11 @@ $periodoDescriptivo = \app\models\siad_pregrado\Periodo::Periododescriptivo($mod
 //Crear URL para el código QR
 $url = Url::to('@web/index.php?r=carnetizacion/view&id='.base64_encode($model->id), 'https');
 
-$finfo    = new finfo(FILEINFO_MIME);
-$mimeType = $finfo->buffer($model->fotografia);
+$finfo = new finfo(FILEINFO_MIME);
+$mimeType = $finfo->buffer(base64_decode($model->fotografia));
 $mimeType = explode('; ',$mimeType);
 $mimeType = $mimeType[0];
+
 ?>
 
 
@@ -74,7 +75,7 @@ $mimeType = $mimeType[0];
     </tr>
     <tr align="center">
         <th height="135px" colspan="2" style="text-align: center">
-            <?= '<img style="border:1px solid black;" height="138" src="data:'.$mimeType.';base64,'.base64_encode($model->fotografia).'"/>' ?>
+            <?= '<img style="border:1px solid black;" height="138" src="data:'.$mimeType.';base64,'.$model->fotografia.'"/>' ?>
         </th>
     </tr>
     <tr align="center">
